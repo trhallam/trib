@@ -1,20 +1,17 @@
-'''
-trib_main.py
+"""trib_main.py
+
+Main function for trib application
 
 Antony Hallam
 2017-04-25
-'''
+
+"""
 
 
 import sys, os, inspect
 
 # connect to lib packages
-libpath = os.path.abspath(\
-            os.path.join(\
-                os.path.dirname(inspect.getfile(inspect.currentframe()\
-                        )),'lib'\
-            )\
-          )
+libpath = os.path.abspath(os.path.join(os.path.dirname(inspect.getfile(inspect.currentframe())),'lib'))
 # add libpath to sys.path
 if libpath not in sys.path:
     sys.path.insert(0, libpath)
@@ -24,10 +21,10 @@ from tribgui import tribGui
     
    
 def main():
-	app = QtWidgets.QApplication(sys.argv)
-	form = tribGui.tribApp()
-	form.show()
-	app.exec_()
+    app = QtWidgets.QApplication(sys.argv)
+    form = tribGui.tribApp()
+    form.show()
+    app.exec_()
 	
 if __name__ == '__main__':
 	main()
