@@ -1,3 +1,7 @@
+# Folders to Ignore
+highcharts/
+
+
 # Windows image file caches
 Thumbs.db
 ehthumbs.db
