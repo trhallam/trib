@@ -8,14 +8,14 @@ Antony Hallam
 
 import sys, os, inspect
 
-#connect to lib packages
+# connect to lib packages
 libpath = os.path.abspath(\
             os.path.join(\
                 os.path.dirname(inspect.getfile(inspect.currentframe()\
                         )),'lib'\
             )\
           )
-#add libpath to sys.path                        
+# add libpath to sys.path
 if libpath not in sys.path:
     sys.path.insert(0, libpath)
 

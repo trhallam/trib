@@ -166,7 +166,7 @@
                       <string>Enter probability between 0 and 100</string>
                      </property>
                      <property name="text">
-                      <string>90</string>
+                      <string>0.9</string>
                      </property>
                      <property name="maxLength">
                       <number>5</number>
@@ -247,7 +247,7 @@
                       <string>Enter probability between 0 and 100</string>
                      </property>
                      <property name="text">
-                      <string>10</string>
+                      <string>0.1</string>
                      </property>
                      <property name="maxLength">
                       <number>5</number>
@@ -339,7 +339,7 @@
               </property>
               <layout class="QGridLayout" name="gridLayout_3">
                <item row="0" column="0">
-                <widget class="QTableView" name="tableViewDistrValues"/>
+                <widget class="QTableWidget" name="tableWidgetDistrValues"/>
                </item>
               </layout>
              </widget>
