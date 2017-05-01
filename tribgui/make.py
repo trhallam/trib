@@ -12,20 +12,28 @@ import os
 
 print(os.getcwd())
 
-maker='pyuic5'
+maker ='pyuic5'
 indir = '_qtdesigner'
 intype = '.ui'
 outtype = '.py'
 
-uiFiles = ['tribDesign',      # main window
-            'tribDialogAbout'  # about dialog window
+uiFiles = ['tribDesignMainWindow',        # main window
+            'tribDesignDialogAbout',      # about dialog window
+            'tribDesignFDTables'          # main window2
            ]
-# check files exist
+
+rcmaker = 'pyrcc5'
+intyperc = '.qrc'
+outtyperc = '_rc.py'
+rcFiles = ['tribDesignResource'       # icons etc
+           ]
+
 for file in uiFiles:
     infile = join(indir, file+intype)
-    outfile = file+outtype
-    # print(infile, ':\t', os.path.isfile(infile))
-
-    # check_output([maker, infile, '-o', outfile])
-
+    outfile = join(indir, file+outtype)
     call([maker, infile, '-o', outfile])
+
+for file in rcFiles:
+    infile = join(indir, file+intyperc)
+    outfile = join(indir, file+outtyperc)
+    call([rcmaker, infile, '-o', outfile])

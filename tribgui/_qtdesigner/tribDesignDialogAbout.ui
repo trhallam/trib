@@ -26,8 +26,8 @@
    <string>Trib- About</string>
   </property>
   <property name="windowIcon">
-   <iconset>
-    <normaloff>icons/CDFPlot.svg</normaloff>icons/CDFPlot.svg</iconset>
+   <iconset resource="tribDesignResource.qrc">
+    <normaloff>:/icons/icons/CDFPlot.svg</normaloff>:/icons/icons/CDFPlot.svg</iconset>
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="0">
@@ -137,13 +137,13 @@
           <set>Qt::ImhNone</set>
          </property>
          <property name="text">
-          <string>https://github.com/trhallam/trib</string>
+          <string/>
          </property>
          <property name="textFormat">
           <enum>Qt::RichText</enum>
          </property>
          <property name="pixmap">
-          <pixmap>icons/GitHub-Mark-32px.png</pixmap>
+          <pixmap resource="tribDesignResource.qrc">:/icons/icons/GitHub-Mark-32px.png</pixmap>
          </property>
          <property name="alignment">
           <set>Qt::AlignCenter</set>
@@ -230,7 +230,9 @@
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="tribDesignResource.qrc"/>
+ </resources>
  <connections>
   <connection>
    <sender>pushButton</sender>

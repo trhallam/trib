@@ -17,12 +17,12 @@ if libpath not in sys.path:
     sys.path.insert(0, libpath)
 
 from PyQt5 import QtGui,QtWidgets
-from tribgui import tribGui
+from tribgui import tribMainWindow
     
    
 def main():
     app = QtWidgets.QApplication(sys.argv)
-    form = tribGui.tribApp()
+    form = tribMainWindow.tribMainApp()
     form.show()
     app.exec_()
 	

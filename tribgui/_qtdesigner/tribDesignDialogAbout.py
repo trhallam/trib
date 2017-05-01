@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file '_qtdesigner\tribDialogAbout.ui'
+# Form implementation generated from reading ui file '_qtdesigner\tribDesignDialogAbout.ui'
 #
 # Created by: PyQt5 UI code generator 5.8.1
 #
@@ -15,7 +15,7 @@ class Ui_dialogAbout(object):
         dialogAbout.setMinimumSize(QtCore.QSize(370, 260))
         dialogAbout.setMaximumSize(QtCore.QSize(370, 260))
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap("icons/CDFPlot.svg"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap(":/icons/icons/CDFPlot.svg"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         dialogAbout.setWindowIcon(icon)
         self.gridLayout = QtWidgets.QGridLayout(dialogAbout)
         self.gridLayout.setObjectName("gridLayout")
@@ -69,8 +69,9 @@ class Ui_dialogAbout(object):
         self.labelGitHub.setMaximumSize(QtCore.QSize(32, 50))
         self.labelGitHub.setToolTipDuration(2000)
         self.labelGitHub.setInputMethodHints(QtCore.Qt.ImhNone)
+        self.labelGitHub.setText("")
         self.labelGitHub.setTextFormat(QtCore.Qt.RichText)
-        self.labelGitHub.setPixmap(QtGui.QPixmap("icons/GitHub-Mark-32px.png"))
+        self.labelGitHub.setPixmap(QtGui.QPixmap(":/icons/icons/GitHub-Mark-32px.png"))
         self.labelGitHub.setAlignment(QtCore.Qt.AlignCenter)
         self.labelGitHub.setOpenExternalLinks(True)
         self.labelGitHub.setTextInteractionFlags(QtCore.Qt.LinksAccessibleByMouse)
@@ -107,6 +108,6 @@ class Ui_dialogAbout(object):
         self.labelAuthor.setText(_translate("dialogAbout", "Created by: Tony Hallam"))
         self.labelYear.setText(_translate("dialogAbout", "2017"))
         self.labelGitHub.setToolTip(_translate("dialogAbout", "trib GitHub"))
-        self.labelGitHub.setText(_translate("dialogAbout", "https://github.com/trhallam/trib"))
         self.pushButton.setText(_translate("dialogAbout", "OK"))
 
+import tribDesignResource_rc

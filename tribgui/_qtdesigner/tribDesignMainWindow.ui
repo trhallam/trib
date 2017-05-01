@@ -7,15 +7,15 @@
     <x>0</x>
     <y>0</y>
     <width>941</width>
-    <height>783</height>
+    <height>642</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Trib</string>
   </property>
   <property name="windowIcon">
-   <iconset>
-    <normaloff>icons/CDFPlot.svg</normaloff>icons/CDFPlot.svg</iconset>
+   <iconset resource="tribDesignResource.qrc">
+    <normaloff>:/icons/icons/CDFPlot.svg</normaloff>:/icons/icons/CDFPlot.svg</iconset>
   </property>
   <property name="toolTipDuration">
    <number>2</number>
@@ -44,13 +44,6 @@
            <enum>Qt::Horizontal</enum>
           </property>
           <widget class="QWidget" name="">
-           <layout class="QVBoxLayout" name="verticalLayout_3">
-            <item>
-             <widget class="QWidget" name="widgetFDTables" native="true"/>
-            </item>
-           </layout>
-          </widget>
-          <widget class="QWidget" name="">
            <layout class="QHBoxLayout" name="horizontalLayout">
             <property name="topMargin">
              <number>6</number>
@@ -61,6 +54,9 @@
             <property name="bottomMargin">
              <number>6</number>
             </property>
+            <item>
+             <layout class="QVBoxLayout" name="verticalLayoutFD"/>
+            </item>
             <item>
              <widget class="Line" name="lineSplitterFixedDistr">
               <property name="orientation">
@@ -164,7 +160,9 @@
    <container>1</container>
   </customwidget>
  </customwidgets>
- <resources/>
+ <resources>
+  <include location="tribDesignResource.qrc"/>
+ </resources>
  <connections>
   <connection>
    <sender>actionExit</sender>
