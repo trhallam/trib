@@ -38,12 +38,10 @@ class tribWidgetFDTable(QtWidgets.QWidget, tribDesignFDTables.Ui_Form):
         self._getFixedDistrValues()
         self._calcFixedDistr()
 
-        print(self.fixedDistrMu, self.fixedDistrStd)
-
         self.tableWidgetDistrValues.setColumnCount(2)
         self.basicOutputs = {
-            'Variable': ['90', '50', '10', 'mean', 'std'], \
-            'Value': ['0', '0', '0', '0', '0']}
+            'Variable': ['0.9', '0.5', '0.1', 'mean', 'std', 'P10'], \
+            'Value': ['0', '0', '0', '0', '0', '-99']}
         self._setTableWidgetDistrValuesData(self.basicOutputs)
         self._calcFixedDistrTable()
 
@@ -53,6 +51,10 @@ class tribWidgetFDTable(QtWidgets.QWidget, tribDesignFDTables.Ui_Form):
         self.lineEditProb2.textChanged.connect(self.onTextEdited)
         self.lineEditValue1.textChanged.connect(self.onTextEdited)
         self.lineEditValue2.textChanged.connect(self.onTextEdited)
+
+        # monitors for changes to output table
+
+        self.tableWidgetDistrValues.itemChanged.connect(self.onTextEdited)
 
         # print(dir(self.lineEditProb1))
         # print(dir(self.lineEditProb1.textChanged))
@@ -65,22 +67,23 @@ class tribWidgetFDTable(QtWidgets.QWidget, tribDesignFDTables.Ui_Form):
         self.fixedDistr[self.lineEditProb2.text()] = self.lineEditValue2.text()
 
     def _calcFixedDistr(self):
-        p = [];
-        f = []
+        p = []; f = []
         for key in self.fixedDistr.keys():
             p.append(1 - float(key))
             f.append(float(self.fixedDistr[key]))
         self.fixedDistrMu, self.fixedDistrStd = \
-            distr.invNormPpf(f[0], p[0] / 100, f[1], p[1] / 100)
-        print(self.fixedDistrMu, self.fixedDistrStd)
+            distr.invNormPpf(f[0], p[0], f[1], p[1])
+        # print(self.fixedDistrMu, self.fixedDistrStd)
 
     def _calcFixedDistrTable(self):
         kstats = ['mean', 'std', 'median']
         rows = self.tableWidgetDistrValues.rowCount() - 1
         val = ''
-        for row in range(0, rows + 1):
-            var = self.tableWidgetDistrValues.itemAt(row, 0).text()
-            print(row, var)
+        for row in range(0, rows):
+            self.tableWidgetDistrValues.setCurrentCell(row, 0)
+            var = self.tableWidgetDistrValues.currentItem().text()
+
+
             if var in kstats:
                 if var == 'mean':
                     val = self.fixedDistrMu
@@ -88,8 +91,21 @@ class tribWidgetFDTable(QtWidgets.QWidget, tribDesignFDTables.Ui_Form):
                     val = self.fixedDistrStd
                 if var == 'median':
                     val = stats.norm.median(loc=self.fixedDistrMu, scale=self.fixedDistrStd)
-        self.tableWidgetDistrValues.itemAt(row, 0).setText(var)
-        self.tableWidgetDistrValues.itemAt(row, 1).setText(str(val))
+
+            else:
+                try:
+                    pc = float(var)
+                    if 0 < pc < 1:
+                        val = stats.norm.ppf(1-pc, loc=self.fixedDistrMu, scale=self.fixedDistrStd)
+                    else:
+                        raise ValueError
+                except ValueError:
+                    # self.tableWidgetDistrValues.currentItem().setBackground() # investigate QBrush etc
+                    val = ''
+
+            # print('_calcFixedDistrTable', row, var, val)
+            self.tableWidgetDistrValues.setCurrentCell(row, 1)
+            self.tableWidgetDistrValues.currentItem().setText(str(val))
 
     # special pyqt slots
 
@@ -97,6 +113,7 @@ class tribWidgetFDTable(QtWidgets.QWidget, tribDesignFDTables.Ui_Form):
     def onTextEdited(self):
         self._getFixedDistrValues()
         self._calcFixedDistr()
+        self._calcFixedDistrTable()
 
     #   def _getTableWidgetDistrValuesData(self):
     #      horHeaders = self.tableWidgetDistrValues.takeHorizontalHeaderItem(1)
