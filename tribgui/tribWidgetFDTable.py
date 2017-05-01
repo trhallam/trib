@@ -7,6 +7,7 @@ make.py must be run in the tribgui module folder to update the gui interface.
 """
 
 from PyQt5 import QtGui, QtWidgets
+from PyQt5.QtCore import pyqtSlot
 
 from tribgui._qtdesigner import tribDesignFDTables
 
@@ -46,6 +47,16 @@ class tribWidgetFDTable(QtWidgets.QWidget, tribDesignFDTables.Ui_Form):
         self._setTableWidgetDistrValuesData(self.basicOutputs)
         self._calcFixedDistrTable()
 
+        # monitors for distribution input boxes
+
+        self.lineEditProb1.textChanged.connect(self.onTextEdited)
+        self.lineEditProb2.textChanged.connect(self.onTextEdited)
+        self.lineEditValue1.textChanged.connect(self.onTextEdited)
+        self.lineEditValue2.textChanged.connect(self.onTextEdited)
+
+        # print(dir(self.lineEditProb1))
+        # print(dir(self.lineEditProb1.textChanged))
+
     # functions for Fixed Distribution Tab
 
     def _getFixedDistrValues(self):
@@ -61,6 +72,7 @@ class tribWidgetFDTable(QtWidgets.QWidget, tribDesignFDTables.Ui_Form):
             f.append(float(self.fixedDistr[key]))
         self.fixedDistrMu, self.fixedDistrStd = \
             distr.invNormPpf(f[0], p[0] / 100, f[1], p[1] / 100)
+        print(self.fixedDistrMu, self.fixedDistrStd)
 
     def _calcFixedDistrTable(self):
         kstats = ['mean', 'std', 'median']
@@ -78,6 +90,13 @@ class tribWidgetFDTable(QtWidgets.QWidget, tribDesignFDTables.Ui_Form):
                     val = stats.norm.median(loc=self.fixedDistrMu, scale=self.fixedDistrStd)
         self.tableWidgetDistrValues.itemAt(row, 0).setText(var)
         self.tableWidgetDistrValues.itemAt(row, 1).setText(str(val))
+
+    # special pyqt slots
+
+    @pyqtSlot()
+    def onTextEdited(self):
+        self._getFixedDistrValues()
+        self._calcFixedDistr()
 
     #   def _getTableWidgetDistrValuesData(self):
     #      horHeaders = self.tableWidgetDistrValues.takeHorizontalHeaderItem(1)

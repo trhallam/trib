@@ -1,5 +1,7 @@
 <RCC>
   <qresource prefix="icons">
+    <file>icons/CDFPlotLarge.png</file>
+    <file>icons/In-Black-48px-R.png</file>
     <file>icons/CDFPlot.svg</file>
     <file>icons/GitHub-Mark-32px.png</file>
   </qresource>

@@ -7,9 +7,12 @@ make.py must be run in the tribgui module folder to update the gui interface.
 """
 
 from PyQt5 import QtGui, QtWidgets
+from PyQt5.QtCore import pyqtSlot
 
 from tribgui._qtdesigner import tribDesignMainWindow, tribDesignDialogAbout
 from tribWidgetFDTable import tribWidgetFDTable
+
+import webbrowser
 
 
 '''
@@ -22,6 +25,17 @@ class tribAboutDialog(QtWidgets.QDialog, tribDesignDialogAbout.Ui_dialogAbout):
         super(tribAboutDialog, self).__init__(parent)
         self.setupUi(self)
 
+        self.pushButtonGitHub.clicked.connect(self.onIconClick)
+        self.pushButtonLIn.clicked.connect(self.onIconClick)
+
+    @pyqtSlot()
+    def onIconClick(self):
+        sender=self.sender()
+        tooltip = sender.toolTip()
+        try:
+            webbrowser.open_new_tab(tooltip[2+tooltip.find(':'):])
+        except webbrowser.Error:
+            pass
 
 '''
 Class to caputre the setup of the main window.
