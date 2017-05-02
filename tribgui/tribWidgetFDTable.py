@@ -82,8 +82,6 @@ class tribWidgetFDTable(QtWidgets.QWidget, tribDesignFDTables.Ui_Form):
         for row in range(0, rows):
             self.tableWidgetDistrValues.setCurrentCell(row, 0)
             var = self.tableWidgetDistrValues.currentItem().text()
-
-
             if var in kstats:
                 if var == 'mean':
                     val = self.fixedDistrMu
@@ -91,11 +89,10 @@ class tribWidgetFDTable(QtWidgets.QWidget, tribDesignFDTables.Ui_Form):
                     val = self.fixedDistrStd
                 if var == 'median':
                     val = stats.norm.median(loc=self.fixedDistrMu, scale=self.fixedDistrStd)
-
             else:
                 try:
                     pc = float(var)
-                    if 0 < pc < 1:
+                    if 0.0 < pc < 1.0:
                         val = stats.norm.ppf(1-pc, loc=self.fixedDistrMu, scale=self.fixedDistrStd)
                     else:
                         raise ValueError

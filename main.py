@@ -38,14 +38,14 @@ if libpath not in sys.path:
 
 from PyQt5 import QtGui,QtWidgets
 from tribgui import tribMainWindow
-    
-   
+
+
 def main():
     app = QtWidgets.QApplication(sys.argv)
     form = tribMainWindow.tribMainApp()
     form.show()
     app.exec_()
-	
+
 if __name__ == '__main__':
-	main()
+    main()
 
