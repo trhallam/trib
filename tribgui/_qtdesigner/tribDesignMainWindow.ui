@@ -20,19 +20,34 @@
   <property name="toolTipDuration">
    <number>2</number>
   </property>
+  <property name="styleSheet">
+   <string notr="true">selection-color: rgb(139, 218, 249);
+background-color: rgb(252, 252, 252);
+border-color: rgb(93, 87, 107);</string>
+  </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
     <item row="0" column="0">
      <widget class="QTabWidget" name="tabWidget">
       <property name="autoFillBackground">
-       <bool>true</bool>
+       <bool>false</bool>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">selection-color: rgb(139, 218, 249);
+background-color: rgb(252, 252, 252);
+border-color: rgb(93, 87, 107);</string>
       </property>
       <property name="currentIndex">
        <number>0</number>
       </property>
       <widget class="QWidget" name="tabFixedDist">
        <property name="autoFillBackground">
-        <bool>true</bool>
+        <bool>false</bool>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">selection-color: rgb(139, 218, 249);
+background-color: rgb(252, 252, 252);
+border-color: rgb(93, 87, 107);</string>
        </property>
        <attribute name="title">
         <string>Fixed Distribution</string>
@@ -73,7 +88,7 @@
                </size>
               </property>
               <property name="autoFillBackground">
-               <bool>true</bool>
+               <bool>false</bool>
               </property>
              </widget>
             </item>
@@ -84,11 +99,21 @@
        </layout>
       </widget>
       <widget class="QWidget" name="tabSetDist">
+       <property name="styleSheet">
+        <string notr="true">selection-color: rgb(139, 218, 249);
+background-color: rgb(252, 252, 252);
+border-color: rgb(93, 87, 107);</string>
+       </property>
        <attribute name="title">
         <string>Set Distribution</string>
        </attribute>
       </widget>
       <widget class="QWidget" name="tabProbit">
+       <property name="styleSheet">
+        <string notr="true">selection-color: rgb(139, 218, 249);
+background-color: rgb(252, 252, 252);
+border-color: rgb(93, 87, 107);</string>
+       </property>
        <attribute name="title">
         <string>Probit Plot</string>
        </attribute>

@@ -60,6 +60,11 @@ class Ui_Form(object):
         self.horizontalLayout1.setObjectName("horizontalLayout1")
         self.lineEditProb1 = QtWidgets.QLineEdit(self.distributionDefBox)
         self.lineEditProb1.setMinimumSize(QtCore.QSize(0, 30))
+        self.lineEditProb1.setStyleSheet("selection-color: rgb(139, 218, 249);\n"
+"background-color: rgb(252, 252, 252);\n"
+"border-color: rgb(93, 87, 107);\n"
+"alternate-background-color: rgb(255, 250, 227);\n"
+"font: 75 14pt \"Arial\";")
         self.lineEditProb1.setMaxLength(5)
         self.lineEditProb1.setAlignment(QtCore.Qt.AlignCenter)
         self.lineEditProb1.setClearButtonEnabled(False)
@@ -75,6 +80,11 @@ class Ui_Form(object):
         self.horizontalLayout1.addWidget(self.labeldots1)
         self.lineEditValue1 = QtWidgets.QLineEdit(self.distributionDefBox)
         self.lineEditValue1.setMinimumSize(QtCore.QSize(0, 30))
+        self.lineEditValue1.setStyleSheet("selection-color: rgb(139, 218, 249);\n"
+"background-color: rgb(252, 252, 252);\n"
+"border-color: rgb(93, 87, 107);\n"
+"alternate-background-color: rgb(255, 250, 227);\n"
+"font: 75 14pt \"Arial\";")
         self.lineEditValue1.setMaxLength(10)
         self.lineEditValue1.setAlignment(QtCore.Qt.AlignCenter)
         self.lineEditValue1.setPlaceholderText("")
@@ -86,6 +96,11 @@ class Ui_Form(object):
         self.horizontalLayout2.setObjectName("horizontalLayout2")
         self.lineEditProb2 = QtWidgets.QLineEdit(self.distributionDefBox)
         self.lineEditProb2.setMinimumSize(QtCore.QSize(0, 30))
+        self.lineEditProb2.setStyleSheet("selection-color: rgb(139, 218, 249);\n"
+"background-color: rgb(252, 252, 252);\n"
+"border-color: rgb(93, 87, 107);\n"
+"alternate-background-color: rgb(255, 250, 227);\n"
+"font: 75 14pt \"Arial\";")
         self.lineEditProb2.setMaxLength(5)
         self.lineEditProb2.setAlignment(QtCore.Qt.AlignCenter)
         self.lineEditProb2.setClearButtonEnabled(False)
@@ -101,6 +116,11 @@ class Ui_Form(object):
         self.horizontalLayout2.addWidget(self.labeldots2)
         self.lineEditValue2 = QtWidgets.QLineEdit(self.distributionDefBox)
         self.lineEditValue2.setMinimumSize(QtCore.QSize(0, 30))
+        self.lineEditValue2.setStyleSheet("selection-color: rgb(139, 218, 249);\n"
+"background-color: rgb(252, 252, 252);\n"
+"border-color: rgb(93, 87, 107);\n"
+"alternate-background-color: rgb(255, 250, 227);\n"
+"font: 75 14pt \"Arial\";")
         self.lineEditValue2.setMaxLength(10)
         self.lineEditValue2.setAlignment(QtCore.Qt.AlignCenter)
         self.lineEditValue2.setPlaceholderText("")
@@ -117,10 +137,16 @@ class Ui_Form(object):
         font.setBold(True)
         font.setWeight(75)
         self.distributionValuesGroup.setFont(font)
+        self.distributionValuesGroup.setStyleSheet("")
         self.distributionValuesGroup.setObjectName("distributionValuesGroup")
         self.gridLayout_2 = QtWidgets.QGridLayout(self.distributionValuesGroup)
         self.gridLayout_2.setObjectName("gridLayout_2")
         self.tableWidgetDistrValues = QtWidgets.QTableWidget(self.distributionValuesGroup)
+        self.tableWidgetDistrValues.setStyleSheet("selection-color: rgb(139, 218, 249);\n"
+"background-color: rgb(252, 252, 252);\n"
+"border-color: rgb(93, 87, 107);\n"
+"alternate-background-color: rgb(255, 250, 227);\n"
+"font: 75 14pt \"Arial\";")
         self.tableWidgetDistrValues.setObjectName("tableWidgetDistrValues")
         self.tableWidgetDistrValues.setColumnCount(0)
         self.tableWidgetDistrValues.setRowCount(0)

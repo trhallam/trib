@@ -16,15 +16,24 @@ class Ui_MainWindow(object):
         icon.addPixmap(QtGui.QPixmap(":/icons/icons/CDFPlot.svg"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         MainWindow.setWindowIcon(icon)
         MainWindow.setToolTipDuration(2)
+        MainWindow.setStyleSheet("selection-color: rgb(139, 218, 249);\n"
+"background-color: rgb(252, 252, 252);\n"
+"border-color: rgb(93, 87, 107);")
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.gridLayout = QtWidgets.QGridLayout(self.centralwidget)
         self.gridLayout.setObjectName("gridLayout")
         self.tabWidget = QtWidgets.QTabWidget(self.centralwidget)
-        self.tabWidget.setAutoFillBackground(True)
+        self.tabWidget.setAutoFillBackground(False)
+        self.tabWidget.setStyleSheet("selection-color: rgb(139, 218, 249);\n"
+"background-color: rgb(252, 252, 252);\n"
+"border-color: rgb(93, 87, 107);")
         self.tabWidget.setObjectName("tabWidget")
         self.tabFixedDist = QtWidgets.QWidget()
-        self.tabFixedDist.setAutoFillBackground(True)
+        self.tabFixedDist.setAutoFillBackground(False)
+        self.tabFixedDist.setStyleSheet("selection-color: rgb(139, 218, 249);\n"
+"background-color: rgb(252, 252, 252);\n"
+"border-color: rgb(93, 87, 107);")
         self.tabFixedDist.setObjectName("tabFixedDist")
         self.gridLayout_2 = QtWidgets.QGridLayout(self.tabFixedDist)
         self.gridLayout_2.setContentsMargins(0, 0, 0, 0)
@@ -47,15 +56,21 @@ class Ui_MainWindow(object):
         self.horizontalLayout.addWidget(self.lineSplitterFixedDistr)
         self.widgetWebChart = QtWebEngineWidgets.QWebEngineView(self.widget)
         self.widgetWebChart.setMinimumSize(QtCore.QSize(600, 0))
-        self.widgetWebChart.setAutoFillBackground(True)
+        self.widgetWebChart.setAutoFillBackground(False)
         self.widgetWebChart.setObjectName("widgetWebChart")
         self.horizontalLayout.addWidget(self.widgetWebChart)
         self.gridLayout_2.addWidget(self.splitter, 0, 0, 1, 1)
         self.tabWidget.addTab(self.tabFixedDist, "")
         self.tabSetDist = QtWidgets.QWidget()
+        self.tabSetDist.setStyleSheet("selection-color: rgb(139, 218, 249);\n"
+"background-color: rgb(252, 252, 252);\n"
+"border-color: rgb(93, 87, 107);")
         self.tabSetDist.setObjectName("tabSetDist")
         self.tabWidget.addTab(self.tabSetDist, "")
         self.tabProbit = QtWidgets.QWidget()
+        self.tabProbit.setStyleSheet("selection-color: rgb(139, 218, 249);\n"
+"background-color: rgb(252, 252, 252);\n"
+"border-color: rgb(93, 87, 107);")
         self.tabProbit.setObjectName("tabProbit")
         self.tabWidget.addTab(self.tabProbit, "")
         self.gridLayout.addWidget(self.tabWidget, 0, 0, 1, 1)
