@@ -31,6 +31,12 @@ class Ui_Form(object):
         self.verticalLayout.setSpacing(0)
         self.verticalLayout.setObjectName("verticalLayout")
         self.comboBoxDist = QtWidgets.QComboBox(self.distributionDefBox)
+        self.comboBoxDist.setStyleSheet("selection-color: rgb(93, 87, 107);\n"
+"selection-background-color: rgb(139, 218, 249);\n"
+"background-color: rgb(252, 252, 252);\n"
+"border-color: rgb(93, 87, 107);\n"
+"alternate-background-color: rgb(255, 250, 227);\n"
+"font: 75 14pt \"Arial\";")
         self.comboBoxDist.setCurrentText("")
         self.comboBoxDist.setObjectName("comboBoxDist")
         self.verticalLayout.addWidget(self.comboBoxDist)
@@ -60,7 +66,8 @@ class Ui_Form(object):
         self.horizontalLayout1.setObjectName("horizontalLayout1")
         self.lineEditProb1 = QtWidgets.QLineEdit(self.distributionDefBox)
         self.lineEditProb1.setMinimumSize(QtCore.QSize(0, 30))
-        self.lineEditProb1.setStyleSheet("selection-color: rgb(139, 218, 249);\n"
+        self.lineEditProb1.setStyleSheet("selection-color: rgb(93, 87, 107);\n"
+"selection-background-color: rgb(139, 218, 249);\n"
 "background-color: rgb(252, 252, 252);\n"
 "border-color: rgb(93, 87, 107);\n"
 "alternate-background-color: rgb(255, 250, 227);\n"
@@ -141,8 +148,9 @@ class Ui_Form(object):
         self.distributionValuesGroup.setObjectName("distributionValuesGroup")
         self.gridLayout_2 = QtWidgets.QGridLayout(self.distributionValuesGroup)
         self.gridLayout_2.setObjectName("gridLayout_2")
-        self.tableWidgetDistrValues = QtWidgets.QTableWidget(self.distributionValuesGroup)
-        self.tableWidgetDistrValues.setStyleSheet("selection-color: rgb(139, 218, 249);\n"
+        self.tableWidgetDistrValues = XParameterTableWidget(self.distributionValuesGroup)
+        self.tableWidgetDistrValues.setStyleSheet("selection-color: rgb(93, 87, 107);\n"
+"selection-background-color: rgb(139, 218, 249);\n"
 "background-color: rgb(252, 252, 252);\n"
 "border-color: rgb(93, 87, 107);\n"
 "alternate-background-color: rgb(255, 250, 227);\n"
@@ -176,4 +184,5 @@ class Ui_Form(object):
         self.lineEditValue2.setText(_translate("Form", "20.55"))
         self.distributionValuesGroup.setTitle(_translate("Form", "Distribution Values"))
 
+from pyqt5x.XTableWidget import XParameterTableWidget
 import tribDesignResource_rc

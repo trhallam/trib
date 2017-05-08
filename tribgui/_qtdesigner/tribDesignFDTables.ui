@@ -55,6 +55,14 @@
         </property>
         <item>
          <widget class="QComboBox" name="comboBoxDist">
+          <property name="styleSheet">
+           <string notr="true">selection-color: rgb(93, 87, 107);
+selection-background-color: rgb(139, 218, 249);
+background-color: rgb(252, 252, 252);
+border-color: rgb(93, 87, 107);
+alternate-background-color: rgb(255, 250, 227);
+font: 75 14pt &quot;Arial&quot;;</string>
+          </property>
           <property name="currentText">
            <string/>
           </property>
@@ -138,7 +146,8 @@
              <string>Enter probability between 0 and 100</string>
             </property>
             <property name="styleSheet">
-             <string notr="true">selection-color: rgb(139, 218, 249);
+             <string notr="true">selection-color: rgb(93, 87, 107);
+selection-background-color: rgb(139, 218, 249);
 background-color: rgb(252, 252, 252);
 border-color: rgb(93, 87, 107);
 alternate-background-color: rgb(255, 250, 227);
@@ -342,9 +351,10 @@ font: 75 14pt &quot;Arial&quot;;</string>
      </property>
      <layout class="QGridLayout" name="gridLayout_2">
       <item row="0" column="0">
-       <widget class="QTableWidget" name="tableWidgetDistrValues">
+       <widget class="XParameterTableWidget" name="tableWidgetDistrValues">
         <property name="styleSheet">
-         <string notr="true">selection-color: rgb(139, 218, 249);
+         <string notr="true">selection-color: rgb(93, 87, 107);
+selection-background-color: rgb(139, 218, 249);
 background-color: rgb(252, 252, 252);
 border-color: rgb(93, 87, 107);
 alternate-background-color: rgb(255, 250, 227);
@@ -357,6 +367,13 @@ font: 75 14pt &quot;Arial&quot;;</string>
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>XParameterTableWidget</class>
+   <extends>QTableWidget</extends>
+   <header>pyqt5x.XTableWidget.h</header>
+  </customwidget>
+ </customwidgets>
  <resources>
   <include location="tribDesignResource.qrc"/>
  </resources>

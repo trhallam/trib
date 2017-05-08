@@ -65,6 +65,7 @@ class Ui_dialogAbout(object):
         font.setBold(False)
         font.setWeight(50)
         self.labelDisc.setFont(font)
+        self.labelDisc.setStyleSheet("")
         self.labelDisc.setAlignment(QtCore.Qt.AlignCenter)
         self.labelDisc.setObjectName("labelDisc")
         self.verticalLayout.addWidget(self.labelDisc)

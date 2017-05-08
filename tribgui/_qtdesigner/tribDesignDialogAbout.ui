@@ -137,6 +137,9 @@
          <bold>false</bold>
         </font>
        </property>
+       <property name="styleSheet">
+        <string notr="true"/>
+       </property>
        <property name="text">
         <string>A program to help calculate distribution statistics</string>
        </property>

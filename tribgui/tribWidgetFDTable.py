@@ -38,16 +38,19 @@ class tribWidgetFDTable(QtWidgets.QWidget, tribDesignFDTables.Ui_Form):
         self._getFixedDistrValues()
         self._calcFixedDistr()
 
-        self.tableWidgetDistrValues.setColumnCount(2)
-        self.basicOutputs = {
-            'Variable': ['0.9', '0.5', '0.1', 'mean', 'std', 'P10'], \
-            'Value': ['0', '0', '0', '0', '0', '-99']}
+        #self.tableWidgetDistrValues.setSize(10,2)
+        self.fixedDistrHeaders = ['Variable', 'Value']
+        self.fixedDistrData = {}
+        self.fixedDistrData[self.fixedDistrHeaders[0]]=['0.9', '0.5', '0.1', 'mean', 'std', 'P10']
+        self.fixedDistrData[self.fixedDistrHeaders[1]]=['']*len(self.fixedDistrData[self.fixedDistrHeaders[0]])
+        self.basicOutputs = self.fixedDistrData
         self.tableColRatio = 0.5
-        self._setTableWidgetDistrValuesData(self.basicOutputs)
+        self.tableWidgetDistrValues.setdata(self.basicOutputs)
         self._calcFixedDistrTable()
+        # self.tableWidgetDistrValues.stretchTable()
 
         # monitors for distribution input boxes
-
+        self.comboBoxDist.currentIndexChanged.connect(self.onFixedDistrEdited)
         self.lineEditProb1.textChanged.connect(self.onFixedDistrEdited)
         self.lineEditProb2.textChanged.connect(self.onFixedDistrEdited)
         self.lineEditValue1.textChanged.connect(self.onFixedDistrEdited)
@@ -55,13 +58,16 @@ class tribWidgetFDTable(QtWidgets.QWidget, tribDesignFDTables.Ui_Form):
 
         # monitors for changes to output table
 
-        self.tableWidgetDistrValues.itemChanged.connect(self.onTableEdited)
+        self.tableWidgetDistrValues.itemChanged.connect(self.onTableEdited) #moved to _calcDistrRow
+
 
         # monitors resizing of window
         # self.tableWidgetDistrValues.resizeEvent(self.onTableResize)
 
         # print(dir(self.lineEditProb1))
         # print(dir(self.lineEditProb1.textChanged))
+
+        self.tableWidgetDistrValues.setCurrentCell(0, 0)
 
     # functions for Fixed Distribution Tab
 
@@ -85,6 +91,8 @@ class tribWidgetFDTable(QtWidgets.QWidget, tribDesignFDTables.Ui_Form):
         self.tableWidgetDistrValues.setCurrentCell(row, 0)
         var = self.tableWidgetDistrValues.currentItem().text()
         if var in kstats:
+            if var == '':
+                val = ''
             if var == 'mean':
                 val = self.fixedDistrMu
             if var == 'std':
@@ -104,6 +112,11 @@ class tribWidgetFDTable(QtWidgets.QWidget, tribDesignFDTables.Ui_Form):
                 val = '#N/A'
 
         # print('_calcFixedDistrRow', row, var, val)
+        # check if last row and add another if needed
+        if row == self.tableWidgetDistrValues.rowCount() - 1:
+            self.tableWidgetDistrValues.addrow()
+            # self.tableWidgetDistrValues.setSelection()
+
         self.tableWidgetDistrValues.setCurrentCell(row, 1)
         self.tableWidgetDistrValues.currentItem().setText(str(val))
         if val != '#N/A':
@@ -127,39 +140,34 @@ class tribWidgetFDTable(QtWidgets.QWidget, tribDesignFDTables.Ui_Form):
             table.setCurrentCell(row, clm)
             table.currentItem().setFlags(QtCore.Qt.ItemIsEditable)
 
-    def _setTableWidgetDistrValuesData(self, data):
-        horHeaders = []
-        self.tableWidgetDistrValues.setRowCount(len(data['Variable']) + 1)
-        for n, key in enumerate(data.keys()):
-            horHeaders.append(key)
-            for m, item in enumerate(data[key]):
-                newitem = QtWidgets.QTableWidgetItem(item)
-                self.tableWidgetDistrValues.setItem(m, n, newitem)
-
-        # self._togColEditable(self.tableWidgetDistrValues, 1)
-        self.tableWidgetDistrValues.setHorizontalHeaderLabels(horHeaders)
-
     # special pyqt slots
 
     @pyqtSlot()
     def onFixedDistrEdited(self):
         self._getFixedDistrValues()
         self._calcFixedDistr()
+
+        self.tableWidgetDistrValues.itemChanged.disconnect()
         self._calcFixedDistrTable()
+        self.tableWidgetDistrValues.itemChanged.connect(self.onTableEdited)
 
     @pyqtSlot()
     def onTableEdited(self):
         inrow = self.tableWidgetDistrValues.currentRow()
         incol = self.tableWidgetDistrValues.currentColumn()
+
+        self.tableWidgetDistrValues.itemChanged.disconnect()
         self._calcFixedDistrRow(inrow)
+        self.tableWidgetDistrValues.itemChanged.connect(self.onTableEdited)
+
+        self.tableWidgetDistrValues.setCurrentCell(inrow, incol)
+        data=self.tableWidgetDistrValues.returndata()
+
         self.tableWidgetDistrValues.setCurrentCell(inrow, incol)
 
     #pyqt redefinitions
 
-    def resizeEvent(self, resizeEvent):
-        twidth = self.tableWidgetDistrValues.width()
-        self.tableWidgetDistrValues.setColumnWidth(0, int((twidth-22)*self.tableColRatio))
-        self.tableWidgetDistrValues.setColumnWidth(1, int((twidth-22)*(1-self.tableColRatio)))
+
 
     #   def _getTableWidgetDistrValuesData(self):
     #      horHeaders = self.tableWidgetDistrValues.takeHorizontalHeaderItem(1)

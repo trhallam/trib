@@ -22,10 +22,15 @@
   </property>
   <property name="styleSheet">
    <string notr="true">selection-color: rgb(139, 218, 249);
-background-color: rgb(252, 252, 252);
+background-color: rgb(230, 230, 230);
 border-color: rgb(93, 87, 107);</string>
   </property>
   <widget class="QWidget" name="centralwidget">
+   <property name="styleSheet">
+    <string notr="true">selection-color: rgb(139, 218, 249);
+background-color: rgb(230, 230, 230);
+border-color: rgb(93, 87, 107);</string>
+   </property>
    <layout class="QGridLayout" name="gridLayout">
     <item row="0" column="0">
      <widget class="QTabWidget" name="tabWidget">
@@ -34,7 +39,7 @@ border-color: rgb(93, 87, 107);</string>
       </property>
       <property name="styleSheet">
        <string notr="true">selection-color: rgb(139, 218, 249);
-background-color: rgb(252, 252, 252);
+background-color: rgb(230, 230, 230);
 border-color: rgb(93, 87, 107);</string>
       </property>
       <property name="currentIndex">
@@ -46,7 +51,7 @@ border-color: rgb(93, 87, 107);</string>
        </property>
        <property name="styleSheet">
         <string notr="true">selection-color: rgb(139, 218, 249);
-background-color: rgb(252, 252, 252);
+background-color: rgb(230, 230, 230);
 border-color: rgb(93, 87, 107);</string>
        </property>
        <attribute name="title">
@@ -101,7 +106,7 @@ border-color: rgb(93, 87, 107);</string>
       <widget class="QWidget" name="tabSetDist">
        <property name="styleSheet">
         <string notr="true">selection-color: rgb(139, 218, 249);
-background-color: rgb(252, 252, 252);
+background-color: rgb(230, 230, 230);
 border-color: rgb(93, 87, 107);</string>
        </property>
        <attribute name="title">
@@ -111,7 +116,7 @@ border-color: rgb(93, 87, 107);</string>
       <widget class="QWidget" name="tabProbit">
        <property name="styleSheet">
         <string notr="true">selection-color: rgb(139, 218, 249);
-background-color: rgb(252, 252, 252);
+background-color: rgb(230, 230, 230);
 border-color: rgb(93, 87, 107);</string>
        </property>
        <attribute name="title">
