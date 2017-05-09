@@ -37,12 +37,12 @@ if libpath not in sys.path:
     sys.path.insert(0, libpath)
 
 from PyQt5 import QtGui,QtWidgets
-from tribgui import tribMainWindow
+from tribgui import mainWindow
 
 
 def main():
     app = QtWidgets.QApplication(sys.argv)
-    form = tribMainWindow.tribMainApp()
+    form = mainWindow.mainApp()
     form.show()
     app.exec_()
 

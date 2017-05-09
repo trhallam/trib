@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file '_qtdesigner\tribDesignMainWindow.ui'
+# Form implementation generated from reading ui file '_qtdesigner\qdesignMainWindow.ui'
 #
 # Created by: PyQt5 UI code generator 5.8.1
 #
@@ -44,20 +44,20 @@ class Ui_MainWindow(object):
         self.splitter = QtWidgets.QSplitter(self.tabFixedDist)
         self.splitter.setOrientation(QtCore.Qt.Horizontal)
         self.splitter.setObjectName("splitter")
-        self.widget = QtWidgets.QWidget(self.splitter)
-        self.widget.setObjectName("widget")
-        self.horizontalLayout = QtWidgets.QHBoxLayout(self.widget)
+        self.layoutWidget = QtWidgets.QWidget(self.splitter)
+        self.layoutWidget.setObjectName("layoutWidget")
+        self.horizontalLayout = QtWidgets.QHBoxLayout(self.layoutWidget)
         self.horizontalLayout.setContentsMargins(0, 6, 6, 6)
         self.horizontalLayout.setObjectName("horizontalLayout")
         self.verticalLayoutFD = QtWidgets.QVBoxLayout()
         self.verticalLayoutFD.setObjectName("verticalLayoutFD")
         self.horizontalLayout.addLayout(self.verticalLayoutFD)
-        self.lineSplitterFixedDistr = QtWidgets.QFrame(self.widget)
+        self.lineSplitterFixedDistr = QtWidgets.QFrame(self.layoutWidget)
         self.lineSplitterFixedDistr.setFrameShape(QtWidgets.QFrame.VLine)
         self.lineSplitterFixedDistr.setFrameShadow(QtWidgets.QFrame.Sunken)
         self.lineSplitterFixedDistr.setObjectName("lineSplitterFixedDistr")
         self.horizontalLayout.addWidget(self.lineSplitterFixedDistr)
-        self.widgetWebChart = QtWebEngineWidgets.QWebEngineView(self.widget)
+        self.widgetWebChart = QtWebEngineWidgets.QWebEngineView(self.layoutWidget)
         self.widgetWebChart.setMinimumSize(QtCore.QSize(600, 0))
         self.widgetWebChart.setAutoFillBackground(False)
         self.widgetWebChart.setObjectName("widgetWebChart")
@@ -128,4 +128,4 @@ class Ui_MainWindow(object):
         self.actionSettings.setText(_translate("MainWindow", "Settings"))
 
 from PyQt5 import QtWebEngineWidgets
-import tribDesignResource_rc
+import qdesignResource_rc

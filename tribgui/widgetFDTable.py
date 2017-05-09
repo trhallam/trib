@@ -9,7 +9,7 @@ make.py must be run in the tribgui module folder to update the gui interface.
 from PyQt5 import QtGui, QtWidgets, QtCore
 from PyQt5.QtCore import pyqtSlot
 
-from tribgui._qtdesigner import tribDesignFDTables
+from tribgui._qtdesigner import qdesignFDTables
 
 from tufpy.stats import distr
 from scipy import stats
@@ -19,9 +19,9 @@ Class to caputre the setup of the main window.
 '''
 
 
-class tribWidgetFDTable(QtWidgets.QWidget, tribDesignFDTables.Ui_Form):
+class widgetFDTable(QtWidgets.QWidget, qdesignFDTables.Ui_Form):
     def __init__(self, parent=None):
-        super(tribWidgetFDTable, self).__init__(parent)
+        super(widgetFDTable, self).__init__(parent)
         self.setupUi(self)
 
         # known distributions

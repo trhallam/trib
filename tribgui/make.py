@@ -17,15 +17,15 @@ indir = '_qtdesigner'
 intype = '.ui'
 outtype = '.py'
 
-uiFiles = ['tribDesignMainWindow',        # main window
-            'tribDesignDialogAbout',      # about dialog window
-            'tribDesignFDTables'          # main window2
+uiFiles = ['qdesignMainWindow',        # main window
+            'qdesignDialogAbout',      # about dialog window
+            'qdesignFDTables'          # main window2
            ]
 
 rcmaker = 'pyrcc5'
 intyperc = '.qrc'
 outtyperc = '_rc.py'
-rcFiles = ['tribDesignResource'       # icons etc
+rcFiles = ['qdesignResource'       # icons etc
            ]
 
 for file in uiFiles:

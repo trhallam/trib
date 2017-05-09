@@ -375,7 +375,7 @@ font: 75 14pt &quot;Arial&quot;;</string>
   </customwidget>
  </customwidgets>
  <resources>
-  <include location="tribDesignResource.qrc"/>
+  <include location="qdesignResource.qrc"/>
  </resources>
  <connections/>
 </ui>

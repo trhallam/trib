@@ -7,32 +7,52 @@
     <x>0</x>
     <y>0</y>
     <width>941</width>
-    <height>783</height>
+    <height>642</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Trib</string>
   </property>
   <property name="windowIcon">
-   <iconset>
-    <normaloff>icons/CDFPlot.svg</normaloff>icons/CDFPlot.svg</iconset>
+   <iconset resource="qdesignResource.qrc">
+    <normaloff>:/icons/icons/CDFPlot.svg</normaloff>:/icons/icons/CDFPlot.svg</iconset>
   </property>
   <property name="toolTipDuration">
    <number>2</number>
   </property>
+  <property name="styleSheet">
+   <string notr="true">selection-color: rgb(139, 218, 249);
+background-color: rgb(230, 230, 230);
+border-color: rgb(93, 87, 107);</string>
+  </property>
   <widget class="QWidget" name="centralwidget">
+   <property name="styleSheet">
+    <string notr="true">selection-color: rgb(139, 218, 249);
+background-color: rgb(230, 230, 230);
+border-color: rgb(93, 87, 107);</string>
+   </property>
    <layout class="QGridLayout" name="gridLayout">
     <item row="0" column="0">
      <widget class="QTabWidget" name="tabWidget">
       <property name="autoFillBackground">
-       <bool>true</bool>
+       <bool>false</bool>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">selection-color: rgb(139, 218, 249);
+background-color: rgb(230, 230, 230);
+border-color: rgb(93, 87, 107);</string>
       </property>
       <property name="currentIndex">
        <number>0</number>
       </property>
       <widget class="QWidget" name="tabFixedDist">
        <property name="autoFillBackground">
-        <bool>true</bool>
+        <bool>false</bool>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">selection-color: rgb(139, 218, 249);
+background-color: rgb(230, 230, 230);
+border-color: rgb(93, 87, 107);</string>
        </property>
        <attribute name="title">
         <string>Fixed Distribution</string>
@@ -43,14 +63,7 @@
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
           </property>
-          <widget class="QWidget" name="">
-           <layout class="QVBoxLayout" name="verticalLayout_3">
-            <item>
-             <widget class="QWidget" name="widgetFDTables" native="true"/>
-            </item>
-           </layout>
-          </widget>
-          <widget class="QWidget" name="">
+          <widget class="QWidget" name="layoutWidget">
            <layout class="QHBoxLayout" name="horizontalLayout">
             <property name="topMargin">
              <number>6</number>
@@ -61,6 +74,9 @@
             <property name="bottomMargin">
              <number>6</number>
             </property>
+            <item>
+             <layout class="QVBoxLayout" name="verticalLayoutFD"/>
+            </item>
             <item>
              <widget class="Line" name="lineSplitterFixedDistr">
               <property name="orientation">
@@ -77,7 +93,7 @@
                </size>
               </property>
               <property name="autoFillBackground">
-               <bool>true</bool>
+               <bool>false</bool>
               </property>
              </widget>
             </item>
@@ -88,11 +104,21 @@
        </layout>
       </widget>
       <widget class="QWidget" name="tabSetDist">
+       <property name="styleSheet">
+        <string notr="true">selection-color: rgb(139, 218, 249);
+background-color: rgb(230, 230, 230);
+border-color: rgb(93, 87, 107);</string>
+       </property>
        <attribute name="title">
         <string>Set Distribution</string>
        </attribute>
       </widget>
       <widget class="QWidget" name="tabProbit">
+       <property name="styleSheet">
+        <string notr="true">selection-color: rgb(139, 218, 249);
+background-color: rgb(230, 230, 230);
+border-color: rgb(93, 87, 107);</string>
+       </property>
        <attribute name="title">
         <string>Probit Plot</string>
        </attribute>
@@ -164,7 +190,9 @@
    <container>1</container>
   </customwidget>
  </customwidgets>
- <resources/>
+ <resources>
+  <include location="qdesignResource.qrc"/>
+ </resources>
  <connections>
   <connection>
    <sender>actionExit</sender>

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file '_qtdesigner\tribDesignFDTables.ui'
+# Form implementation generated from reading ui file '_qtdesigner\qdesignFDTables.ui'
 #
 # Created by: PyQt5 UI code generator 5.8.1
 #
@@ -185,4 +185,4 @@ class Ui_Form(object):
         self.distributionValuesGroup.setTitle(_translate("Form", "Distribution Values"))
 
 from pyqt5x.XTableWidget import XParameterTableWidget
-import tribDesignResource_rc
+import qdesignResource_rc

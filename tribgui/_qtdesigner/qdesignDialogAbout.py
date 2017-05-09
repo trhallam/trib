@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file '_qtdesigner\tribDesignDialogAbout.ui'
+# Form implementation generated from reading ui file '_qtdesigner\qdesignDialogAbout.ui'
 #
 # Created by: PyQt5 UI code generator 5.8.1
 #
@@ -159,4 +159,4 @@ class Ui_dialogAbout(object):
         self.pushButtonLIn.setToolTip(_translate("dialogAbout", "Linked-In: https://www.linkedin.com/in/antonyhallam/"))
         self.pushButton.setText(_translate("dialogAbout", "OK"))
 
-import tribDesignResource_rc
+import qdesignResource_rc

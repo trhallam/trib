@@ -26,7 +26,7 @@
    <string>Trib- About</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="tribDesignResource.qrc">
+   <iconset resource="qdesignResource.qrc">
     <normaloff>:/icons/icons/CDFPlot.svg</normaloff>:/icons/icons/CDFPlot.svg</iconset>
   </property>
   <layout class="QGridLayout" name="gridLayout">
@@ -78,7 +78,7 @@
           <string/>
          </property>
          <property name="pixmap">
-          <pixmap resource="tribDesignResource.qrc">:/icons/icons/CDFPlotLarge.png</pixmap>
+          <pixmap resource="qdesignResource.qrc">:/icons/icons/CDFPlotLarge.png</pixmap>
          </property>
          <property name="scaledContents">
           <bool>true</bool>
@@ -229,7 +229,7 @@
           <string/>
          </property>
          <property name="icon">
-          <iconset resource="tribDesignResource.qrc">
+          <iconset resource="qdesignResource.qrc">
            <normaloff>:/icons/icons/GitHub-Mark-32px.png</normaloff>:/icons/icons/GitHub-Mark-32px.png</iconset>
          </property>
          <property name="iconSize">
@@ -276,7 +276,7 @@
           <string/>
          </property>
          <property name="icon">
-          <iconset resource="tribDesignResource.qrc">
+          <iconset resource="qdesignResource.qrc">
            <normaloff>:/icons/icons/In-Black-48px-R.png</normaloff>:/icons/icons/In-Black-48px-R.png</iconset>
          </property>
          <property name="iconSize">
@@ -365,7 +365,7 @@
   </layout>
  </widget>
  <resources>
-  <include location="tribDesignResource.qrc"/>
+  <include location="qdesignResource.qrc"/>
  </resources>
  <connections>
   <connection>
