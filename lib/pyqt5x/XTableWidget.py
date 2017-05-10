@@ -18,6 +18,8 @@ class XParameterTableWidget(QtWidgets.QTableWidget):
     def addrow(self):
         n = self.rowCount()
         self.setRowCount(n+1)
+        for col in range(0,self.columnCount()):
+            self.setItem(n, col, QtWidgets.QTableWidgetItem(''))
 
     # not current working
     def addcol(self, name=None):
