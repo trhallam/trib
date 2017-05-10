@@ -19,7 +19,8 @@ outtype = '.py'
 
 uiFiles = ['qdesignMainWindow',        # main window
             'qdesignDialogAbout',      # about dialog window
-            'qdesignFDTables'          # main window2
+            'qdesignFDTables',         # Fixed Distribution Tables Widget
+            'qdesignFDChart'           # Fixed Distribution Chart Widget
            ]
 
 rcmaker = 'pyrcc5'

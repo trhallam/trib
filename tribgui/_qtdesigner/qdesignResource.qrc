@@ -1,8 +1,16 @@
 <RCC>
   <qresource prefix="icons">
+    <file>icons/Icons8_64px.png</file>
     <file>icons/CDFPlotLarge.png</file>
     <file>icons/In-Black-48px-R.png</file>
     <file>icons/CDFPlot.svg</file>
     <file>icons/GitHub-Mark-32px.png</file>
+  </qresource>
+  <qresource prefix="charticons">
+    <file>icons/Settings_48px.png</file>
+    <file>icons/CSV_48px.png</file>
+    <file>icons/Expand_48px.png</file>
+    <file>icons/PNG_48px.png</file>
+    <file>icons/Zoom In_48px.png</file>
   </qresource>
 </RCC>

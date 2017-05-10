@@ -11,6 +11,7 @@ from PyQt5.QtCore import pyqtSlot
 
 from tribgui._qtdesigner import qdesignMainWindow, qdesignDialogAbout
 from widgetFDTable import widgetFDTable
+from widgetFDChart import widgetFDChart
 
 import webbrowser
 
@@ -27,6 +28,7 @@ class aboutDialog(QtWidgets.QDialog, qdesignDialogAbout.Ui_dialogAbout):
 
         self.pushButtonGitHub.clicked.connect(self.onIconClick)
         self.pushButtonLIn.clicked.connect(self.onIconClick)
+        self.pushButtonIcon8.clicked.connect(self.onIconClick)
 
     @pyqtSlot()
     def onIconClick(self):
@@ -53,6 +55,9 @@ class mainApp(QtWidgets.QMainWindow, qdesignMainWindow.Ui_MainWindow):
 
         self.w1 = widgetFDTable()
         self.verticalLayoutFD.addWidget(self.w1)
+
+        self.c1 = widgetFDChart()
+        self.gridLayoutFDChart.addWidget(self.c1)
 
     def _onActionAbout(self):
         self.aboutDialog.show()

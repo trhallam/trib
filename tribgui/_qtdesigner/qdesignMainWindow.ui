@@ -58,7 +58,7 @@ border-color: rgb(93, 87, 107);</string>
         <string>Fixed Distribution</string>
        </attribute>
        <layout class="QGridLayout" name="gridLayout_2">
-        <item row="0" column="0">
+        <item row="0" column="1">
          <widget class="QSplitter" name="splitter">
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
@@ -85,17 +85,7 @@ border-color: rgb(93, 87, 107);</string>
              </widget>
             </item>
             <item>
-             <widget class="QWebEngineView" name="widgetWebChart" native="true">
-              <property name="minimumSize">
-               <size>
-                <width>600</width>
-                <height>0</height>
-               </size>
-              </property>
-              <property name="autoFillBackground">
-               <bool>false</bool>
-              </property>
-             </widget>
+             <layout class="QGridLayout" name="gridLayoutFDChart"/>
             </item>
            </layout>
           </widget>
@@ -182,14 +172,6 @@ border-color: rgb(93, 87, 107);</string>
    </property>
   </action>
  </widget>
- <customwidgets>
-  <customwidget>
-   <class>QWebEngineView</class>
-   <extends>QWidget</extends>
-   <header>qwebengineview.h</header>
-   <container>1</container>
-  </customwidget>
- </customwidgets>
  <resources>
   <include location="qdesignResource.qrc"/>
  </resources>

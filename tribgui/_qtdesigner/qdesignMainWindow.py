@@ -57,12 +57,10 @@ class Ui_MainWindow(object):
         self.lineSplitterFixedDistr.setFrameShadow(QtWidgets.QFrame.Sunken)
         self.lineSplitterFixedDistr.setObjectName("lineSplitterFixedDistr")
         self.horizontalLayout.addWidget(self.lineSplitterFixedDistr)
-        self.widgetWebChart = QtWebEngineWidgets.QWebEngineView(self.layoutWidget)
-        self.widgetWebChart.setMinimumSize(QtCore.QSize(600, 0))
-        self.widgetWebChart.setAutoFillBackground(False)
-        self.widgetWebChart.setObjectName("widgetWebChart")
-        self.horizontalLayout.addWidget(self.widgetWebChart)
-        self.gridLayout_2.addWidget(self.splitter, 0, 0, 1, 1)
+        self.gridLayoutFDChart = QtWidgets.QGridLayout()
+        self.gridLayoutFDChart.setObjectName("gridLayoutFDChart")
+        self.horizontalLayout.addLayout(self.gridLayoutFDChart)
+        self.gridLayout_2.addWidget(self.splitter, 0, 1, 1, 1)
         self.tabWidget.addTab(self.tabFixedDist, "")
         self.tabSetDist = QtWidgets.QWidget()
         self.tabSetDist.setStyleSheet("selection-color: rgb(139, 218, 249);\n"
@@ -127,5 +125,4 @@ class Ui_MainWindow(object):
         self.actionHelp.setText(_translate("MainWindow", "Help"))
         self.actionSettings.setText(_translate("MainWindow", "Settings"))
 
-from PyQt5 import QtWebEngineWidgets
 import qdesignResource_rc
