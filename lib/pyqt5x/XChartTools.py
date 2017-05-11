@@ -8,8 +8,9 @@ from PyQt5.QtChart import (
     QBarSeries, QBarSet, QBarCategoryAxis, QHorizontalBarSeries,
     QBoxPlotSeries, QBoxSet,
     QCandlestickSeries, QCandlestickSet,
-    QLineSeries)
+    QScatterSeries, QLineSeries)
 
+from itertools import zip_longest
 
 # build a bar chart from a dictionary of values
 
@@ -47,19 +48,42 @@ def XDictSet(data_dict, chart_type='bar', key_order=None):
     return series
 
 
-def XLineSeries(data_dict, key_order=None):
+def XLineSeries(data_dict, key_order=None, xkey = None, openGL=False):
     if key_order == None:
         key_order = data_dict.keys()
 
     series = []
-    for key in key_order:
-        set = QLineSeries();
-        set.setName(key)
-        for i, item in enumerate(data_dict[key]):
-            set.append(i + 1, item)
+    if xkey == None:
+        xkey = list(key_order)[0]
+    for key in key_order-xkey:
+        set = QLineSeries(); set.setName(key)
+        if openGL:
+            set.setUseOpenGL(True)        
+        for i, (itemx, itemy) in enumerate(zip_longest(data_dict[xkey],data_dict[key])):
+            set.append(itemx, itemy)
+
         series.append(set)
     return series
 
+def XScatterSeries(data_dict, key_order = None, xkey = None, openGL=False):
+    '''
+    the first dict in the key_order will be used as the x-axis
+    '''
+    if key_order==None:
+        key_order = data_dict.keys()
+
+    series = []
+    if xkey == None:
+        xkey = list(key_order)[0]
+    for key in key_order-xkey:
+        set = QScatterSeries(); set.setName(key)
+        if openGL:
+            set.setUseOpenGL(True)        
+        for i, (itemx, itemy) in enumerate(zip_longest(data_dict[xkey],data_dict[key])):
+            set.append(itemx, itemy)
+
+        series.append(set)
+    return series
 
 def main():
     import sys
