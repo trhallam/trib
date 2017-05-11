@@ -82,9 +82,17 @@ class XChartProbit(QChart):
             self.setAxes(line)
             self.legend().markers(line)[0].setVisible(False)
             
+    def _removeHorizontalGridLine(self):
+        for ser in self.hgridseries:
+            self.removeSeries(ser)
+            
+    def _removeVerticalGridLine(self):
+        for ser in self.vgridseries:
+            self.removeSeries(ser)
+            
     def _logrange(self, min, max, base=10):
         if min <= 0:
-            min += max/(base**5)
+            min += max/(base**10)
         y = 1; bpow = base
         if min < base:
             while min < bpow:
@@ -93,7 +101,7 @@ class XChartProbit(QChart):
             while min > bpow:
                 y += 1; bpow = pow(base,y)
         out = array([])
-        while bpow < max:
+        while bpow < max*base:
             y += 1; bpown = pow(base,y)
             out = append(out, arange(bpow,bpown,bpow))
             bpow = bpown
@@ -103,7 +111,7 @@ class XChartProbit(QChart):
         out = append(out, arange(bpow,bpown,bpow))
         
         
-        print(out)
+        #print(out)
         return out
         
 def main():
@@ -113,19 +121,30 @@ def main():
     from PyQt5.QtGui import QPainter
     from PyQt5.QtWidgets import QApplication, QMainWindow    
     
-    from scipy import rand
-    from scipy.stats import norm
-    from numpy import log10
+    from scipy.stats import norm, lognorm, percentileofscore
+    from numpy import log10, random
     
     app = QApplication(sys.argv)
 
+    rand = random.lognormal(size=50,mean=6,sigma=1.5)
+    randn = random.normal(size=50,loc=4,scale=5)
+    srand = rand.copy()
+    srandn = randn.copy()
+    srand.sort()    
+    srandn.sort()
     data = dict();
-    data["X"] = norm.ppf([rand() for i in range(0,50)])
-    data["Rand"] = log10([100*rand() for i in range(0,50)])
+    datan = dict();
+    data["X"] = norm.ppf([percentileofscore(srand,srand[i])/100 for i in range(0,50)])
+    datan["X"] = norm.ppf([percentileofscore(srandn,srandn[i])/100 for i in range(0,50)])    
+    data["Rand"] = log10(srand)
+    datan["Rand"] = log10(srandn)
 
-    # print(data)
+    ymin = min(data['Rand'].min(),datan['Rand'].min())
+    ymax = max(data['Rand'].max(),datan['Rand'].max())
+    print(ymin,ymax)
     
     series=XScatterSeries(data, xkey="X", openGL=True)
+    seriesn=XScatterSeries(datan, xkey="X", openGL=True)
     
     chart = XChartProbit()
     chart.setAxesMinMax(-3,3,0,3)
@@ -133,11 +152,18 @@ def main():
     for i,set in enumerate(series):
         chart.addSeries(series[i])
         chart.setAxes(series[i])
+    for i,set in enumerate(series):
+        chart.addSeries(seriesn[i])
+        chart.setAxes(seriesn[i])
 
-    print(chart.axesMinMax())
+        
+    chart.axisY.setRange(ymin,ymax)
+    #print(chart.axesMinMax())
         
     chart.setTitle("Simple Scatter example")
     chart.setAnimationOptions(QChart.SeriesAnimations)
+    
+    #chart._removeHorizontalGridLine()
     
     chart.legend().setVisible(True)
     chart.legend().setAlignment(Qt.AlignBottom)
