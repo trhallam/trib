@@ -78,7 +78,7 @@ def XScatterSeries(data_dict, key_order = None, xkey = None, openGL=False):
     for key in key_order-xkey:
         set = QScatterSeries(); set.setName(key)
         if openGL:
-            set.setUseOpenGL(True)        
+            set.setUseOpenGL(True)
         for i, (itemx, itemy) in enumerate(zip_longest(data_dict[xkey],data_dict[key])):
             set.append(itemx, itemy)
 
