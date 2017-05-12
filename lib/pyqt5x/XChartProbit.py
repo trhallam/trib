@@ -238,6 +238,9 @@ class XChartViewProbit(QChartView):
         self.chart.addSeries(series[0])
         self.chart.setAxes(series[0])
         
+    def addLinearReg(self,series_name):
+        self.chart.addLinearReg(self.data[series_name]['X'],self.data[series_name][series_name])
+        
     
 
     
@@ -268,7 +271,7 @@ def main():
     window.resize(800, 600)
     window.show()
     
-    #chart.addLinearReg(data['X'],data['Log-Normal Rand'])
+    chartView.addLinearReg("Log-Normal Rand")
     
     sys.exit(app.exec_())
     
