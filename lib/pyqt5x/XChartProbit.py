@@ -13,9 +13,9 @@ from PyQt5.QtChart import (QChart, QValueAxis,
 from XChartTools import XLineSeries, XScatterSeries
         
 from itertools import zip_longest
-from scipy.stats import norm
+from scipy.stats import norm, linregress
 from numpy import arange, insert, log10, array, append, power
-import numpy as np
+
 
 class XChartProbit(QChart):
     def __init__(self, parent=None):
@@ -48,6 +48,18 @@ class XChartProbit(QChart):
         
         self.plotAreaChanged.connect(self.onPlotSizeChanged)
         #method needed for axes change to redraw grid lines
+        
+    def addLinearReg(self,x,y):
+        #adds a linear regression line for a data set x,y
+        slope, intercept, r_value, p_value, std_err = linregress(x,y)
+        xmin = norm.ppf(0.01); xmax = norm.ppf(0.99)
+        ymin = slope*xmin+intercept; ymax = slope*xmax+intercept
+        data = dict()
+        data['X'] = [xmin,xmax]; data['LinearReg'] = [ymin,ymax]
+        lines = XLineSeries(data, xkey='X',openGL=True)
+        
+        self.addSeries(lines[0])
+        self.setAxes(lines[0])
         
     def axesMinMax(self):
         # returns a length 4 list of the axes min and max values [x1,x2,y1,y2]
@@ -243,6 +255,8 @@ def main():
     window.show()
 #    chart.setAxesMinMax(-3,3,0,3)    
 #    chart._drawVerticalLabels()
+    
+    chart.addLinearReg(data['X'],data['Log-Normal Rand'])
     
     sys.exit(app.exec_())
     
