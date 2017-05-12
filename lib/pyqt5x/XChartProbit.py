@@ -6,14 +6,14 @@ This file contains functions which help build probit style charts using QtCharts
 
 from PyQt5.QtCore import Qt, pyqtSlot
 from PyQt5.QtGui import QColor
-from PyQt5.QtChart import (QChart, QValueAxis,
+from PyQt5.QtChart import (QChart, QValueAxis, QChartView,
         QScatterSeries, 
         QLineSeries)
 
 from XChartTools import XLineSeries, XScatterSeries
         
 from itertools import zip_longest
-from scipy.stats import norm, linregress
+from scipy.stats import norm, linregress, lognorm, percentileofscore
 from numpy import arange, insert, log10, array, append, power
 
 
@@ -197,11 +197,50 @@ class XChartProbit(QChart):
         
     @pyqtSlot()
     def onPlotSizeChanged(self):
-        #print('resize')
+        #reset position of labels
         self._drawHorizontalLabels()
         self._drawVerticalLabels()
-        #print(self.axesMinMax())
+
         
+class XChartViewProbit(QChartView):
+    """
+    Widget to Hangle the setup and input output related to a Probit Style Chart
+    
+    Has functionality for Log-Probit at the moment. Will extent to Normal Probit Soon.
+    """
+
+    def __init__(self, parent=None):
+        super(QChartView, self,).__init__(parent)
+        self.style = 'Log10'
+
+        self.chart = XChartProbit()   
+        self.setChart(self.chart)
+        self.chart.setAnimationOptions(QChart.SeriesAnimations)
+
+        self.chart.legend().setVisible(True)
+        self.chart.legend().setAlignment(Qt.AlignBottom)        
+        
+        self.data = {}
+        
+        
+    def addSeries(self,arr,name):
+        #takes a list/array arr
+        nsamp = len(arr)
+        y = array(arr).copy(); y.sort()
+        # add data to temport dictionary
+        tdict = dict(); 
+        if self.style == 'Log10':
+            tdict['X'] = norm.ppf([percentileofscore(y,y[i])/100.00001 for i in range(0,nsamp)])
+            tdict[name] = log10(y)
+            
+        self.data[name] = tdict
+        series = XScatterSeries(tdict, xkey='X', openGL=True)
+        self.chart.addSeries(series[0])
+        self.chart.setAxes(series[0])
+        
+    
+
+    
 def main():
     import sys
     from PyQt5.QtChart import QChart, QChartView, QLogValueAxis, QValueAxis
@@ -216,47 +255,20 @@ def main():
 
     rand = random.lognormal(size=50,mean=2,sigma=0.1); randn = random.normal(size=50,loc=10,scale=5)
     rand = rand.clip(min=1.1); randn = randn.clip(min=1.1)
-    #srand = rand.copy(); srandn = randn.copy()
-    rand.sort(); randn.sort();
-    data = dict(); datan = dict();
 
-    data["X"] = norm.ppf([percentileofscore(rand,rand[i])/100.00001 for i in range(0,50)])
-    datan["X"] = norm.ppf([percentileofscore(randn,randn[i])/100.00001 for i in range(0,50)])    
-    data["Log-Normal Rand"] = log10(rand); datan["Normal Rand"] = log10(randn)
+    chartView = XChartViewProbit()    
+    chartView.addSeries(rand,"Log-Normal Rand")
+    chartView.addSeries(randn,"Normal Rand")
     
-    series=XScatterSeries(data, xkey="X", openGL=True)
-    seriesn=XScatterSeries(datan, xkey="X", openGL=True)
+    #chartView.chart.addLinearReg()
     
-    chart = XChartProbit()
-    for i,set in enumerate(series):
-        chart.addSeries(series[i])
-        chart.setAxes(series[i])
-    for i,set in enumerate(seriesn):
-        chart.addSeries(seriesn[i])
-        chart.setAxes(seriesn[i])
-
-        
-#    chart.axisY.setRange(ymin,ymax)
-    #print(chart.axesMinMax())
-        
-
-    chart.setAnimationOptions(QChart.SeriesAnimations)
-    
-    #c  hart._removeHorizontalGridLine()
-    
-    chart.legend().setVisible(True)
-    chart.legend().setAlignment(Qt.AlignBottom)
-
-    chartView = QChartView(chart)
     chartView.setRenderHint(QPainter.Antialiasing)
     window = QMainWindow()
     window.setCentralWidget(chartView)
     window.resize(800, 600)
     window.show()
-#    chart.setAxesMinMax(-3,3,0,3)    
-#    chart._drawVerticalLabels()
     
-    chart.addLinearReg(data['X'],data['Log-Normal Rand'])
+    #chart.addLinearReg(data['X'],data['Log-Normal Rand'])
     
     sys.exit(app.exec_())
     
