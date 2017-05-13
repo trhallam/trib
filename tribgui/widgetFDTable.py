@@ -31,7 +31,7 @@ class widgetFDTable(QtWidgets.QWidget, qdesignFDTables.Ui_Form):
         # Populate Distribution Combobox
         self.comboBoxDist.clear()
         self.comboBoxDist.addItems(list(self.distrTypes.keys()))
-        self.activeDistr = self.comboBoxDist.currentText()
+        self.activeDistr = self.distrTypes[self.comboBoxDist.currentText()]
         self.comboBoxDist.currentIndexChanged.connect(self.onChangeDistribution)
 
         # Populate Fixed Distr Tab Table
@@ -83,39 +83,40 @@ class widgetFDTable(QtWidgets.QWidget, qdesignFDTables.Ui_Form):
             p.append(1 - float(key))
             f.append(float(self.fixedDistr[key]))
 
-        if self.activeDistr == 'Normal':
+        if self.activeDistr == 'norm':
             self.fixedDistrMu, self.fixedDistrStd = \
                 distr.invNormPpf(f[0], p[0], f[1], p[1])
-        elif self.activeDistr == 'Log-Normal':
+        elif self.activeDistr == 'lognorm':
             self.fixedDistrMu, self.fixedDistrStd, self.fixedDistrShp = \
                 distr.invLogNormPpf(f[0], p[0], f[1], p[1])
         # print(self.fixedDistrMu, self.fixedDistrStd)
 
-    def _calcFixedDistrRow(self, row):
-        kstats = {'mu':self.fixedDistrMu, 'std':self.fixedDistrStd, '':'', None:None}
-        if self.activeDistr == 'Normal':
-            kstats['mean'], kstats['var'], kstats['skew'], kstats['kurtosis'] = \
+        self.kstats = {'mu':self.fixedDistrMu, 'std':self.fixedDistrStd, '':'', None:None}
+        if self.activeDistr == 'norm':
+            self.kstats['mean'], self.kstats['var'], self.kstats['skew'], self.kstats['kurtosis'] = \
                 stats.norm.stats(loc=self.fixedDistrMu, scale=self.fixedDistrStd,moments='mvsk')
-        elif self.activeDistr == 'Log-Normal':
-            kstats['mean'], kstats['var'], kstats['skew'], kstats['kurtosis'] = \
+        elif self.activeDistr == 'lognorm':
+            self.kstats['mean'], self.kstats['var'], self.kstats['skew'], self.kstats['kurtosis'] = \
                 stats.lognorm.stats(self.fixedDistrShp, scale=exp(self.fixedDistrMu), moments='mvsk') #check inputs
-            kstats['shp'] = self.fixedDistrShp
+            self.kstats['shp'] = self.fixedDistrShp
         else:
-            kstats['mean'], kstats['var'], kstats['skew'], kstats['kurtosis'] = ['#N/A']*4
+            self.kstats['mean'], self.kstats['var'], self.kstats['skew'], self.kstats['kurtosis'] = ['#N/A']*4
+
+    def _calcFixedDistrRow(self, row):
 
         self.tableWidgetDistrValues.setCurrentCell(row, 0)
         var = self.tableWidgetDistrValues.currentItem().text()
 
-        if var in kstats:
-            val = kstats[var]
+        if var in self.kstats:
+            val = self.kstats[var]
 
         else:
             try:
                 pc = float(var)
                 if 0.0 < pc < 1.0:
-                    if self.activeDistr == 'Normal':
+                    if self.activeDistr == 'norm':
                         val = stats.norm.ppf(1 - pc, loc=self.fixedDistrMu, scale=self.fixedDistrStd)
-                    elif self.activeDistr == 'Log-Normal':
+                    elif self.activeDistr == 'lognorm':
                         val = stats.lognorm.ppf(1 - pc, self.fixedDistrShp, scale=exp(self.fixedDistrMu))
                     else:
                         raise ValueError
@@ -159,7 +160,7 @@ class widgetFDTable(QtWidgets.QWidget, qdesignFDTables.Ui_Form):
 
     @pyqtSlot()
     def onChangeDistribution(self):
-        self.activeDistr=self.comboBoxDist.currentText()
+        self.activeDistr=self.distrTypes[self.comboBoxDist.currentText()]
         self.onFixedDistrEdited()
 
     @pyqtSlot()

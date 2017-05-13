@@ -5,8 +5,9 @@ Antony Hallam
 2017-04-26
 '''
 
+import warnings
 import numpy as np
-from scipy.stats import norm, lognorm
+from scipy import stats
 from scipy.special import erfinv
 
 '''
@@ -102,3 +103,35 @@ def invLogNormPpf(f1, p1, f2, p2):
 
     return mu, std, shp
 
+
+def distrstats(type,**kwargs):
+    kstats = {
+            'mu'    : None, # mu
+            'std'   : None, # standard deviation
+            'mean'  : None, # mean of the distribution
+            'var'   : None, # variance
+            'shp'   : None} # shape factor for some scipy distributions
+
+    kstats.update(kwargs)
+
+    def blankreturn(kstats, type, input):
+        print("disrtstats: "+type+' '+input+" Unknown - blankreturn")
+        kstats.update({'mean':'#N/A', 'var':'#N/A', 'skew':'#N/A', 'kurtosis':'#N/A'})
+        return kstats
+
+    if type == 'norm':
+        try:
+            kstats['mean'], kstats['var'], kstats['skew'], kstats['kurtosis'] = \
+                stats.norm.stats(loc=kstats['mu'], scale=kstats['std'],moments='mvsk')
+        except (TypeError,AttributeError):
+            kstats = blankreturn(kstats, type, 'Value')
+    elif type == 'lognorm':
+        try:
+            kstats['mean'], kstats['var'], kstats['skew'], kstats['kurtosis'] = \
+                stats.lognorm.stats(kstats['shp'], scale=np.exp(kstats['mu']), moments='mvsk')
+        except (TypeError, AttributeError):
+            kstats = blankreturn(kstats, type, 'Value')
+    else:
+        kstats = blankreturn(kstats,type,'Distribution')
+
+    return kstats
