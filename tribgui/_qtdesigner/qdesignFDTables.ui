@@ -19,6 +19,9 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: rgb(250, 250, 250);</string>
+  </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="0">
     <widget class="QGroupBox" name="distributionDefBox">
@@ -40,6 +43,9 @@
        <weight>75</weight>
        <bold>true</bold>
       </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgb(250, 250, 250);</string>
      </property>
      <property name="title">
       <string>Distribution Definition</string>
@@ -344,7 +350,7 @@ font: 75 14pt &quot;Arial&quot;;</string>
       </font>
      </property>
      <property name="styleSheet">
-      <string notr="true"/>
+      <string notr="true">background-color: rgb(250, 250, 250);</string>
      </property>
      <property name="title">
       <string>Distribution Values</string>

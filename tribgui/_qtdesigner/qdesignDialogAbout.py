@@ -17,6 +17,7 @@ class Ui_dialogAbout(object):
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap(":/icons/icons/CDFPlot.svg"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         dialogAbout.setWindowIcon(icon)
+        dialogAbout.setStyleSheet("background-color: rgb(255, 255, 255);")
         self.gridLayout = QtWidgets.QGridLayout(dialogAbout)
         self.gridLayout.setObjectName("gridLayout")
         self.verticalLayout = QtWidgets.QVBoxLayout()

@@ -16,6 +16,8 @@ Local Variables
 # Calculate local sqrt of 2
 _sqrt2 = np.sqrt(2)
 
+def knowndistr():
+    return ['norm', 'lognorm']
 
 def invNormPpf(f1, p1, f2, p2):
     """Use two known points to calculate a normal continuous distribution.
@@ -104,34 +106,73 @@ def invLogNormPpf(f1, p1, f2, p2):
     return mu, std, shp
 
 
+def blankreturn(kstats, func, type, input):
+    # function if necessary values are not submitted, returns blanks to prevent crash
+    print(func+": "+type+' '+input+" Unknown - blankreturn")
+    kstats.update({'mean':'#N/A', 'var':'#N/A', 'skew':'#N/A', 'kurtosis':'#N/A'})
+    return kstats
+
+
+def invdistr(type,**kwargs):
+    """
+    invdistr - handler for all distribution types to simplify widgetFDTable mostly
+    :param type: string - type of distribution to calculate for from [norm, lognorm, 
+    :param kwargs: necessary inputs to calculate distribution, most distribution need two or more data points entered as
+                    probabilties p0= , p1= , p2= , p3= , ... with matching
+                    values       f0= , f1= , f2= , f3= , ...
+    :return: kstats a dictionary containing all the inverse distribution outputs
+    """
+    kstats = {               # fill a blank kstats to include values not submitted in **kwargs
+            'mu'    : None,  # mu
+            'std'   : None,  # standard deviation
+            'mean'  : None,  # mean of the distribution
+            'var'   : None,  # variance
+            'shp'   : None}  # shape factor for some scipy distributions
+
+    if type in knowndistr():
+        if type == 'norm':
+            try:
+                kstats['mu'], kstats['std'] = invNormPpf(kwargs['f0'], kwargs['p0'], kwargs['f1'], kwargs['p1'])
+            except NameError:
+                kstats = blankreturn(kstats, 'invdistr', type, 'Missing Value')
+        elif type == 'lognorm':
+            try:
+                kstats['mu'], kstats['std'], kstats['shp'] = invLogNormPpf(kwargs['f0'], kwargs['p0'],
+                                                                           kwargs['f1'], kwargs['p1'])
+            except NameError:
+                kstats = blankreturn(kstats, 'invdistr', type, 'Missing Value')
+    else:  # unknown distribution submitted
+        kstats = blankreturn(kstats,'invdistr', type,'Distribution')
+    return kstats
+
 def distrstats(type,**kwargs):
-    kstats = {
-            'mu'    : None, # mu
-            'std'   : None, # standard deviation
-            'mean'  : None, # mean of the distribution
-            'var'   : None, # variance
-            'shp'   : None} # shape factor for some scipy distributions
+    """
+    distrstats - handler for all distribution types to simplify widgetFDTable mostly
+    :param type: string - type of distribution to calculate for from [norm, lognorm, 
+    :param kwargs: necessary inputs to calculate statistics, mainly mu, std & shp but others where necessary
+    :return: kstats - dictionary of distribution statistics
+    """
+    kstats = {               # fill a blank kstats to include values not submitted in **kwargs
+            'mu'    : None,  # mu
+            'std'   : None,  # standard deviation
+            'mean'  : None,  # mean of the distribution
+            'var'   : None,  # variance
+            'shp'   : None}  # shape factor for some scipy distributions
+    kstats.update(kwargs)    # update kstats with inputs
 
-    kstats.update(kwargs)
-
-    def blankreturn(kstats, type, input):
-        print("disrtstats: "+type+' '+input+" Unknown - blankreturn")
-        kstats.update({'mean':'#N/A', 'var':'#N/A', 'skew':'#N/A', 'kurtosis':'#N/A'})
-        return kstats
-
-    if type == 'norm':
-        try:
-            kstats['mean'], kstats['var'], kstats['skew'], kstats['kurtosis'] = \
-                stats.norm.stats(loc=kstats['mu'], scale=kstats['std'],moments='mvsk')
-        except (TypeError,AttributeError):
-            kstats = blankreturn(kstats, type, 'Value')
-    elif type == 'lognorm':
-        try:
-            kstats['mean'], kstats['var'], kstats['skew'], kstats['kurtosis'] = \
-                stats.lognorm.stats(kstats['shp'], scale=np.exp(kstats['mu']), moments='mvsk')
-        except (TypeError, AttributeError):
-            kstats = blankreturn(kstats, type, 'Value')
-    else:
-        kstats = blankreturn(kstats,type,'Distribution')
-
+    if type in knowndistr():
+        if type == 'norm':  # normal distribution
+            try:
+                kstats['mean'], kstats['var'], kstats['skew'], kstats['kurtosis'] = \
+                    stats.norm.stats(loc=kstats['mu'], scale=kstats['std'],moments='mvsk')
+            except (TypeError,AttributeError):
+                kstats = blankreturn(kstats, 'distrstats', type, 'Value')
+        elif type == 'lognorm':  # lognormal distribution
+            try:
+                kstats['mean'], kstats['var'], kstats['skew'], kstats['kurtosis'] = \
+                    stats.lognorm.stats(kstats['shp'], scale=np.exp(kstats['mu']), moments='mvsk')
+            except (TypeError, AttributeError):
+                kstats = blankreturn(kstats, 'distrstats', type, 'Value')
+    else:  # unknown distribution submitted
+        kstats = blankreturn(kstats, 'distrstats', type,'Distribution')
     return kstats

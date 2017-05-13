@@ -78,29 +78,13 @@ class widgetFDTable(QtWidgets.QWidget, qdesignFDTables.Ui_Form):
         self.fixedDistr[self.lineEditProb2.text()] = self.lineEditValue2.text()
 
     def _calcFixedDistr(self):
-        p = []; f = []
-        for key in self.fixedDistr.keys():
-            p.append(1 - float(key))
-            f.append(float(self.fixedDistr[key]))
+        fdistpoints = dict()
+        for i, key in enumerate(self.fixedDistr.keys()):
+            fdistpoints['p'+str(i)] = 1 - float(key)
+            fdistpoints['f'+str(i)] = float(self.fixedDistr[key])
 
-        if self.activeDistr == 'norm':
-            self.fixedDistrMu, self.fixedDistrStd = \
-                distr.invNormPpf(f[0], p[0], f[1], p[1])
-        elif self.activeDistr == 'lognorm':
-            self.fixedDistrMu, self.fixedDistrStd, self.fixedDistrShp = \
-                distr.invLogNormPpf(f[0], p[0], f[1], p[1])
-        # print(self.fixedDistrMu, self.fixedDistrStd)
-
-        self.kstats = {'mu':self.fixedDistrMu, 'std':self.fixedDistrStd, '':'', None:None}
-        if self.activeDistr == 'norm':
-            self.kstats['mean'], self.kstats['var'], self.kstats['skew'], self.kstats['kurtosis'] = \
-                stats.norm.stats(loc=self.fixedDistrMu, scale=self.fixedDistrStd,moments='mvsk')
-        elif self.activeDistr == 'lognorm':
-            self.kstats['mean'], self.kstats['var'], self.kstats['skew'], self.kstats['kurtosis'] = \
-                stats.lognorm.stats(self.fixedDistrShp, scale=exp(self.fixedDistrMu), moments='mvsk') #check inputs
-            self.kstats['shp'] = self.fixedDistrShp
-        else:
-            self.kstats['mean'], self.kstats['var'], self.kstats['skew'], self.kstats['kurtosis'] = ['#N/A']*4
+        self.kstats = distr.invdistr(self.activeDistr, **fdistpoints)
+        self.kstats=distr.distrstats(self.activeDistr,**self.kstats)
 
     def _calcFixedDistrRow(self, row):
 
@@ -115,9 +99,9 @@ class widgetFDTable(QtWidgets.QWidget, qdesignFDTables.Ui_Form):
                 pc = float(var)
                 if 0.0 < pc < 1.0:
                     if self.activeDistr == 'norm':
-                        val = stats.norm.ppf(1 - pc, loc=self.fixedDistrMu, scale=self.fixedDistrStd)
+                        val = stats.norm.ppf(1 - pc, loc=self.kstats['mu'], scale=self.kstats['std'])
                     elif self.activeDistr == 'lognorm':
-                        val = stats.lognorm.ppf(1 - pc, self.fixedDistrShp, scale=exp(self.fixedDistrMu))
+                        val = stats.lognorm.ppf(1 - pc, self.kstats['shp'], scale=exp(self.kstats['mu']))
                     else:
                         raise ValueError
                 else:

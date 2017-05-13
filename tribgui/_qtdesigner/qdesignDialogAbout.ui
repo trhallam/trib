@@ -29,6 +29,9 @@
    <iconset resource="qdesignResource.qrc">
     <normaloff>:/icons/icons/CDFPlot.svg</normaloff>:/icons/icons/CDFPlot.svg</iconset>
   </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: rgb(255, 255, 255);</string>
+  </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="0">
     <layout class="QVBoxLayout" name="verticalLayout">
