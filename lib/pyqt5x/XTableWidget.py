@@ -88,7 +88,7 @@ class XParameterTableWidget(QtWidgets.QTableWidget):
         self.setRowCount(int_n)
 
     def stretchtable(self):
-        twidth = self.width()
+        twidth = self.width()-30
         try:
             for j, pc in enumerate(self.widthratio):
                 self.setColumnWidth(j, int((twidth)) * pc)
