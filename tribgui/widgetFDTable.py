@@ -7,7 +7,7 @@ make.py must be run in the tribgui module folder to update the gui interface.
 """
 
 from PyQt5 import QtGui, QtWidgets, QtCore
-from PyQt5.QtCore import pyqtSlot
+from PyQt5.QtCore import pyqtSlot, pyqtSignal
 
 from tribgui._qtdesigner import qdesignFDTables
 
@@ -20,6 +20,10 @@ Class to caputre the setup of the main window.
 
 
 class widgetFDTable(QtWidgets.QWidget, qdesignFDTables.Ui_Form):
+
+    # signals to communicate with other widgets through main window
+    actionDistrUpdated = pyqtSignal(list)
+
     def __init__(self, parent=None):
         super(widgetFDTable, self).__init__(parent)
         self.setupUi(self)
@@ -39,7 +43,6 @@ class widgetFDTable(QtWidgets.QWidget, qdesignFDTables.Ui_Form):
         self._getFixedDistrValues()
         self._calcFixedDistr()
 
-        #self.tableWidgetDistrValues.setSize(10,2)
         self.fixedDistrHeaders = ['Variable', 'Value']
         self.fixedDistrData = {}
         self.fixedDistrData[self.fixedDistrHeaders[0]]=['0.9', '0.5', '0.1', 'mean', 'std', 'P10']
@@ -48,7 +51,6 @@ class widgetFDTable(QtWidgets.QWidget, qdesignFDTables.Ui_Form):
         self.tableColRatio = 0.5
         self.tableWidgetDistrValues.setdata(self.basicOutputs)
         self._calcFixedDistrTable()
-        # self.tableWidgetDistrValues.stretchTable()
 
         # monitors for distribution input boxes
         self.comboBoxDist.currentIndexChanged.connect(self.onFixedDistrEdited)
@@ -64,9 +66,6 @@ class widgetFDTable(QtWidgets.QWidget, qdesignFDTables.Ui_Form):
 
         # monitors resizing of window
         # self.tableWidgetDistrValues.resizeEvent(self.onTableResize)
-
-        # print(dir(self.lineEditProb1))
-        # print(dir(self.lineEditProb1.textChanged))
 
         self.tableWidgetDistrValues.setCurrentCell(0, 0)
 
@@ -84,7 +83,8 @@ class widgetFDTable(QtWidgets.QWidget, qdesignFDTables.Ui_Form):
             fdistpoints['f'+str(i)] = float(self.fixedDistr[key])
 
         self.kstats = distr.invdistr(self.activeDistr, **fdistpoints)
-        self.kstats=distr.distrstats(self.activeDistr,**self.kstats)
+        self.kstats = distr.distrstats(self.activeDistr,**self.kstats)
+        self.actionDistrUpdated.emit([self.activeDistr, self.kstats])
 
     def _calcFixedDistrRow(self, row):
 
