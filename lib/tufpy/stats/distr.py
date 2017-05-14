@@ -16,8 +16,39 @@ Local Variables
 # Calculate local sqrt of 2
 _sqrt2 = np.sqrt(2)
 
+
 def knowndistr():
     return ['norm', 'lognorm']
+
+
+def _distrargs(type):
+    reqargs = {'norm'       : [],
+               'lognorm'    : ['shp']
+               }
+    return reqargs[type]
+
+def _distrkeys(type):
+    # define the keys required for each distribution
+    reqkeys = {'norm'       : ['loc', 'scale'],
+               'lognorm'    : ['scale']
+               }
+    return reqkeys[type]
+
+
+def _distrkeysync(type,dict,direction='chart'):
+    # define the key mappings for each distribution
+
+    if direction == 'chart':
+        if type == 'norm':
+            dict['loc'] = dict['mu']
+            dict['scale'] = dict['std']
+        elif type == 'lognorm':
+            dict['scale'] = np.exp(dict['mu'])
+    elif direction == 'trib':
+        pass
+    else:
+        pass
+    return dict
 
 def invNormPpf(f1, p1, f2, p2):
     """Use two known points to calculate a normal continuous distribution.
@@ -145,6 +176,7 @@ def invdistr(type,**kwargs):
         kstats = blankreturn(kstats,'invdistr', type,'Distribution')
     return kstats
 
+
 def distrstats(type,**kwargs):
     """
     distrstats - handler for all distribution types to simplify widgetFDTable mostly
@@ -176,3 +208,50 @@ def distrstats(type,**kwargs):
     else:  # unknown distribution submitted
         kstats = blankreturn(kstats, 'distrstats', type,'Distribution')
     return kstats
+
+
+def distrpdf(type, n, **kwargs):
+    """
+    distrpdf - handler for all distribution types to simplify widgetFDChart mostly
+    :param type: string - type of distribution to calculate for from [norm, lognorm,
+    :param n: the number of samples in the returned ppf function dictionary
+    :param kwargs: necessary inputs to calculate statistics, mainly mu, std & shp but others where necessary
+    :return: ppf - of distribution 'type'
+    """
+    kstats = {               # fill a blank kstats to include values not submitted in **kwargs
+            'mu'    : None,  # mu
+            'std'   : None,  # standard deviation
+            'mean'  : None,  # mean of the distribution
+            'var'   : None,  # variance
+            'shp'   : None}  # shape factor for some scipy distributions
+    kstats.update(kwargs)    # update kstats with inputs
+
+    pmin=0.01; pmax=0.99
+
+    data_dict = dict()
+    if type in knowndistr():
+        kstats = _distrkeysync(type,kstats)
+        try:
+            dargs = {kstats[key] for key in _distrargs(type)}
+        except TypeError:
+            dargs = ()
+        try:
+            dkwargs = {key: kstats[key] for key in _distrkeys(type)}
+        except TypeError:
+            dkwargs = ()
+
+        if type == 'norm':  # normal distribution
+            # calculate X space
+            xmin = stats.norm.ppf(pmin, **dkwargs)
+            xmax = stats.norm.ppf(pmax, **dkwargs)
+            data_dict['X'] = np.linspace(xmin, xmax, n)
+            # calculate distr
+            data_dict['Y'] = stats.norm.pdf(data_dict['X'], **dkwargs)
+        elif type == 'lognorm':  # lognormal distribution
+            # calculate X space
+            xmin = stats.lognorm.ppf(pmin, *dargs, **dkwargs)
+            xmax = stats.lognorm.ppf(pmax, *dargs, **dkwargs)
+            data_dict['X'] = np.linspace(xmin, xmax, n)
+            # calculate distr
+            data_dict['Y'] = stats.lognorm.pdf(data_dict['X'], *dargs, **dkwargs)
+    return data_dict

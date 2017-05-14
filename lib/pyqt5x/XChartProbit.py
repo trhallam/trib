@@ -6,9 +6,7 @@ This file contains functions which help build probit style charts using QtCharts
 
 from PyQt5.QtCore import Qt, pyqtSlot
 from PyQt5.QtGui import QColor
-from PyQt5.QtChart import (QChart, QValueAxis, QChartView,
-        QScatterSeries, 
-        QLineSeries)
+from PyQt5.QtChart import (QChart, QValueAxis, QChartView)
 
 from XChartTools import XLineSeries, XScatterSeries
         
