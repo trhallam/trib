@@ -63,6 +63,9 @@ class mainApp(QtWidgets.QMainWindow, qdesignMainWindow.Ui_MainWindow):
 
         self.w1.actionDistrUpdated.connect(self.c1.updateChart)
 
+        #chart displays on start
+        self.w1._calcFixedDistr()
+
 
     def _onActionAbout(self):
         self.aboutDialog.show()

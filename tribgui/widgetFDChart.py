@@ -46,7 +46,7 @@ class widgetFDChart(QtWidgets.QWidget, qdesignFDChart.Ui_Form):
         self.chart.setAxisX(self.chart.axisX, series)
         self.chart.setAxisY(self.chart.axisY, series)
 
-    def setAxesMinMax(self,x1,x2,y1,y2):
+    def setAxesMinMax(self, x1, x2, y1, y2):
         # sets the min max values in X and Y
         self.chart.axisX.setMin(x1); self.chart.axisX.setMax(x2)
         self.chart.axisY.setMin(y1); self.chart.axisY.setMax(y2)
