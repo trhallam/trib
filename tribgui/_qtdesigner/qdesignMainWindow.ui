@@ -180,6 +180,10 @@ background-color: rgb(250, 250, 250);</string>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionExit">
+   <property name="icon">
+    <iconset resource="qdesignResource.qrc">
+     <normaloff>:/menuicons/icons/Exit_64px.png</normaloff>:/menuicons/icons/Exit_64px.png</iconset>
+   </property>
    <property name="text">
     <string>Exit</string>
    </property>

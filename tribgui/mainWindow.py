@@ -13,8 +13,9 @@ from tribgui._qtdesigner import qdesignMainWindow, qdesignDialogAbout
 from widgetFDTable import widgetFDTable
 from widgetFDChart import widgetFDChart
 
-import webbrowser
+import json
 
+from os.path import expanduser, join
 
 '''
 Class to capture the setup of the About Dialog.
@@ -49,25 +50,83 @@ class mainApp(QtWidgets.QMainWindow, qdesignMainWindow.Ui_MainWindow):
         super(mainApp, self).__init__(parent)
         self.setupUi(self)
 
+        # global variables
+        self.userhome = join(expanduser("~"),'Documents')
+
         # Connect Menu Actions to Other Windows
+        # File
+        self.actionNew.triggered.connect(self._onActionNew)
+        self.actionOpen.triggered.connect(self._onActionOpen)
+        self.actionOpen_Recent.triggered.connect(self._onActionOpenRecent)
+        self.actionSave_Session.triggered.connect(self._onActionSaveSession)
+        self.actionSave_Session_As.triggered.connect(self._onActionSaveSessionAs)
+
+        # About
         self.actionAbout.triggered.connect(self._onActionAbout)
         self.aboutDialog = aboutDialog(self)
 
-        self.w1 = widgetFDTable()
-        self.verticalLayoutFD.addWidget(self.w1)
+        self.wFDTable = widgetFDTable()
+        self.verticalLayoutFD.addWidget(self.wFDTable)
 
 
-        self.c1 = widgetFDChart()
-        self.gridLayoutFDChart.addWidget(self.c1)
+        self.wFDChart = widgetFDChart()
+        self.gridLayoutFDChart.addWidget(self.wFDChart)
 
 
-        self.w1.actionDistrUpdated.connect(self.c1.updateChart)
+        #self.w1.actionDistrUpdated.connect(self.c1.updateChart)
 
         #chart displays on start
-        self.w1._calcFixedDistr()
+        #self.w1._calcFixedDistr()
 
+    def saveSession(self, file):
+        outputdict = dict()
+        settingsdict = dict()
+
+        outputdict['fdtableInput'] = self.wFDTable.fixedInputData
+        outputdict['fdtableOutput'] = self.wFDTable.fixedDistrData
+
+        with open(file, 'w') as fp:
+            json.dump(outputdict, fp, sort_keys=True, indent=4)
+            fp.close()
+
+    def openSession(self, file):
+
+        with open(file, 'r') as fp:
+            inputdict = json.load(fp)
+            fp.close
+
+        self.wFDTable.fixedInputData = inputdict['fdtableInput']
+        self.wFDTable.fixedDistrData = inputdict['fdtableOutput']
 
     def _onActionAbout(self):
         self.aboutDialog.show()
 
+    def _onActionNew(self):
+        pass
 
+
+    def _onActionOpen(self):
+        self.sessionfile = QtWidgets.QFileDialog.getOpenFileName(self,
+                caption='Open File', directory = self.userhome, filter='*.json')
+        try:
+            self.openSession(self.sessionfile[0])
+        except PermissionError:
+            pass
+
+    def _onActionOpenRecent(self):
+        '''
+        Will contian users X most recent sessions to Open
+        '''
+        pass
+
+    def _onActionSaveSession(self):
+        try:
+            if self.openFileName: #check session file is already open
+                pass #write something to save the session to the open file name
+        except:
+            self._onActionSaveSessionAs()
+
+    def _onActionSaveSessionAs(self):
+        self.sessionfile = QtWidgets.QFileDialog.getSaveFileName(self,
+                caption = 'Save Session As', directory = self.userhome, filter='*.json')
+        self.saveSession(*self.sessionfile[0])
