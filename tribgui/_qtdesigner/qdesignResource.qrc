@@ -6,6 +6,14 @@
     <file>icons/CDFPlot.svg</file>
     <file>icons/GitHub-Mark-32px.png</file>
   </qresource>
+  <qresource prefix="menuicons">
+    <file>icons/Settings_64px_grey.png</file>
+    <file>icons/Open Folder_64px.png</file>
+    <file>icons/Create New_64px.png</file>
+    <file>icons/Exit_64px.png</file>
+    <file>icons/Save as_64px.png</file>
+    <file>icons/Save_64px.png</file>
+  </qresource>
   <qresource prefix="charticons">
     <file>icons/Settings_48px.png</file>
     <file>icons/CSV_48px.png</file>
