@@ -21,8 +21,8 @@
    <number>2</number>
   </property>
   <property name="styleSheet">
-   <string notr="true">selection-color: rgb(139, 218, 249);
-background-color: rgb(250, 250, 250);
+   <string notr="true">background-color: rgb(250, 250, 250);
+selection-background-color: rgb(139, 218, 249);
 border-color: rgb(93, 87, 107);</string>
   </property>
   <widget class="QWidget" name="centralwidget">
@@ -126,13 +126,38 @@ background-color: rgb(250, 250, 250);</string>
      <x>0</x>
      <y>0</y>
      <width>941</width>
-     <height>21</height>
+     <height>22</height>
     </rect>
    </property>
+   <property name="font">
+    <font>
+     <family>HoloLens MDL2 Assets</family>
+     <pointsize>10</pointsize>
+     <weight>50</weight>
+     <bold>false</bold>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font: 10pt &quot;HoloLens MDL2 Assets&quot;;</string>
+   </property>
    <widget class="QMenu" name="menuFile">
+    <property name="font">
+     <font>
+      <family>HoloLens MDL2 Assets</family>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">font: 9pt &quot;HoloLens MDL2 Assets&quot;;</string>
+    </property>
     <property name="title">
      <string>File</string>
     </property>
+    <addaction name="separator"/>
+    <addaction name="actionNew"/>
+    <addaction name="actionOpen"/>
+    <addaction name="actionOpen_Recent"/>
+    <addaction name="actionSave_Session"/>
+    <addaction name="actionSave_Session_As"/>
     <addaction name="separator"/>
     <addaction name="actionExit"/>
    </widget>
@@ -158,20 +183,125 @@ background-color: rgb(250, 250, 250);</string>
    <property name="text">
     <string>Exit</string>
    </property>
+   <property name="font">
+    <font>
+     <family>HoloLens MDL2 Assets</family>
+     <pointsize>9</pointsize>
+    </font>
+   </property>
   </action>
   <action name="actionAbout">
    <property name="text">
     <string>About</string>
+   </property>
+   <property name="font">
+    <font>
+     <family>HoloLens MDL2 Assets</family>
+     <pointsize>9</pointsize>
+    </font>
    </property>
   </action>
   <action name="actionHelp">
    <property name="text">
     <string>Help</string>
    </property>
+   <property name="font">
+    <font>
+     <family>HoloLens MDL2 Assets</family>
+     <pointsize>9</pointsize>
+    </font>
+   </property>
   </action>
   <action name="actionSettings">
+   <property name="icon">
+    <iconset resource="qdesignResource.qrc">
+     <normaloff>:/menuicons/icons/Settings_64px_grey.png</normaloff>:/menuicons/icons/Settings_64px_grey.png</iconset>
+   </property>
    <property name="text">
     <string>Settings</string>
+   </property>
+   <property name="font">
+    <font>
+     <family>HoloLens MDL2 Assets</family>
+     <pointsize>9</pointsize>
+     <weight>50</weight>
+     <bold>false</bold>
+    </font>
+   </property>
+  </action>
+  <action name="actionSave_Session">
+   <property name="icon">
+    <iconset resource="qdesignResource.qrc">
+     <normaloff>:/menuicons/icons/Save_64px.png</normaloff>:/menuicons/icons/Save_64px.png</iconset>
+   </property>
+   <property name="text">
+    <string>Save Session</string>
+   </property>
+   <property name="font">
+    <font>
+     <family>HoloLens MDL2 Assets</family>
+     <pointsize>9</pointsize>
+    </font>
+   </property>
+  </action>
+  <action name="actionSave_Session_As">
+   <property name="icon">
+    <iconset resource="qdesignResource.qrc">
+     <normaloff>:/menuicons/icons/Save as_64px.png</normaloff>:/menuicons/icons/Save as_64px.png</iconset>
+   </property>
+   <property name="text">
+    <string>Save Session As</string>
+   </property>
+   <property name="font">
+    <font>
+     <family>HoloLens MDL2 Assets</family>
+     <pointsize>9</pointsize>
+    </font>
+   </property>
+  </action>
+  <action name="actionNew">
+   <property name="icon">
+    <iconset resource="qdesignResource.qrc">
+     <normaloff>:/menuicons/icons/Create New_64px.png</normaloff>:/menuicons/icons/Create New_64px.png</iconset>
+   </property>
+   <property name="text">
+    <string>New</string>
+   </property>
+   <property name="font">
+    <font>
+     <family>HoloLens MDL2 Assets</family>
+     <pointsize>9</pointsize>
+    </font>
+   </property>
+  </action>
+  <action name="actionOpen">
+   <property name="icon">
+    <iconset resource="qdesignResource.qrc">
+     <normaloff>:/menuicons/icons/Open Folder_64px.png</normaloff>:/menuicons/icons/Open Folder_64px.png</iconset>
+   </property>
+   <property name="text">
+    <string>Open</string>
+   </property>
+   <property name="font">
+    <font>
+     <family>HoloLens MDL2 Assets</family>
+     <pointsize>9</pointsize>
+    </font>
+   </property>
+  </action>
+  <action name="actionOpen_Recent">
+   <property name="icon">
+    <iconset resource="qdesignResource.qrc">
+     <normaloff>:/menuicons/icons/Open Folder_64px.png</normaloff>:/menuicons/icons/Open Folder_64px.png</iconset>
+   </property>
+   <property name="text">
+    <string>Open Recent</string>
+   </property>
+   <property name="font">
+    <font>
+     <family>HoloLens MDL2 Assets</family>
+     <pointsize>9</pointsize>
+    </font>
    </property>
   </action>
  </widget>
