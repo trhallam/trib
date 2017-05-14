@@ -11,8 +11,6 @@ from PyQt5.QtCore import pyqtSlot, pyqtSignal
 
 from tribgui._qtdesigner import qdesignFDTables
 
-from tufpy.stats import distr
-from scipy import stats, exp
 
 '''
 Class to caputre the setup of the main window.
@@ -22,7 +20,7 @@ Class to caputre the setup of the main window.
 class widgetFDTable(QtWidgets.QWidget, qdesignFDTables.Ui_Form):
 
     # signals to communicate with other widgets through main window
-    actionDistrUpdated = pyqtSignal(list)
+    #actionDistrUpdated = pyqtSignal(list)
 
     def __init__(self, parent=None):
         super(widgetFDTable, self).__init__(parent)
@@ -36,12 +34,20 @@ class widgetFDTable(QtWidgets.QWidget, qdesignFDTables.Ui_Form):
         self.comboBoxDist.clear()
         self.comboBoxDist.addItems(list(self.distrTypes.keys()))
         self.activeDistr = self.distrTypes[self.comboBoxDist.currentText()]
-        self.comboBoxDist.currentIndexChanged.connect(self.onChangeDistribution)
+#        self.comboBoxDist.currentIndexChanged.connect(self.onChangeDistribution)
+
+        # Populate Fixed Distr Input Table
+        self.fixedInputHeaders = ['Input', 'Value']
+        self.fixedInputData = {}
+        self.fixedInputData[self.fixedInputHeaders[0]] = ['P90', 'P10']
+        self.fixedInputData[self.fixedInputHeaders[1]] = ['1', '3']
+        self.basicInputs = self.fixedInputData
+        self.tableWidgetDistrInputs.setdata(self.basicInputs)
 
         # Populate Fixed Distr Tab Table
 
-        self._getFixedDistrValues()
-        self._calcFixedDistr()
+#        self._getFixedDistrValues()
+#        self._calcFixedDistr()
 
         self.fixedDistrHeaders = ['Variable', 'Value']
         self.fixedDistrData = {}
@@ -50,18 +56,14 @@ class widgetFDTable(QtWidgets.QWidget, qdesignFDTables.Ui_Form):
         self.basicOutputs = self.fixedDistrData
         self.tableColRatio = 0.5
         self.tableWidgetDistrValues.setdata(self.basicOutputs)
-        self._calcFixedDistrTable()
+#        self._calcFixedDistrTable()
 
         # monitors for distribution input boxes
-        self.comboBoxDist.currentIndexChanged.connect(self.onFixedDistrEdited)
-        self.lineEditProb1.textChanged.connect(self.onFixedDistrEdited)
-        self.lineEditProb2.textChanged.connect(self.onFixedDistrEdited)
-        self.lineEditValue1.textChanged.connect(self.onFixedDistrEdited)
-        self.lineEditValue2.textChanged.connect(self.onFixedDistrEdited)
+#        self.comboBoxDist.currentIndexChanged.connect(self.onFixedDistrEdited)
 
         # monitors for changes to output table
 
-        self.tableWidgetDistrValues.itemChanged.connect(self.onTableEdited) #moved to _calcDistrRow
+#        self.tableWidgetDistrValues.itemChanged.connect(self.onTableEdited) #moved to _calcDistrRow
 
 
         # monitors resizing of window
@@ -71,10 +73,11 @@ class widgetFDTable(QtWidgets.QWidget, qdesignFDTables.Ui_Form):
 
     # functions for Fixed Distribution Tab
 
+'''
     def _getFixedDistrValues(self):
         self.fixedDistr = {}
-        self.fixedDistr[self.lineEditProb1.text()] = self.lineEditValue1.text()
-        self.fixedDistr[self.lineEditProb2.text()] = self.lineEditValue2.text()
+#        self.fixedDistr[self.lineEditProb1.text()] = self.lineEditValue1.text()
+#        self.fixedDistr[self.lineEditProb2.text()] = self.lineEditValue2.text()
 
     def _calcFixedDistr(self):
         fdistpoints = dict()
@@ -169,12 +172,19 @@ class widgetFDTable(QtWidgets.QWidget, qdesignFDTables.Ui_Form):
         data=self.tableWidgetDistrValues.returndata()
 
         self.tableWidgetDistrValues.setCurrentCell(inrow, incol)
+'''
 
-    #pyqt redefinitions
+def main():
+    import sys
+    from PyQt5.QtWidgets import QApplication, QMainWindow
 
+    app = QApplication(sys.argv)
+    # chartView.chart.addLinearReg()
+    fdtable = widgetFDTable()
+    window = QMainWindow()
+    window.setCentralWidget(fdtable)
+    window.show()
+    sys.exit(app.exec_())
 
-
-    #   def _getTableWidgetDistrValuesData(self):
-    #      horHeaders = self.tableWidgetDistrValues.takeHorizontalHeaderItem(1)
-    #      print(horHeaders)
-
+if __name__ == "__main__":
+    main()
