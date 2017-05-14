@@ -238,19 +238,14 @@ class XChartViewProbit(QChartView):
         
     def addLinearReg(self,series_name):
         self.chart.addLinearReg(self.data[series_name]['X'],self.data[series_name][series_name])
-        
-    
 
-    
+        
 def main():
     import sys
-    from PyQt5.QtChart import QChart, QChartView, QLogValueAxis, QValueAxis
     from PyQt5.QtCore import Qt
     from PyQt5.QtGui import QPainter
-    from PyQt5.QtWidgets import QApplication, QMainWindow, QGraphicsTextItem   
-    
-    from scipy.stats import norm, lognorm, percentileofscore
-    from numpy import log10, random
+    from PyQt5.QtWidgets import QApplication, QMainWindow
+    from numpy import random
     
     app = QApplication(sys.argv)
 
