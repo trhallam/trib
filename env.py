@@ -36,3 +36,8 @@ libpath = os.path.abspath(os.path.join(os.path.dirname(inspect.getfile(inspect.c
 if libpath not in sys.path:
 	sys.path.insert(0, libpath)
 	
+#from tribgui.widgetIDTable import *
+from tribgui.widgetIDChart import *
+
+if __name__ == "__main__":
+    main()
