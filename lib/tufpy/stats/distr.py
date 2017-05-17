@@ -34,7 +34,12 @@ def _distrkeys(type):
                }
     return reqkeys[type]
 
-
+def _distrnames():
+    # returns a dictionary of all the names of the known distributions
+    return {'norm'          : 'Normal',
+            'lognorm'       : 'Log-Normal'
+            }
+    
 def _distrkeysync(type,dict,direction='chart'):
     # define the key mappings for each distribution
 
@@ -255,3 +260,29 @@ def distrpdf(type, n, **kwargs):
             # calculate distr
             data_dict['Y'] = stats.lognorm.pdf(data_dict['X'], *dargs, **dkwargs)
     return data_dict
+    
+def distrfit(type, a, **kwargs):
+    """
+    distrfit - handler for all distribution types to simplify widgetIDChart mostsly
+    :param type: string - type of distribution to calculate for from [norm, lognorm,
+    :param a: array of float values to fit the distribution of type to
+    :param kwargs: tbd
+    """
+    kstats = {               # fill a blank kstats to include values not submitted in **kwargs
+            'mu'    : None,  # mu
+            'std'   : None,  # standard deviation
+            'mean'  : None,  # mean of the distribution
+            'var'   : None,  # variance
+            'shp'   : None}  # shape factor for some scipy distributions
+
+    if type in knowndistr():
+        if type == 'norm':  # normal distribution
+            distrMLE = stats.norm.fit(a)
+            kstats['mu'] = distrMLE[0]; kstats['mean'] = distrMLE[0]
+            kstats['std'] = distrMLE[1]
+        elif type == 'lognorm':
+            distrMLE = stats.lognorm.fit(a,floc=0)
+            kstats['shp'] = distrMLE[0]; kstats['loc'] = distrMLE[1]
+            kstats['mu'] = np.log(distrMLE[2])
+    
+    return kstats

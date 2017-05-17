@@ -24,7 +24,6 @@ def XDictSet(data_dict, chart_type='bar', key_order=None):
 
         def dictloop(data, ko, QSeries, QSet):
             for key in ko:
-                print(key)
                 set = QSet(key)
                 for item in data[key]:
                     try:
