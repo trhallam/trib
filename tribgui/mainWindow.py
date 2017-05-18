@@ -65,14 +65,16 @@ class mainApp(QtWidgets.QMainWindow, qdesignMainWindow.Ui_MainWindow):
         self.actionAbout.triggered.connect(self._onActionAbout)
         self.aboutDialog = aboutDialog(self)
 
+        # Fixed Distribution Tab
+        # Fixed Distribution Tables
         self.wFDTable = widgetFDTable()
         self.verticalLayoutFD.addWidget(self.wFDTable)
 
-
+        # Fixed Distribution Chart
         self.wFDChart = widgetFDChart()
         self.gridLayoutFDChart.addWidget(self.wFDChart)
 
-
+        # Input Distribution Tab
         #self.w1.actionDistrUpdated.connect(self.c1.updateChart)
 
         #chart displays on start

@@ -8,7 +8,7 @@ from PyQt5.QtCore import Qt, pyqtSlot
 from PyQt5.QtGui import QColor
 from PyQt5.QtChart import (QChart, QValueAxis, QChartView)
 
-from XChartTools import XLineSeries, XScatterSeries
+from .XChartTools import XLineSeries, XScatterSeries
         
 from itertools import zip_longest
 from scipy.stats import norm, linregress, lognorm, percentileofscore
