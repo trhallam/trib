@@ -6,16 +6,17 @@ make.py must be run in the tribgui module folder to update the gui interface.
 
 """
 
-from PyQt5 import QtGui, QtWidgets
+import json
+from os.path import expanduser, join
+
+from PyQt5 import QtWidgets
 from PyQt5.QtCore import pyqtSlot
+from tribgui.widgets import (widgetFDChart, widgetIDChart,
+                            widgetIDTable, widgetFDTable)
 
 from tribgui._qtdesigner import qdesignMainWindow, qdesignDialogAbout
-from widgetFDTable import widgetFDTable
-from widgetFDChart import widgetFDChart
+from tribgui import widgets
 
-import json
-
-from os.path import expanduser, join
 
 '''
 Class to capture the setup of the About Dialog.
@@ -75,6 +76,19 @@ class mainApp(QtWidgets.QMainWindow, qdesignMainWindow.Ui_MainWindow):
         self.gridLayoutFDChart.addWidget(self.wFDChart)
 
         # Input Distribution Tab
+        # Input Distribution Table
+
+        self.wIDTable = widgetIDTable()
+
+        self.verticalLayoutIDLeft.addWidget(self.wIDTable)
+
+        # Histogram Widget
+        self.wIDChart = widgetIDChart()
+        self.gridLayoutHist.addWidget(self.wIDChart)
+
+        # Connect Widgets
+        self.wIDTable.actionInputUpdated.connect(self.wIDChart.receiveFromTable)
+        #self.wIDTable.onTableEdited()
         #self.w1.actionDistrUpdated.connect(self.c1.updateChart)
 
         #chart displays on start

@@ -207,6 +207,12 @@ class widgetIDChart(QtWidgets.QWidget, qdesignFDChart.Ui_Form):
         self.addHistogram(self.nbins)
         self.updateChart()
 
+    @pyqtSlot(dict)
+    def receiveFromTable(self, datadict):
+        self.setRawData(datadict['Value'])
+        self.addHistogram(self.nbins)
+        self.updateChart()
+
 def main():
     import sys
     from PyQt5.QtWidgets import QApplication, QMainWindow
