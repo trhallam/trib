@@ -54,7 +54,7 @@ class widgetIDProbit(QtWidgets.QWidget, qdesignFDChart.Ui_Form):
         self.comboBoxDistr.setMinimumSize(QtCore.QSize(100, 30))
         
         self.knowndistr = distr._distrnames()
-        self.comboBoxDistr.addItems(['None'] + [self.knowndistr[key] for key in self.knowndistr])
+        self.comboBoxDistr.addItems([self.knowndistr[key] for key in self.knowndistr])
         self.comboBoxDistr.setObjectName("comboBoxDistr")
         self.horizontalLayout.insertWidget(3,self.comboBoxDistr)
         self.comboBoxDistr.currentTextChanged.connect(self.onComboBoxDistrChanged)
@@ -67,6 +67,9 @@ class widgetIDProbit(QtWidgets.QWidget, qdesignFDChart.Ui_Form):
         self.verticalLayout.addWidget(self.chartview)
         self.chartview.setRenderHint(QPainter.Antialiasing)        
         
+        self.onComboBoxDistrChanged(self.activeDist)
+        
+        
     def updateChart(self):
         pass
              
@@ -78,7 +81,11 @@ class widgetIDProbit(QtWidgets.QWidget, qdesignFDChart.Ui_Form):
     @pyqtSlot(str)
     def onComboBoxDistrChanged(self, name):
         self.activeDist = str(self.distrfromname(name))
-        self.updateChart()
+        if self.activeDist == 'norm':
+            self.chart.setActiveScale('linear')
+        elif self.activeDist == 'lognorm':
+            self.chart.setActiveScale('log10')
+        self.chart.redrawChart()
 
 def main():
     import sys
@@ -94,6 +101,7 @@ def main():
     chartWid = widgetIDProbit()    
     chartWid.chart.loadSeries(rand,"Log-Normal Rand")
     chartWid.chart.loadSeries(randn,"Normal Rand")
+    chartWid.chart.redrawChart()
     
     #chartView.chart.addLinearReg()
     

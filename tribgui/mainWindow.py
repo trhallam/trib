@@ -77,7 +77,6 @@ class mainApp(QtWidgets.QMainWindow, qdesignMainWindow.Ui_MainWindow):
 
         # Input Distribution Tab
         # Input Distribution Table
-
         self.wIDTable = widgetIDTable()
 
         self.verticalLayoutIDLeft.addWidget(self.wIDTable)

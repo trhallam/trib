@@ -46,11 +46,6 @@ class XChartProbit(QChart):
         #define the default grid colour to grey
         self.setGridColor(110,110,110)
         
-        #draw the grid
-        self._drawVerticalGridLines()
-        self.setActiveScale()
-
-        
         self.plotAreaChanged.connect(self.onPlotSizeChanged)
         #method needed for axes change to redraw grid lines
         
@@ -85,7 +80,6 @@ class XChartProbit(QChart):
         series  = XScatterSeries(tdict, xkey='X', openGL=True)
         self.addSeries(series[0])
         self.setAxes(series[0])
-        self.resetAxes()
         
     def _replotData(self):
         for key in self.data.keys():
@@ -95,15 +89,45 @@ class XChartProbit(QChart):
         # returns a length 4 list of the axes min and max values [x1,x2,y1,y2]
         return [self.axisX.min(), self.axisX.max(), self.axisY.min(), self.axisY.max()]
         
-    def resetAxes(self):
-        ymin = 0; ymax = 1
-        for key in self.data.keys():
-            ymin = min(min(self.data[key]), ymin)
-            ymax = max(max(self.data[key]), ymax)
-        yscal = 0.1*(ymax-ymin)
-        xmin = distr.distrppf(self.activeProbit, 0.0001); xmax = distr.distrppf(self.activeProbit, 0.9999)
-        self.setAxesMinMax(xmin,xmax,ymin-yscal,ymax+yscal)
+    def redrawChart(self):
+        self.resetAxes()
+        self.removeAllSeries()
+        self._removeVerticalLabels()
+        self._drawVerticalGridLines()
+        if self.activeScale == 'log10':
+            self.axisY.setLabelsVisible(False)    
+            self.axisY.setTickCount(1)
+            self.setTitle("Log Probit Plot")   
+            self.axisY.setMinorGridLineVisible(False)
+            self.axisY.setGridLineVisible(False)
+            self._drawHorizontalGridLine()
+            self._drawHorizontalLabels()
+            self._drawVerticalLabels()
+        elif self.activeScale == 'linear':
+            self.axisY.setLabelsVisible(True)    
+            self.axisY.setTickCount(10)
+            self.setTitle("Probit Plot")               
+            self.axisY.setMinorGridLineVisible(True)
+            self.axisY.setGridLineVisible(True)
         
+        for serkey in self.data.keys():
+            self.plotSeries(serkey)
+            
+    def resetAxes(self):
+        ymins = []; ymaxs = []
+        for key in self.data.keys():
+            ymins.append(min(self.data[key]))
+            ymaxs.append(max(self.data[key]))
+        try:
+            ymin = min(ymins); ymax = max(ymaxs)
+        except ValueError:
+            ymin = 1.1; ymax = 2
+        yscal = 0.1*(ymax-ymin)
+        xmin = distr.distrppf(self.activeProbit, 0.001); xmax = distr.distrppf(self.activeProbit, 0.999)
+        if self.activeScale == 'linear':
+            self.setAxesMinMax(xmin,xmax,ymin-yscal,ymax+yscal)
+        elif self.activeScale == 'log10':
+            self.setAxesMinMax(xmin,xmax,log10(ymin-yscal/10),log10(ymax+yscal))
         
     def setGridColor(self,r,g,b):
         # sets the colour of the background grid
@@ -118,24 +142,8 @@ class XChartProbit(QChart):
                 self.activeProbit = 'norm'
                 self.activeScale = 'log10'
     
-    def setActiveScale(self):
-        self.resetAxes()
-        #self.removeAllSeries()
-        self._drawVerticalGridLines()
-        if self.activeScale == 'log10':
-            self.axisY.setLabelsVisible(False)    
-            self.axisY.setTickCount(1)
-            self.setTitle("Log Probit Plot")   
-            self.axisY.setMinorGridLineVisible(False)
-            self.axisY.setGridLineVisible(False)
-            self._drawHorizontalGridLine()
-        elif self.activeScale == 'linear':
-            self.axisY.setLabelsVisible(True)    
-            self.axisY.setTickCount(10)
-            self.setTitle("Probit Plot")               
-            self.axisY.setMinorGridLineVisible(True)
-            self.axisY.setGridLineVisible(True)          
-        
+    def setActiveScale(self,newscale):
+        self.activeScale = newscale
             
     def setAxes(self,series):
         # assigns a series to the chart default axes
@@ -186,15 +194,15 @@ class XChartProbit(QChart):
         pblx_lab = pblx-10
         # calculate the position on the chart in y plane with which to place each label.
         pbly = [pbly-int(pah*y) for y in vlaby[1:-1]]
-        try:
-            self.vlabels
-        except AttributeError:
-            self.vlabels=[]    
-            for i,labx in enumerate(pbly): #run through labels and create and position them
-                # label text based on P scale
-                ltext = str(self.hgridy[i]);
-                self.vlabels.append(self.scene().addText(ltext))            
-        
+        #try:
+        #    self.vlabels
+        #except AttributeError:
+        self.vlabels=[]    
+        for i,labx in enumerate(pbly): #run through labels and create and position them
+            # label text based on P scale
+            ltext = str(self.hgridy[i]);
+            self.vlabels.append(self.scene().addText(ltext))      
+                
         for i,laby in enumerate(pbly): #run through labels and create and position them
             # label text based on P scale
             self.vlabels[i].setPos(pblx-self.hlabels[i].boundingRect().width()-10,
@@ -220,9 +228,7 @@ class XChartProbit(QChart):
 
     def _drawHorizontalGridLine(self):
         hgridx = [distr.distrppf(self.activeProbit, 0.0001)-1, distr.distrppf(self.activeProbit, 0.9999)+1]
-        print(self.axisY.min())
         self.hgridy = self._logrange(10**self.axisY.min(), 10**self.axisY.max(), base=10)
-        print (self.hgridy)
         self.hgridseries = []
         for val in self.hgridy:
             line = '%d'%val
@@ -242,6 +248,13 @@ class XChartProbit(QChart):
     def _removeVerticalGridLine(self):
         for ser in self.vgridseries:
             self.removeSeries(ser)
+            
+    def _removeVerticalLabels(self):
+        try:
+            for lab in self.vlabels:
+                self.scene().removeItem(lab)
+        except AttributeError:
+            pass
             
     def _logrange(self, min, max, base=10):
         if min <= 0:
@@ -269,10 +282,9 @@ class XChartProbit(QChart):
     @pyqtSlot()
     def onPlotSizeChanged(self):
         #reset position of labels
-        self.setActiveScale()
-        self._drawHorizontalLabels()
-        if self.activeScale == 'log10':
-            self._drawVerticalLabels()
+        self.redrawChart()
+            
+            
 
         
 class XChartViewProbit(QChartView):
@@ -328,8 +340,8 @@ def main():
     rand = rand.clip(min=1.1); randn = randn.clip(min=1.1)
 
     chartView = XChartViewProbit()    
-    chartView.addSeries(rand,"Log-Normal Rand")
-    chartView.addSeries(randn,"Normal Rand")
+    #chartView.addSeries(rand,"Log-Normal Rand")
+    #chartView.addSeries(randn,"Normal Rand")
     
     #chartView.chart.addLinearReg()
     

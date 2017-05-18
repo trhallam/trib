@@ -1,5 +1,5 @@
 """
-tribgui
+widgets
 =====
 
 Provides
@@ -13,7 +13,7 @@ Utilities
 test
     Run unittests (To Be Implemented)
 __version__
-    PyQt5X version string (not the same as PyQt5)
+
 
 """
 
@@ -23,3 +23,5 @@ from .widgetFDTable import widgetFDTable
 from .widgetIDChart import widgetIDChart
 from .widgetIDTable import widgetIDTable
 from .widgetIDProbit import widgetIDProbit
+
+from .widgetIDProbit import main
