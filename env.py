@@ -37,8 +37,9 @@ if libpath not in sys.path:
 	sys.path.insert(0, libpath)
 	
 #from tribgui.widgetIDTable import *
-from tribgui.widgetIDChart import *
+#from tribgui.widgetIDChart import *
 #from tribgui.colourpack import *
+from tribgui.widgetIDProbit import *
 
 if __name__ == "__main__":
     main()
