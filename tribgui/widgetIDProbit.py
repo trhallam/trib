@@ -60,8 +60,10 @@ class widgetIDProbit(QtWidgets.QWidget, qdesignFDChart.Ui_Form):
         self.comboBoxDistr.currentTextChanged.connect(self.onComboBoxDistrChanged)
         self.activeDist = str(self.distrfromname(self.comboBoxDistr.currentText()))
 
+        self.chart = XChartProbit()
+        
         # Add Chart to Chartview and Chartview to Widget
-        self.chartview = XChartViewProbit()
+        self.chartview = QChartView(self.chart)
         self.verticalLayout.addWidget(self.chartview)
         self.chartview.setRenderHint(QPainter.Antialiasing)        
         
@@ -90,8 +92,8 @@ def main():
     rand = rand.clip(min=1.1); randn = randn.clip(min=1.1)
 
     chartWid = widgetIDProbit()    
-    chartWid.chartview.addSeries(rand,"Log-Normal Rand")
-    chartWid.chartview.addSeries(randn,"Normal Rand")
+    chartWid.chart.loadSeries(rand,"Log-Normal Rand")
+    chartWid.chart.loadSeries(randn,"Normal Rand")
     
     #chartView.chart.addLinearReg()
     

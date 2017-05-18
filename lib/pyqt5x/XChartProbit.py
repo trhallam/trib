@@ -8,7 +8,9 @@ from PyQt5.QtCore import Qt, pyqtSlot
 from PyQt5.QtGui import QColor
 from PyQt5.QtChart import (QChart, QValueAxis, QChartView)
 
+
 from .XChartTools import XLineSeries, XScatterSeries
+from tufpy.stats import distr
         
 from itertools import zip_longest
 from scipy.stats import norm, linregress, lognorm, percentileofscore
@@ -18,39 +20,45 @@ from numpy import arange, insert, log10, array, append, power
 class XChartProbit(QChart):
     def __init__(self, parent=None):
         super(QChart, self).__init__(parent)
-
+        
+        # Class Vars
+        self.activeProbit = 'norm'
+        #self.activeScale = 'linear'
+        self.activeScale = 'log10'
+        self.knowndistr = distr._distrnames()
+        self.data = dict()
+        self
+        
         # Axis Setup
         self.axisX = QValueAxis()
         self.axisY = QValueAxis()
         
-        self.setAxesMinMax(-3,3,0.01,1.5)
+
         self.axisX.setLabelsVisible(False)
-        self.axisY.setLabelsVisible(False)
         self.axisX.setTickCount(2)
-        self.axisY.setTickCount(1)
         self.axisX.setTitleText("Series Fractional Probability")
         self.axisY.setTitleText("Value")
-        self.setTitle("Log Probit Plot")
+        self.setAxesMinMax(-3,3,0.01,1.5)
         
         self.axisX.setMinorGridLineVisible(False)
         self.axisX.setGridLineVisible(False)
-        self.axisY.setMinorGridLineVisible(False)
-        self.axisY.setGridLineVisible(False)
         
         #define the default grid colour to grey
         self.setGridColor(110,110,110)
         
         #draw the grid
         self._drawVerticalGridLines()
-        self._drawHorizontalGridLine()
+        self.setActiveScale()
+
         
         self.plotAreaChanged.connect(self.onPlotSizeChanged)
         #method needed for axes change to redraw grid lines
         
-    def addLinearReg(self,x,y):
+    def addLinearReg(self,seriesname):
+        x = self.data[seriesname]['X'], y = self.data[seriesname][seriesname]
         #adds a linear regression line for a data set x,y
         slope, intercept, r_value, p_value, std_err = linregress(x,y)
-        xmin = norm.ppf(0.01); xmax = norm.ppf(0.99)
+        xmin = distr.distrppf(self.activeProbit, 0.01); xmax = distr.distrppf(self.activeProbit, 0.99)
         ymin = slope*xmin+intercept; ymax = slope*xmax+intercept
         data = dict()
         data['X'] = [xmin,xmax]; data['LinearReg'] = [ymin,ymax]
@@ -58,15 +66,77 @@ class XChartProbit(QChart):
         
         self.addSeries(lines[0])
         self.setAxes(lines[0])
+
+    def loadSeries(self,arr,name):
+        #takes a list/array arr
+        y = array(arr).copy(); y.sort()
+        self.data[name] = y
+        self.plotSeries(name)
+        
+    def plotSeries(self, name):
+        nsamp = len(self.data[name])
+        # add data to temport dictionary
+        tdict = dict(); 
+        if self.activeScale == 'log10':
+            tdict[name] = log10(self.data[name])
+        elif self.activeScale == 'linear':
+            tdict[name] = self.data[name]
+        tdict['X'] = distr.distrppf(self.activeProbit, [percentileofscore(self.data[name],self.data[name][i])/100.00001 for i in range(0,nsamp)])
+        series  = XScatterSeries(tdict, xkey='X', openGL=True)
+        self.addSeries(series[0])
+        self.setAxes(series[0])
+        self.resetAxes()
+        
+    def _replotData(self):
+        for key in self.data.keys():
+            self.pl
         
     def axesMinMax(self):
         # returns a length 4 list of the axes min and max values [x1,x2,y1,y2]
         return [self.axisX.min(), self.axisX.max(), self.axisY.min(), self.axisY.max()]
         
+    def resetAxes(self):
+        ymin = 0; ymax = 1
+        for key in self.data.keys():
+            ymin = min(min(self.data[key]), ymin)
+            ymax = max(max(self.data[key]), ymax)
+        yscal = 0.1*(ymax-ymin)
+        xmin = distr.distrppf(self.activeProbit, 0.0001); xmax = distr.distrppf(self.activeProbit, 0.9999)
+        self.setAxesMinMax(xmin,xmax,ymin-yscal,ymax+yscal)
+        
+        
     def setGridColor(self,r,g,b):
         # sets the colour of the background grid
         self.gridcolor = QColor(r,g,b)
     
+    def setActiveProbit(self,type):
+        if type in self.knowndistr:
+            if type == 'norm':
+                self.activeProbit = 'norm'
+                self.activeScale = 'linear'
+            elif type == 'lognorm':
+                self.activeProbit = 'norm'
+                self.activeScale = 'log10'
+    
+    def setActiveScale(self):
+        self.resetAxes()
+        #self.removeAllSeries()
+        self._drawVerticalGridLines()
+        if self.activeScale == 'log10':
+            self.axisY.setLabelsVisible(False)    
+            self.axisY.setTickCount(1)
+            self.setTitle("Log Probit Plot")   
+            self.axisY.setMinorGridLineVisible(False)
+            self.axisY.setGridLineVisible(False)
+            self._drawHorizontalGridLine()
+        elif self.activeScale == 'linear':
+            self.axisY.setLabelsVisible(True)    
+            self.axisY.setTickCount(10)
+            self.setTitle("Probit Plot")               
+            self.axisY.setMinorGridLineVisible(True)
+            self.axisY.setGridLineVisible(True)          
+        
+            
     def setAxes(self,series):
         # assigns a series to the chart default axes
         self.setAxisX(self.axisX, series); self.setAxisY(self.axisY, series)
@@ -80,7 +150,8 @@ class XChartProbit(QChart):
         xmin = self.axisX.min(); xmax = self.axisX.max()
         axisScale = 1/ (xmax - xmin) # scaler for plotted axis (reduces to 0-1.0)
         # calculate probit values to scale from grid lines insert min and max values to scale correctly
-        vlabx = norm.ppf(self.vgridx); vlabx = insert(vlabx, 0, xmin); vlabx = insert(vlabx, len(vlabx), xmax)
+        vlabx = distr.distrppf(self.activeProbit, self.vgridx); 
+        vlabx = insert(vlabx, 0, xmin); vlabx = insert(vlabx, len(vlabx), xmax)
         vlabx = (vlabx-xmin)*axisScale #scale the probit value to ratios of the Xaxis length
         paw = self.plotArea().width(); pah = self.plotArea().height() #find the plot width and height
         # find plot bottom left corner X and Y
@@ -137,7 +208,7 @@ class XChartProbit(QChart):
         self.vgridseries = []
         for val in self.vgridx:
             line = 'P'+'%02d'%round(100.0*(1.0-val))
-            tdict = {'X':[norm.ppf(val)]*2, line:vgridy}
+            tdict = {'X':[distr.distrppf(self.activeProbit,val)]*2, line:vgridy}
             self.vgridseries = self.vgridseries + XLineSeries(tdict, xkey = 'X', openGL=True)
         for i,line in enumerate(self.vgridseries):
             pen = line.pen()
@@ -148,8 +219,10 @@ class XChartProbit(QChart):
             self.legend().markers(line)[0].setVisible(False)
 
     def _drawHorizontalGridLine(self):
-        hgridx = [norm.ppf(0.01)-1, norm.ppf(0.99)+1]
+        hgridx = [distr.distrppf(self.activeProbit, 0.0001)-1, distr.distrppf(self.activeProbit, 0.9999)+1]
+        print(self.axisY.min())
         self.hgridy = self._logrange(10**self.axisY.min(), 10**self.axisY.max(), base=10)
+        print (self.hgridy)
         self.hgridseries = []
         for val in self.hgridy:
             line = '%d'%val
@@ -192,12 +265,14 @@ class XChartProbit(QChart):
             if val <= max:
                 j=ind
         return out[i:j+1]
-        
+    
     @pyqtSlot()
     def onPlotSizeChanged(self):
         #reset position of labels
+        self.setActiveScale()
         self._drawHorizontalLabels()
-        self._drawVerticalLabels()
+        if self.activeScale == 'log10':
+            self._drawVerticalLabels()
 
         
 class XChartViewProbit(QChartView):
@@ -227,7 +302,7 @@ class XChartViewProbit(QChartView):
         y = array(arr).copy(); y.sort()
         # add data to temport dictionary
         tdict = dict(); 
-        if self.style == 'Log10':
+        if self.style == 'log10':
             tdict['X'] = norm.ppf([percentileofscore(y,y[i])/100.00001 for i in range(0,nsamp)])
             tdict[name] = log10(y)
             

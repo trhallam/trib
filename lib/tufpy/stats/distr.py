@@ -260,6 +260,21 @@ def distrpdf(type, n, **kwargs):
             # calculate distr
             data_dict['Y'] = stats.lognorm.pdf(data_dict['X'], *dargs, **dkwargs)
     return data_dict
+
+def distrppf(type, a, **kwargs):
+    """
+    distrppf - handler for all distribution types to simplify XProbitChart mostly
+    :param type: string - type of distribution to calculate for from [norm, lognorm,
+    :param a: float or float_ar of values between 0 and 1.
+    :param kwargs: tbd
+    """
+    if type in knowndistr():
+       if type == 'norm':  # normal distribution
+           ppfar = stats.norm.ppf(a)
+       elif type == 'lognorm':
+           ppfar = stats.lognorm.ppf(a)
+    
+    return ppfar
     
 def distrfit(type, a, **kwargs):
     """
