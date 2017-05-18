@@ -6,18 +6,17 @@ make.py must be run in the tribgui module folder to update the gui interface.
 
 """
 
-from PyQt5 import QtGui, QtWidgets
+import json
+from os.path import expanduser, join
+
+from PyQt5 import QtWidgets
 from PyQt5.QtCore import pyqtSlot
+from tribgui.widgets import (widgetFDChart, widgetIDChart,
+                            widgetIDTable, widgetFDTable)
 
 from tribgui._qtdesigner import qdesignMainWindow, qdesignDialogAbout
-from widgetFDTable import widgetFDTable
-from widgetFDChart import widgetFDChart
-from widgetIDChart import widgetIDChart
-from widgetIDTable import widgetIDTable
+from tribgui import widgets
 
-import json
-
-from os.path import expanduser, join
 
 '''
 Class to capture the setup of the About Dialog.

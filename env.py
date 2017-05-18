@@ -14,7 +14,9 @@ Examples:
     
 """
 
-import getopt, sys, os, inspect
+import inspect
+import os
+import sys
 
 print('Loading Paths')
 trib_folder = os.path.realpath(os.path.abspath(os.path.dirname(
@@ -37,7 +39,7 @@ if libpath not in sys.path:
 	sys.path.insert(0, libpath)
 	
 #from tribgui.widgetIDTable import *
-from tribgui.widgetIDChart import *
+from widgets.widgetIDChart import *
 #from tribgui.colourpack import *
 
 if __name__ == "__main__":
