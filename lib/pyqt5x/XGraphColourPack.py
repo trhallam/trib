@@ -3,7 +3,8 @@
 This file contains the colour definitions for the XCharting Tools.
 Colours are by design as far from each other as possible.
 
-Green-Armytage, Paul, 2010, A Colour Alphabet and the Limits of Colour Coding
+kellycolours :: 
+gacolours :: Green-Armytage, Paul, 2010, A Colour Alphabet and the Limits of Colour Coding
 
 """
 
@@ -34,21 +35,29 @@ gacolours = {'white' : '#FFFFFF', 'black' : '#191919', 'yellow' : '#FFFF00',  'd
 class ColourPack(object):
     def __init__(self):
         self._cdd = dict()
+        self._order = list()
         
     def addColour(self, name, rgbhex):
         self._cdd[name] = rgbhex
+        self._order.append(name)
         colour = QtGui.QColor()
         colour.setNamedColor(rgbhex)
         self.__setattr__(name, colour)
         
     def namedColours(self):
         return self._cdd.keys()
+        
+    def colourOrder(self):
+        return self._order
 
 gaColours = ColourPack()
-kellyColours = ColourPack
+kellyColours = ColourPack()
     
 for col in gacolours:
     gaColours.addColour(col, gacolours[col])
+
+for col in kellycolours:
+    kellyColours.addColour(col, kellycolours[col])
    
 def main():
     import sys

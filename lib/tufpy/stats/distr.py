@@ -231,7 +231,7 @@ def distrpdf(type, n, **kwargs):
             'shp'   : None}  # shape factor for some scipy distributions
     kstats.update(kwargs)    # update kstats with inputs
 
-    pmin=0.01; pmax=0.99
+    pmin=0.0001; pmax=0.9999
 
     data_dict = dict()
     if type in knowndistr():

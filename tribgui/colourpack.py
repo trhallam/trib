@@ -5,7 +5,7 @@ This file contains the colour definitions for the trib application.
 """
 
 from PyQt5 import QtGui
-
+from pyqt5x.XGraphColourPack import ColourPack
 
 """
 Contains all the colour definitions necessary for items in Trib.
@@ -17,19 +17,6 @@ colours = {'tribBlue' : '#8BDAF9',
            'tribOlive': '#9ABCAB',
            'tribStone': '#5D576B'
           }
-
-class ColourPack(object):
-    def __init__(self):
-        self._cdd = dict()
-        
-    def addColour(self, name, rgbhex):
-        self._cdd[name] = rgbhex
-        colour = QtGui.QColor()
-        colour.setNamedColor(rgbhex)
-        self.__setattr__(name, colour)
-        
-    def namedColours(self):
-        return self._cdd.keys()
 
 tribColours = ColourPack()
     

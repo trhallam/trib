@@ -7,8 +7,8 @@ make.py must be run in the tribgui module folder to update the gui interface.
 """
 
 from PyQt5 import QtWidgets, QtCore
-from PyQt5.QtChart import QChart, QChartView, QValueAxis
-from PyQt5.QtGui import QPainter
+from PyQt5.QtChart import QChart, QChartView, QValueAxis, QBarSet
+from PyQt5.QtGui import QPainter, QPen
 from PyQt5.QtCore import pyqtSlot, Qt
 from tufpy.stats import distr
 
@@ -16,6 +16,8 @@ import numpy as np
 from scipy import stats
 
 from tribgui._qtdesigner import qdesignFDChart
+from tribgui.colourpack import tribColours
+
 from pyqt5x.XChartTools import XLineSeries, XDictSet
 
 s = 0.5
@@ -127,7 +129,7 @@ class widgetIDChart(QtWidgets.QWidget, qdesignFDChart.Ui_Form):
     def addHistLine(self):
         # fits a distribution to the histogram and draws a line
         self.kstats = distr.distrfit(self.activeDist,self.datar)#hist[0])
-        self.addDistrLine(100,self.kstats)
+        self.addDistrLine(1000,self.kstats)
         
     def addHistogram(self, nbins):
 # accepts a data array datar and int nbins to calculate a histogram
@@ -139,6 +141,9 @@ class widgetIDChart(QtWidgets.QWidget, qdesignFDChart.Ui_Form):
             pass
             # create a function which displays a msg in the middle of the chart by raising a data error of sorts
         self.histseries = XDictSet({'Hist':self.hist[0]})
+        # return barsets
+        self.histsets = self.histseries.findChildren(QBarSet)
+        
             
     def updateChart(self):
         self.chart.removeAllSeries()
@@ -157,7 +162,11 @@ class widgetIDChart(QtWidgets.QWidget, qdesignFDChart.Ui_Form):
             self.chart.axisHist.setRange(0, cmax)
             self.chart.addSeries(self.histseries)
             self.histseries.setBarWidth(1)
-            self.histseries.setColor()
+            
+            # Set Colours
+            self.histsets[0].setColor(tribColours.tribBlue)
+            
+            # Update Axes
             self.chart.setAxisX(self.chart.axisBins, self.histseries)
             self.chart.setAxisY(self.chart.axisHist, self.histseries)
         except NameError:
@@ -166,6 +175,13 @@ class widgetIDChart(QtWidgets.QWidget, qdesignFDChart.Ui_Form):
         if self.activeDist != 'None':
             try:  # Add distribution line
                 self.addHistLine()
+                
+                # Fit Line Formatting
+                linepen = QPen(); 
+                linepen.setWidth(5.0)
+                linepen.setColor(tribColours.tribCoral)
+                self.lineDist.setPen(linepen)
+
                 self.chart.addSeries(self.lineDist)
                 self.setAxes(self.lineDist)
                 self.chart.axisX.setRange(hmin-binwidth, hmax+binwidth)

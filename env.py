@@ -38,6 +38,7 @@ if libpath not in sys.path:
 	
 #from tribgui.widgetIDTable import *
 from tribgui.widgetIDChart import *
+#from tribgui.colourpack import *
 
 if __name__ == "__main__":
     main()
