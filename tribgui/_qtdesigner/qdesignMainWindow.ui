@@ -38,7 +38,8 @@ border-color: rgb(93, 87, 107);</string>
        <bool>false</bool>
       </property>
       <property name="styleSheet">
-       <string notr="true">selection-color: rgb(139, 218, 249);
+       <string notr="true">selection-background-color: rgb(139, 218, 249);
+selection-color: rgb(0,0,0);
 background-color: rgb(250, 250, 250);
 border-color: rgb(93, 87, 107);</string>
       </property>
@@ -97,6 +98,12 @@ border-color: rgb(93, 87, 107);</string>
        </layout>
       </widget>
       <widget class="QWidget" name="tabInputDist">
+       <property name="minimumSize">
+        <size>
+         <width>20</width>
+         <height>0</height>
+        </size>
+       </property>
        <property name="styleSheet">
         <string notr="true">selection-color: rgb(139, 218, 249);
 background-color: rgb(250, 250, 250);
@@ -108,13 +115,41 @@ border-color: rgb(93, 87, 107);</string>
        <layout class="QGridLayout" name="gridLayout_3">
         <item row="0" column="0">
          <widget class="QSplitter" name="splitter_2">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>20</width>
+            <height>0</height>
+           </size>
+          </property>
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
           </property>
           <widget class="QWidget" name="verticalLayoutWidget_2">
-           <layout class="QVBoxLayout" name="verticalLayoutIDRight"/>
+           <layout class="QVBoxLayout" name="verticalLayoutIDLeft" stretch="0">
+            <item>
+             <layout class="QGridLayout" name="gridLayoutIDLeft"/>
+            </item>
+           </layout>
           </widget>
           <widget class="Line" name="lineSplitterSetDistr">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>10</width>
+             <height>0</height>
+            </size>
+           </property>
            <property name="maximumSize">
             <size>
              <width>10</width>
@@ -126,7 +161,7 @@ border-color: rgb(93, 87, 107);</string>
            </property>
           </widget>
           <widget class="QWidget" name="verticalLayoutWidget">
-           <layout class="QVBoxLayout" name="verticalLayoutIDLeft">
+           <layout class="QVBoxLayout" name="verticalLayoutIDRight">
             <item>
              <widget class="QTabWidget" name="tabWidgetID">
               <property name="minimumSize">
@@ -147,20 +182,35 @@ border-color: rgb(93, 87, 107);</string>
               <property name="currentIndex">
                <number>0</number>
               </property>
+              <widget class="QWidget" name="tabStats">
+               <attribute name="title">
+                <string>Stats</string>
+               </attribute>
+               <layout class="QGridLayout" name="gridLayout_7">
+                <item row="0" column="0">
+                 <layout class="QGridLayout" name="gridLayoutStats"/>
+                </item>
+               </layout>
+              </widget>
               <widget class="QWidget" name="tabHist">
                <attribute name="title">
                 <string>Histogram</string>
                </attribute>
+               <layout class="QGridLayout" name="gridLayout_4">
+                <item row="0" column="0">
+                 <layout class="QGridLayout" name="gridLayoutHist"/>
+                </item>
+               </layout>
               </widget>
               <widget class="QWidget" name="tabProbit">
                <attribute name="title">
                 <string>Probit</string>
                </attribute>
-              </widget>
-              <widget class="QWidget" name="tabStats">
-               <attribute name="title">
-                <string>Stats</string>
-               </attribute>
+               <layout class="QGridLayout" name="gridLayout_6">
+                <item row="0" column="0">
+                 <layout class="QGridLayout" name="gridLayoutProbit"/>
+                </item>
+               </layout>
               </widget>
              </widget>
             </item>

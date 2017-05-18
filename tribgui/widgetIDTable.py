@@ -31,18 +31,31 @@ for i, dp in enumerate(dummy_data_4testing):
 class widgetIDTable(QtWidgets.QWidget):
 
     # signals to communicate with other widgets through main window
-    #actionDistrUpdated = pyqtSignal(list)
+    actionInputUpdated = pyqtSignal(dict)
 
     def __init__(self, parent=None):
         super(widgetIDTable, self).__init__(parent)
-		
         self.activeDistr = 'norm'
         
         self.setObjectName("Input Table")
-        self.resize(348, 768)
-        self.setMinimumSize(QtCore.QSize(280, 460))
+
+
+        #self.resize(348, 768)
+        # Sizing
+        self.setMinimumSize(QtCore.QSize(300, 200))
+        # self.setMaximumSize(QtCore.QSize(300, 5000))
+        self.setSizePolicy(QtWidgets.QSizePolicy.Expanding,
+                           QtWidgets.QSizePolicy.Expanding)
+        self.gridLayout = QtWidgets.QGridLayout()
+        self.setLayout(self.gridLayout)
+
         self.setStyleSheet("background-color: rgb(255, 255, 255);")
-        self.tableWidgetInputValues = XParameterTableWidget(self)
+        self.tableWidgetInputValues = XParameterTableWidget()
+        # self.tableWidgetInputValues.setMinimumSize(QtCore.QSize(300, 200))
+        # self.tableWidgetInputValues.setMaximumSize(QtCore.QSize(500, 5000))
+        self.tableWidgetInputValues.setSizePolicy(QtWidgets.QSizePolicy.Expanding,
+                                                    QtWidgets.QSizePolicy.Expanding)
+        self.gridLayout.addWidget(self.tableWidgetInputValues)
         #self.tableWidgetInputValues = XParameterTableWidget(self)
         
         # Populate Input Distr Table
@@ -89,18 +102,18 @@ class widgetIDTable(QtWidgets.QWidget):
         var = self.tableWidgetInputValues.currentItem().text()
 
         try: #check for numerical value
-            pc = float(var)
+            float(var)
             # return all data send to histogram
         except ValueError:
             self.tableWidgetInputValues.currentItem().setBackground(QtGui.QColor(255, 154, 145))
             self._setRowColour(self.tableWidgetInputValues, row, QtGui.QColor(255, 154, 145))
-            val = None
+            var = None
             
         if row == self.tableWidgetInputValues.rowCount() - 1:
             self.tableWidgetInputValues.addrow()
 
         self.tableWidgetInputValues.setCurrentCell(row, 1)
-        if val != None:
+        if var != None:
             self._setRowColour(self.tableWidgetInputValues, row, QtGui.QColor(255, 255, 255))
 
     def _setRowColour(self, table, row, colour):
@@ -109,6 +122,17 @@ class widgetIDTable(QtWidgets.QWidget):
         for ind in range(0, nclm):
             table.setCurrentCell(row, ind)
             table.currentItem().setBackground(colour)
+
+    def _cleandata(self):
+        cleandata = dict()
+        values = list(); ids = list()
+        for i, val in enumerate(self.data['Value']):
+            try:
+                values.append(float(val)); ids.append(self.data['Point ID'][i])
+            except ValueError:
+                continue
+        cleandata['Value']=values; cleandata['Point ID']=ids
+        return cleandata
 
     # special pyqt slots
     @pyqtSlot()
@@ -121,10 +145,9 @@ class widgetIDTable(QtWidgets.QWidget):
         self.tableWidgetInputValues.itemChanged.connect(self.onTableEdited)
 
         self.tableWidgetInputValues.setCurrentCell(inrow, incol)
-        data=self.tableWidgetInputValues.returndata()
-
+        self.data=self.tableWidgetInputValues.returndata()
         self.tableWidgetInputValues.setCurrentCell(inrow, incol)
-        
+        self.actionInputUpdated.emit(self._cleandata())
 
 def main():
     import sys

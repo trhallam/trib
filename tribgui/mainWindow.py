@@ -12,6 +12,8 @@ from PyQt5.QtCore import pyqtSlot
 from tribgui._qtdesigner import qdesignMainWindow, qdesignDialogAbout
 from widgetFDTable import widgetFDTable
 from widgetFDChart import widgetFDChart
+from widgetIDChart import widgetIDChart
+from widgetIDTable import widgetIDTable
 
 import json
 
@@ -75,6 +77,19 @@ class mainApp(QtWidgets.QMainWindow, qdesignMainWindow.Ui_MainWindow):
         self.gridLayoutFDChart.addWidget(self.wFDChart)
 
         # Input Distribution Tab
+        # Input Distribution Table
+
+        self.wIDTable = widgetIDTable()
+
+        self.verticalLayoutIDLeft.addWidget(self.wIDTable)
+
+        # Histogram Widget
+        self.wIDChart = widgetIDChart()
+        self.gridLayoutHist.addWidget(self.wIDChart)
+
+        # Connect Widgets
+        self.wIDTable.actionInputUpdated.connect(self.wIDChart.receiveFromTable)
+        #self.wIDTable.onTableEdited()
         #self.w1.actionDistrUpdated.connect(self.c1.updateChart)
 
         #chart displays on start

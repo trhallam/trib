@@ -49,6 +49,8 @@ class Ui_Form(object):
         self.pushButtonZoom.setFlat(True)
         self.pushButtonZoom.setObjectName("pushButtonZoom")
         self.horizontalLayout.addWidget(self.pushButtonZoom)
+        spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.horizontalLayout.addItem(spacerItem)
         self.pushButtonExportPNG = QtWidgets.QPushButton(Form)
         self.pushButtonExportPNG.setMinimumSize(QtCore.QSize(30, 30))
         self.pushButtonExportPNG.setText("")
@@ -69,8 +71,6 @@ class Ui_Form(object):
         self.pushButtonExportCSV.setFlat(True)
         self.pushButtonExportCSV.setObjectName("pushButtonExportCSV")
         self.horizontalLayout.addWidget(self.pushButtonExportCSV)
-        spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.horizontalLayout.addItem(spacerItem)
         self.verticalLayout.addLayout(self.horizontalLayout)
         self.gridLayout.addLayout(self.verticalLayout, 0, 0, 1, 1)
 
