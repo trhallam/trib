@@ -32,7 +32,7 @@ background-color: rgb(250, 250, 250);
 border-color: rgb(93, 87, 107);</string>
    </property>
    <layout class="QGridLayout" name="gridLayout">
-    <item row="0" column="0">
+    <item row="1" column="0">
      <widget class="QTabWidget" name="tabWidget">
       <property name="autoFillBackground">
        <bool>false</bool>
@@ -58,63 +58,117 @@ border-color: rgb(93, 87, 107);</string>
         <string>Fixed Distribution</string>
        </attribute>
        <layout class="QGridLayout" name="gridLayout_2">
-        <item row="0" column="1">
+        <item row="0" column="0">
          <widget class="QSplitter" name="splitter">
-          <property name="styleSheet">
-           <string notr="true">background-color: rgb(250, 250, 250);</string>
-          </property>
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
           </property>
-          <widget class="QWidget" name="layoutWidget">
-           <layout class="QHBoxLayout" name="horizontalLayout">
-            <property name="topMargin">
-             <number>6</number>
-            </property>
-            <property name="rightMargin">
-             <number>6</number>
-            </property>
-            <property name="bottomMargin">
-             <number>6</number>
-            </property>
-            <item>
-             <layout class="QVBoxLayout" name="verticalLayoutFD"/>
-            </item>
-            <item>
-             <widget class="Line" name="lineSplitterFixedDistr">
-              <property name="orientation">
-               <enum>Qt::Vertical</enum>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <layout class="QGridLayout" name="gridLayoutFDChart"/>
-            </item>
-           </layout>
+          <widget class="QWidget" name="">
+           <layout class="QVBoxLayout" name="verticalLayoutFD"/>
+          </widget>
+          <widget class="Line" name="lineSplitterFixedDistr">
+           <property name="minimumSize">
+            <size>
+             <width>20</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>20</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="frameShadow">
+            <enum>QFrame::Sunken</enum>
+           </property>
+           <property name="lineWidth">
+            <number>2</number>
+           </property>
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+          </widget>
+          <widget class="QWidget" name="">
+           <layout class="QGridLayout" name="gridLayoutFDChart"/>
           </widget>
          </widget>
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="tabSetDist">
+      <widget class="QWidget" name="tabInputDist">
        <property name="styleSheet">
         <string notr="true">selection-color: rgb(139, 218, 249);
 background-color: rgb(250, 250, 250);
 border-color: rgb(93, 87, 107);</string>
        </property>
        <attribute name="title">
-        <string>Set Distribution</string>
+        <string>Input Distribution</string>
        </attribute>
-      </widget>
-      <widget class="QWidget" name="tabProbit">
-       <property name="styleSheet">
-        <string notr="true">selection-color: rgb(139, 218, 249);
-border-color: rgb(93, 87, 107);
-background-color: rgb(250, 250, 250);</string>
-       </property>
-       <attribute name="title">
-        <string>Probit Plot</string>
-       </attribute>
+       <layout class="QGridLayout" name="gridLayout_3">
+        <item row="0" column="0">
+         <widget class="QSplitter" name="splitter_2">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <widget class="QWidget" name="verticalLayoutWidget_2">
+           <layout class="QVBoxLayout" name="verticalLayoutIDRight"/>
+          </widget>
+          <widget class="Line" name="lineSplitterSetDistr">
+           <property name="maximumSize">
+            <size>
+             <width>10</width>
+             <height>10000000</height>
+            </size>
+           </property>
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+          </widget>
+          <widget class="QWidget" name="verticalLayoutWidget">
+           <layout class="QVBoxLayout" name="verticalLayoutIDLeft">
+            <item>
+             <widget class="QTabWidget" name="tabWidgetID">
+              <property name="minimumSize">
+               <size>
+                <width>600</width>
+                <height>300</height>
+               </size>
+              </property>
+              <property name="layoutDirection">
+               <enum>Qt::LeftToRight</enum>
+              </property>
+              <property name="tabPosition">
+               <enum>QTabWidget::West</enum>
+              </property>
+              <property name="tabShape">
+               <enum>QTabWidget::Rounded</enum>
+              </property>
+              <property name="currentIndex">
+               <number>0</number>
+              </property>
+              <widget class="QWidget" name="tabHist">
+               <attribute name="title">
+                <string>Histogram</string>
+               </attribute>
+              </widget>
+              <widget class="QWidget" name="tabProbit">
+               <attribute name="title">
+                <string>Probit</string>
+               </attribute>
+              </widget>
+              <widget class="QWidget" name="tabStats">
+               <attribute name="title">
+                <string>Stats</string>
+               </attribute>
+              </widget>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </widget>
+        </item>
+       </layout>
       </widget>
      </widget>
     </item>
