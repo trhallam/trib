@@ -20,7 +20,7 @@ from pyqt5x.XChartTools import XLineSeries, XDictSet
 
 s = 0.5
 dummy_data_4testing = stats.lognorm.rvs(s, scale=0.2, size=100)
-#dummy_data_4testing = stats.norm.rvs(loc=100, scale=500, size=200)
+#dummy_data_4testing = stats.norm.rvs(loc=100, scale=10, size=200)
 
 '''
 dummy_data_4testing = [0.08, 0.18, 0.19, 0.22, 0.38, 0.39, 0.83, 0.91, 1.62, 1.92, 1.93, 2.58, 3.2,
@@ -51,14 +51,12 @@ class widgetIDChart(QtWidgets.QWidget, qdesignFDChart.Ui_Form):
         self.comboBoxDistr.setMinimumSize(QtCore.QSize(100, 30))
         
         self.knowndistr = distr._distrnames()
-        for key in self.knowndistr:
-            self.comboBoxDistr.addItem(self.knowndistr[key])
-        
+        self.comboBoxDistr.addItems(['None'] + [self.knowndistr[key] for key in self.knowndistr])
         self.comboBoxDistr.setObjectName("comboBoxDistr")
         self.horizontalLayout.insertWidget(3,self.comboBoxDistr)
         self.comboBoxDistr.currentTextChanged.connect(self.onComboBoxDistrChanged)
-        self.activeDist = self.distrfromname(self.comboBoxDistr.currentText())
-        
+        self.activeDist = str(self.distrfromname(self.comboBoxDistr.currentText()))
+
         # Spinbox Label
         self.spinBoxLab = QtWidgets.QLabel(self)
         self.spinBoxLab.setText('N Hist Bins: ')
@@ -123,51 +121,58 @@ class widgetIDChart(QtWidgets.QWidget, qdesignFDChart.Ui_Form):
         xmin = min(data['X']); xmax = max(data['X'])
         ymin = min(data['Y']); ymax = max(data['Y'])
         xscal = 0.1*(xmax-xmin); yscal = 0.1*(ymax-0)
-        self.setAxesMinMax(xmin-xscal, xmax+xscal, 0, ymax+yscal)
+        self.chart.axisY.setRange(0, ymax+yscal)
         self.lineDist = XLineSeries(data, xkey='X')[0]
         
     def addHistLine(self):
         # fits a distribution to the histogram and draws a line
-        self.kstats = distr.distrfit(self.activeDist,self.hist[0])
+        self.kstats = distr.distrfit(self.activeDist,self.datar)#hist[0])
         self.addDistrLine(100,self.kstats)
         
     def addHistogram(self, nbins):
 # accepts a data array datar and int nbins to calculate a histogram
         self.nbins = nbins
+        self.spinBoxDistr.setValue(nbins)
         try:
             self.hist = np.histogram(self.datar, bins=nbins)
         except:
             pass
             # create a function which displays a msg in the middle of the chart by raising a data error of sorts
         self.histseries = XDictSet({'Hist':self.hist[0]})
-        #print(self.hist)
             
     def updateChart(self):
         self.chart.removeAllSeries()
-
-        self.addHistLine()
-        minmax = self.axesMinMax()
+        hmin = self.hist[1][0]; hmax = self.hist[1][-1]; cmax = max(self.hist[0])+1
+        binwidth = self.hist[1][1]-self.hist[1][0]; binscale = 1/binwidth
         
+        if self.activeDist == 'None':
+            self.chart.axisY.setVisible(False)
+            self.chart.axisX.setMin(hmin)
+            self.chart.axisX.setMax(hmax)
+        else:
+            self.chart.axisY.setVisible(True)
+
         try:  # Add histogram bars
+            self.chart.axisBins.setRange(-1, self.nbins)
+            self.chart.axisHist.setRange(0, cmax)
             self.chart.addSeries(self.histseries)
+            self.histseries.setBarWidth(1)
+            self.histseries.setColor()
             self.chart.setAxisX(self.chart.axisBins, self.histseries)
             self.chart.setAxisY(self.chart.axisHist, self.histseries)
-  
-            binwidth = self.hist[1][1]-self.hist[1][0]
-            binscale = 1/binwidth
-            self.chart.axisBins.setMin(0-binscale*(minmax[0]+0.5*binwidth))
-            self.chart.axisBins.setMax(self.nbins-1+binscale*(minmax[1]+0.5*binwidth))
-            self.chart.axisHist.setMin(0); self.chart.axisHist.setMax(round(self.ndata*minmax[3]))
-            self.histseries.setBarWidth(1)
         except NameError:
             pass
 
-        try:  # Add distribution line
-            self.chart.addSeries(self.lineDist)
-            self.setAxes(self.lineDist)
-        except AttributeError:
-            pass
-         
+        if self.activeDist != 'None':
+            try:  # Add distribution line
+                self.addHistLine()
+                self.chart.addSeries(self.lineDist)
+                self.setAxes(self.lineDist)
+                self.chart.axisX.setRange(hmin-binwidth, hmax+binwidth)
+               
+            except AttributeError:
+                pass
+             
 
     @pyqtSlot(int)
     def onSpinBoxChanged(self,n):
@@ -182,8 +187,9 @@ class widgetIDChart(QtWidgets.QWidget, qdesignFDChart.Ui_Form):
         
     @pyqtSlot(str)
     def onComboBoxDistrChanged(self, name):
-        self.activeDist = self.distrfromname(name)
-        #self.updateChart()
+        self.activeDist = str(self.distrfromname(name))
+        self.addHistogram(self.nbins)
+        self.updateChart()
 
 def main():
     import sys
@@ -195,7 +201,7 @@ def main():
     #IDchart.addDistrLine('lognorm', 100, kstats)
     IDchart.setRawData(dummy_data_4testing)
     IDchart.addHistogram(20)
-    IDchart.addHistLine()
+    #IDchart.addHistLine()
     IDchart.updateChart()
     
     distr.distrfit('lognorm',dummy_data_4testing)
