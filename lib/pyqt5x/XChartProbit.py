@@ -23,16 +23,13 @@ class XChartProbit(QChart):
         
         # Class Vars
         self.activeProbit = 'norm'
-        #self.activeScale = 'linear'
         self.activeScale = 'log10'
         self.knowndistr = distr._distrnames()
         self.data = dict()
-        self
-        
+
         # Axis Setup
         self.axisX = QValueAxis()
         self.axisY = QValueAxis()
-        
 
         self.axisX.setLabelsVisible(False)
         self.axisX.setTickCount(2)
@@ -43,15 +40,15 @@ class XChartProbit(QChart):
         self.axisX.setMinorGridLineVisible(False)
         self.axisX.setGridLineVisible(False)
         
-        #define the default grid colour to grey
+        # define the default grid colour to grey
         self.setGridColor(110,110,110)
         
         self.plotAreaChanged.connect(self.onPlotSizeChanged)
-        #method needed for axes change to redraw grid lines
+        # method needed for axes change to redraw grid lines
         
     def addLinearReg(self,seriesname):
         x = self.data[seriesname]['X'], y = self.data[seriesname][seriesname]
-        #adds a linear regression line for a data set x,y
+        # adds a linear regression line for a data set x,y
         slope, intercept, r_value, p_value, std_err = linregress(x,y)
         xmin = distr.distrppf(self.activeProbit, 0.01); xmax = distr.distrppf(self.activeProbit, 0.99)
         ymin = slope*xmin+intercept; ymax = slope*xmax+intercept
@@ -62,11 +59,12 @@ class XChartProbit(QChart):
         self.addSeries(lines[0])
         self.setAxes(lines[0])
 
-    def loadSeries(self,arr,name):
-        #takes a list/array arr
+    def loadSeries(self, arr, name):
+        # takes a list/array arr
         y = array(arr).copy(); y.sort()
         self.data[name] = y
-        self.plotSeries(name)
+        #self.plotSeries(name)
+        self.redrawChart()
         
     def plotSeries(self, name):
         nsamp = len(self.data[name])
@@ -129,11 +127,11 @@ class XChartProbit(QChart):
         elif self.activeScale == 'log10':
             self.setAxesMinMax(xmin,xmax,log10(ymin-yscal/10),log10(ymax+yscal))
         
-    def setGridColor(self,r,g,b):
+    def setGridColor(self, r, g, b):
         # sets the colour of the background grid
         self.gridcolor = QColor(r,g,b)
     
-    def setActiveProbit(self,type):
+    def setActiveProbit(self, type):
         if type in self.knowndistr:
             if type == 'norm':
                 self.activeProbit = 'norm'
@@ -141,6 +139,7 @@ class XChartProbit(QChart):
             elif type == 'lognorm':
                 self.activeProbit = 'norm'
                 self.activeScale = 'log10'
+        self.redrawChart()
     
     def setActiveScale(self,newscale):
         self.activeScale = newscale

@@ -63,20 +63,16 @@ def main():
     import sys
     from PyQt5.QtWidgets import (QApplication, QGridLayout, QWidget,
         QLabel)
-    from PyQt5.QtGui import QPalette, QColor
-    from PyQt5 import Qt
+    from PyQt5.QtGui import QPalette
 
 
     class GridWidget(QWidget):
         
         def __init__(self):
             super().__init__()
-            
             self.initUI()
-            
-            
+
         def initUI(self):
-            
             grid = QGridLayout()
             self.setLayout(grid)
             labellist = []; colourlist = []; pallist = [];    

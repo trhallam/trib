@@ -28,3 +28,5 @@ __version__
 
 """
 
+from .XChartProbit import XChartProbit
+from .XTableWidget import XParameterTableWidget
