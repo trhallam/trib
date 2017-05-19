@@ -12,6 +12,8 @@ from PyQt5.QtCore import pyqtSlot, pyqtSignal
 from tribgui._qtdesigner import qdesignFDTables
 
 
+
+
 '''
 Class to caputre the setup of the main window.
 '''
@@ -46,7 +48,8 @@ class widgetFDTable(QtWidgets.QWidget, qdesignFDTables.Ui_Form):
 
         # Populate Fixed Distr Tab Table
 
-#        self._getFixedDistrValues()
+        self._getFixedDistrValues()
+
 #        self._calcFixedDistr()
 
         self.fixedDistrHeaders = ['Variable', 'Value']
@@ -73,12 +76,11 @@ class widgetFDTable(QtWidgets.QWidget, qdesignFDTables.Ui_Form):
 
     # functions for Fixed Distribution Tab
 
-'''
-    def _getFixedDistrValues(self):
-        self.fixedDistr = {}
-#        self.fixedDistr[self.lineEditProb1.text()] = self.lineEditValue1.text()
-#        self.fixedDistr[self.lineEditProb2.text()] = self.lineEditValue2.text()
 
+    def _getFixedDistrValues(self):
+        self.fixedInputData = self.tableWidgetDistrInputs.returndata()
+        
+'''
     def _calcFixedDistr(self):
         fdistpoints = dict()
         for i, key in enumerate(self.fixedDistr.keys()):

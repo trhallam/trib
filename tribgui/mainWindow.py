@@ -15,8 +15,6 @@ from tribgui.widgets import (widgetFDChart, widgetIDChart,
                             widgetIDTable, widgetFDTable)
 
 from tribgui._qtdesigner import qdesignMainWindow, qdesignDialogAbout
-from tribgui import widgets
-
 
 '''
 Class to capture the setup of the About Dialog.
