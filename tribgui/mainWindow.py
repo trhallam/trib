@@ -11,7 +11,7 @@ from os.path import expanduser, join
 
 from PyQt5 import QtWidgets
 from PyQt5.QtCore import pyqtSlot
-from tribgui.widgets import (widgetFDChart, widgetIDChart,
+from tribgui.widgets import (widgetFDChart, widgetIDChart, widgetIDProbit,
                             widgetIDTable, widgetFDTable)
 
 from tribgui._qtdesigner import qdesignMainWindow, qdesignDialogAbout
@@ -83,8 +83,21 @@ class mainApp(QtWidgets.QMainWindow, qdesignMainWindow.Ui_MainWindow):
         self.wIDChart = widgetIDChart()
         self.gridLayoutHist.addWidget(self.wIDChart)
 
+        # Probit Widget
+        self.wIDProbit = widgetIDProbit()
+        self.gridLayoutProbit.addWidget(self.wIDProbit)
+
         # Connect Widgets
         self.wIDTable.actionInputUpdated.connect(self.wIDChart.receiveFromTable)
+        self.wIDTable.actionInputUpdated.connect(self.wIDProbit.receiveFromTable)
+
+        self.wIDChart.actionRequestFromTable.connect(self.wIDTable.onDataRequest)
+        self.wIDChart.actionRequestFromTable.emit()
+
+        self.wIDProbit.actionRequestFromTable.connect(self.wIDTable.onDataRequest)
+        self.wIDProbit.actionRequestFromTable.emit()
+
+
         #self.wIDTable.onTableEdited()
         #self.w1.actionDistrUpdated.connect(self.c1.updateChart)
 

@@ -44,7 +44,7 @@ background-color: rgb(250, 250, 250);
 border-color: rgb(93, 87, 107);</string>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="tabFixedDist">
        <property name="autoFillBackground">
@@ -131,11 +131,7 @@ border-color: rgb(93, 87, 107);</string>
            <enum>Qt::Horizontal</enum>
           </property>
           <widget class="QWidget" name="verticalLayoutWidget_2">
-           <layout class="QVBoxLayout" name="verticalLayoutIDLeft" stretch="0">
-            <item>
-             <layout class="QGridLayout" name="gridLayoutIDLeft"/>
-            </item>
-           </layout>
+           <layout class="QVBoxLayout" name="verticalLayoutIDLeft" stretch=""/>
           </widget>
           <widget class="Line" name="lineSplitterSetDistr">
            <property name="sizePolicy">

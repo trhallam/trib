@@ -7,10 +7,10 @@ This module contains classes for the modification of the idtables widget
 from PyQt5 import QtGui, QtWidgets, QtCore
 from PyQt5.QtCore import pyqtSlot, pyqtSignal
 try:
-    from pyqt5x.XTableWidget import XParameterTableWidget
+    from pyqt5x import XParameterTableWidget
 except ImportError:
     from .. import env
-    from pyqt5x.XTableWidget import XParameterTableWidget
+    from pyqt5x import XParameterTableWidget
 
 '''
 Class to caputre the setup of the data input table.
@@ -145,6 +145,15 @@ class widgetIDTable(QtWidgets.QWidget):
         self.tableWidgetInputValues.itemChanged.connect(self.onTableEdited)
 
         self.tableWidgetInputValues.setCurrentCell(inrow, incol)
+        self.data=self.tableWidgetInputValues.returndata()
+        self.tableWidgetInputValues.setCurrentCell(inrow, incol)
+        self.actionInputUpdated.emit(self._cleandata())
+
+    @pyqtSlot()
+    def onDataRequest(self):
+        inrow = self.tableWidgetInputValues.currentRow()
+        incol = self.tableWidgetInputValues.currentColumn()
+
         self.data=self.tableWidgetInputValues.returndata()
         self.tableWidgetInputValues.setCurrentCell(inrow, incol)
         self.actionInputUpdated.emit(self._cleandata())

@@ -7,19 +7,17 @@ make.py must be run in the tribgui module folder to update the gui interface.
 """
 
 from PyQt5 import QtWidgets, QtCore
-from PyQt5.QtChart import QChart, QChartView, QValueAxis, QBarSet
-from PyQt5.QtGui import QPainter, QPen
-from PyQt5.QtCore import pyqtSlot, Qt
+from PyQt5.QtChart import QChartView
+from PyQt5.QtGui import QPainter
+from PyQt5.QtCore import pyqtSlot, pyqtSignal
 from tufpy.stats import distr
 
-import numpy as np
 from scipy import stats
 
 from tribgui._qtdesigner import qdesignFDChart
 from tribgui.colourpack import tribColours
 
-from pyqt5x.XChartTools import XLineSeries, XDictSet
-from pyqt5x.XChartProbit import XChartProbit, XChartViewProbit
+from pyqt5x import XChartProbit
 
 s = 0.5
 dummy_data_4testing = stats.lognorm.rvs(s, scale=0.2, size=100)
@@ -41,6 +39,9 @@ for i, dp in enumerate(dummy_data_4testing):
 
 
 class widgetIDProbit(QtWidgets.QWidget, qdesignFDChart.Ui_Form):
+
+    actionRequestFromTable = pyqtSignal()
+
     def __init__(self, parent=None):
         super(widgetIDProbit, self).__init__(parent)
         self.setupUi(self)
@@ -61,14 +62,14 @@ class widgetIDProbit(QtWidgets.QWidget, qdesignFDChart.Ui_Form):
         self.activeDist = str(self.distrfromname(self.comboBoxDistr.currentText()))
 
         self.chart = XChartProbit()
-        
+
         # Add Chart to Chartview and Chartview to Widget
         self.chartview = QChartView(self.chart)
         self.verticalLayout.addWidget(self.chartview)
         self.chartview.setRenderHint(QPainter.Antialiasing)        
         
         self.onComboBoxDistrChanged(self.activeDist)
-        
+
         
     def updateChart(self):
         pass
@@ -80,11 +81,21 @@ class widgetIDProbit(QtWidgets.QWidget, qdesignFDChart.Ui_Form):
         
     @pyqtSlot(str)
     def onComboBoxDistrChanged(self, name):
+        '''
         self.activeDist = str(self.distrfromname(name))
         if self.activeDist == 'norm':
             self.chart.setActiveScale('linear')
         elif self.activeDist == 'lognorm':
             self.chart.setActiveScale('log10')
+        self.chart.redrawChart()
+        '''
+
+        self.chart.setActiveProbit(self.activeDist)
+
+    @pyqtSlot(dict)
+    def receiveFromTable(self, datadict):
+        self.onComboBoxDistrChanged(self.activeDist)
+        self.chart.loadSeries(datadict['Value'],"Values")
         self.chart.redrawChart()
 
 def main():

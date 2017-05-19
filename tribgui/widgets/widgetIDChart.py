@@ -9,7 +9,7 @@ make.py must be run in the tribgui module folder to update the gui interface.
 from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtChart import QChart, QChartView, QValueAxis, QBarSet
 from PyQt5.QtGui import QPainter, QPen
-from PyQt5.QtCore import pyqtSlot, Qt
+from PyQt5.QtCore import pyqtSlot, Qt, pyqtSignal
 from tufpy.stats import distr
 
 import numpy as np
@@ -40,6 +40,9 @@ for i, dp in enumerate(dummy_data_4testing):
 
 
 class widgetIDChart(QtWidgets.QWidget, qdesignFDChart.Ui_Form):
+
+    actionRequestFromTable = pyqtSignal()
+
     def __init__(self, parent=None):
         super(widgetIDChart, self).__init__(parent)
         self.setupUi(self)
