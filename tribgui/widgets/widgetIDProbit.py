@@ -15,9 +15,8 @@ from tufpy.stats import distr
 from scipy import stats
 
 from tribgui._qtdesigner import qdesignFDChart
-from tribgui.colourpack import tribColours
 
-from pyqt5x import XChartProbit
+from pyqt5x import XChartProbit, XComboBoxDict
 
 s = 0.5
 dummy_data_4testing = stats.lognorm.rvs(s, scale=0.2, size=100)
@@ -51,14 +50,14 @@ class widgetIDProbit(QtWidgets.QWidget, qdesignFDChart.Ui_Form):
         
         # Extra Menu Items
         # Distribution Type Selection
-        self.comboBoxDistr = QtWidgets.QComboBox(self)
+        self.comboBoxDistr = XComboBoxDict(self)
         self.comboBoxDistr.setMinimumSize(QtCore.QSize(100, 30))
         
         self.knowndistr = distr._distrnames()
-        self.comboBoxDistr.addItems([self.knowndistr[key] for key in self.knowndistr])
+        self.comboBoxDistr.addItems(self.knowndistr)
         self.comboBoxDistr.setObjectName("comboBoxDistr")
         self.horizontalLayout.insertWidget(3,self.comboBoxDistr)
-        self.comboBoxDistr.currentTextChanged.connect(self.onComboBoxDistrChanged)
+        self.comboBoxDistr.currentKeyChanged.connect(self.onComboBoxDistrChanged)
         self.activeDist = str(self.distrfromname(self.comboBoxDistr.currentText()))
 
         self.chart = XChartProbit()
@@ -90,7 +89,8 @@ class widgetIDProbit(QtWidgets.QWidget, qdesignFDChart.Ui_Form):
         self.chart.redrawChart()
         '''
 
-        self.chart.setActiveProbit(self.activeDist)
+        self.chart.setActiveProbit(name)
+        self.chart.redrawChart()
 
     @pyqtSlot(dict)
     def receiveFromTable(self, datadict):

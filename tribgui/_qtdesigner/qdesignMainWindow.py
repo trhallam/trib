@@ -87,9 +87,6 @@ class Ui_MainWindow(object):
         self.verticalLayoutIDLeft = QtWidgets.QVBoxLayout(self.verticalLayoutWidget_2)
         self.verticalLayoutIDLeft.setContentsMargins(0, 0, 0, 0)
         self.verticalLayoutIDLeft.setObjectName("verticalLayoutIDLeft")
-        self.gridLayoutIDLeft = QtWidgets.QGridLayout()
-        self.gridLayoutIDLeft.setObjectName("gridLayoutIDLeft")
-        self.verticalLayoutIDLeft.addLayout(self.gridLayoutIDLeft)
         self.lineSplitterSetDistr = QtWidgets.QFrame(self.splitter_2)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(0)
@@ -259,7 +256,7 @@ class Ui_MainWindow(object):
         self.menubar.addAction(self.menuAbout.menuAction())
 
         self.retranslateUi(MainWindow)
-        self.tabWidget.setCurrentIndex(0)
+        self.tabWidget.setCurrentIndex(1)
         self.tabWidgetID.setCurrentIndex(0)
         self.actionExit.triggered.connect(MainWindow.close)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)

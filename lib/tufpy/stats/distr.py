@@ -27,6 +27,7 @@ def _distrargs(type):
                }
     return reqargs[type]
 
+
 def _distrkeys(type):
     # define the keys required for each distribution
     reqkeys = {'norm'       : ['loc', 'scale'],
@@ -34,12 +35,14 @@ def _distrkeys(type):
                }
     return reqkeys[type]
 
+
 def _distrnames():
     # returns a dictionary of all the names of the known distributions
     return {'norm'          : 'Normal',
             'lognorm'       : 'Log-Normal'
             }
-    
+
+
 def _distrkeysync(type,dict,direction='chart'):
     # define the key mappings for each distribution
 
@@ -54,6 +57,19 @@ def _distrkeysync(type,dict,direction='chart'):
     else:
         pass
     return dict
+
+
+def _distrmapargs(type,indict):
+    kstats = _distrkeysync(type, indict)
+    try:
+        dargs = {kstats[key] for key in _distrargs(type)}
+    except TypeError:
+        dargs = ()
+    try:
+        dkwargs = {key: kstats[key] for key in _distrkeys(type)}
+    except TypeError:
+        dkwargs = ()
+    return dargs, dkwargs
 
 def invNormPpf(f1, p1, f2, p2):
     """Use two known points to calculate a normal continuous distribution.
@@ -235,7 +251,8 @@ def distrpdf(type, n, **kwargs):
 
     data_dict = dict()
     if type in knowndistr():
-        kstats = _distrkeysync(type,kstats)
+        kstats = _distrkeysync(type, kstats)
+        '''
         try:
             dargs = {kstats[key] for key in _distrargs(type)}
         except TypeError:
@@ -244,7 +261,9 @@ def distrpdf(type, n, **kwargs):
             dkwargs = {key: kstats[key] for key in _distrkeys(type)}
         except TypeError:
             dkwargs = ()
-
+        '''
+        dargs, dkwargs = _distrmapargs(kstats)
+        print(dargs,dkwargs)
         if type == 'norm':  # normal distribution
             # calculate X space
             xmin = stats.norm.ppf(pmin, **dkwargs)
@@ -269,10 +288,13 @@ def distrppf(type, a, **kwargs):
     :param kwargs: tbd
     """
     if type in knowndistr():
-       if type == 'norm':  # normal distribution
-           ppfar = stats.norm.ppf(a)
-       elif type == 'lognorm':
-           ppfar = stats.lognorm.ppf(a)
+        #kstats = _distrkeysync(type, kstats)
+        #dargs, dkwargs = _distrmapargs(kstats)
+        dargs = []; dkwargs = []
+        if type == 'norm':  # normal distribution
+            ppfar = stats.norm.ppf(a, *dargs, **kwargs)
+        elif type == 'lognorm':
+            ppfar = stats.lognorm.ppf(a, *dargs, **kwargs)
     
     return ppfar
     

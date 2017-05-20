@@ -30,3 +30,4 @@ __version__
 
 from .XChartProbit import XChartProbit
 from .XTableWidget import XParameterTableWidget
+from .XComboBoxDict import XComboBoxDict
