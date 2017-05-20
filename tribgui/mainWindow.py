@@ -7,12 +7,13 @@ make.py must be run in the tribgui module folder to update the gui interface.
 """
 
 import json
+import webbrowser
 from os.path import expanduser, join
 
 from PyQt5 import QtWidgets
 from PyQt5.QtCore import pyqtSlot
 from tribgui.widgets import (widgetFDChart, widgetIDChart, widgetIDProbit,
-                            widgetIDTable, widgetFDTable)
+                            widgetIDTable, widgetFDTable, widgetIDStats)
 
 from tribgui._qtdesigner import qdesignMainWindow, qdesignDialogAbout
 
@@ -79,6 +80,10 @@ class mainApp(QtWidgets.QMainWindow, qdesignMainWindow.Ui_MainWindow):
 
         self.verticalLayoutIDLeft.addWidget(self.wIDTable)
 
+        # Stats Table
+        self.wIDStats = widgetIDStats()
+        self.gridLayoutStats.addWidget(self.wIDStats)
+
         # Histogram Widget
         self.wIDChart = widgetIDChart()
         self.gridLayoutHist.addWidget(self.wIDChart)
@@ -90,6 +95,7 @@ class mainApp(QtWidgets.QMainWindow, qdesignMainWindow.Ui_MainWindow):
         # Connect Widgets
         self.wIDTable.actionInputUpdated.connect(self.wIDChart.receiveFromTable)
         self.wIDTable.actionInputUpdated.connect(self.wIDProbit.receiveFromTable)
+        self.wIDTable.actionInputUpdated.connect(self.wIDStats.receiveFromTable)
 
         self.wIDChart.actionRequestFromTable.connect(self.wIDTable.onDataRequest)
         self.wIDChart.actionRequestFromTable.emit()

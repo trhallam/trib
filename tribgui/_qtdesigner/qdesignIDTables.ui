@@ -20,108 +20,13 @@
    <string>Form</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">background-color: rgb(255, 255, 255);</string>
+   <string notr="true"/>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="2" column="0">
-    <widget class="QGroupBox" name="distributionValuesGroup">
-     <property name="minimumSize">
-      <size>
-       <width>250</width>
-       <height>250</height>
-      </size>
-     </property>
-     <property name="font">
-      <font>
-       <pointsize>12</pointsize>
-       <weight>75</weight>
-       <bold>true</bold>
-      </font>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">background-color: rgb(255, 255, 255);</string>
-     </property>
-     <property name="title">
-      <string>Distribution Values</string>
-     </property>
-     <layout class="QGridLayout" name="gridLayout_2">
-      <item row="1" column="0">
-       <widget class="XParameterTableWidget" name="tableWidgetDistrValues">
-        <property name="styleSheet">
-         <string notr="true">selection-color: rgb(93, 87, 107);
-selection-background-color: rgb(139, 218, 249);
-background-color: rgb(252, 252, 252);
-border-color: rgb(93, 87, 107);
-alternate-background-color: rgb(255, 250, 227);
-font: 75 14pt &quot;Arial&quot;;</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </widget>
-   </item>
    <item row="0" column="0">
-    <widget class="QGroupBox" name="distributionDefBox">
-     <property name="minimumSize">
-      <size>
-       <width>250</width>
-       <height>210</height>
-      </size>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>16777215</width>
-       <height>210</height>
-      </size>
-     </property>
-     <property name="font">
-      <font>
-       <pointsize>12</pointsize>
-       <weight>75</weight>
-       <bold>true</bold>
-      </font>
-     </property>
+    <widget class="XParameterTableWidget" name="tableWidgetDistrInputs">
      <property name="styleSheet">
-      <string notr="true">background-color: rgb(255, 255, 255);</string>
-     </property>
-     <property name="title">
-      <string>Distribution Definition</string>
-     </property>
-     <layout class="QGridLayout" name="gridLayout_3">
-      <item row="0" column="0">
-       <widget class="QComboBox" name="comboBoxDist">
-        <property name="styleSheet">
-         <string notr="true">selection-color: rgb(93, 87, 107);
-selection-background-color: rgb(139, 218, 249);
-background-color: rgb(252, 252, 252);
-border-color: rgb(93, 87, 107);
-alternate-background-color: rgb(255, 250, 227);
-font: 75 14pt &quot;Arial&quot;;</string>
-        </property>
-        <property name="currentText">
-         <string/>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="0">
-       <widget class="XParameterTableWidget" name="tableWidgetDistrInputs">
-        <property name="styleSheet">
-         <string notr="true">selection-color: rgb(93, 87, 107);
-selection-background-color: rgb(139, 218, 249);
-background-color: rgb(252, 252, 252);
-border-color: rgb(93, 87, 107);
-alternate-background-color: rgb(255, 250, 227);
-font: 75 14pt &quot;Arial&quot;;</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </widget>
-   </item>
-   <item row="1" column="0">
-    <widget class="Line" name="line">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
+      <string notr="true"/>
      </property>
     </widget>
    </item>

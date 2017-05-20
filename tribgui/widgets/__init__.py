@@ -23,5 +23,6 @@ from .widgetFDTable import widgetFDTable
 from .widgetIDChart import widgetIDChart
 from .widgetIDTable import widgetIDTable
 from .widgetIDProbit import widgetIDProbit
+from .widgetIDStats import widgetIDStats
 
-from .widgetIDProbit import main
+#from .widgetIDProbit import main

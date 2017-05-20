@@ -262,8 +262,7 @@ def distrpdf(type, n, **kwargs):
         except TypeError:
             dkwargs = ()
         '''
-        dargs, dkwargs = _distrmapargs(kstats)
-        print(dargs,dkwargs)
+        dargs, dkwargs = _distrmapargs(type, kstats)
         if type == 'norm':  # normal distribution
             # calculate X space
             xmin = stats.norm.ppf(pmin, **dkwargs)
@@ -322,4 +321,19 @@ def distrfit(type, a, **kwargs):
             kstats['shp'] = distrMLE[0]; kstats['loc'] = distrMLE[1]
             kstats['mu'] = np.log(distrMLE[2])
     
+    return kstats
+
+def distrdescribe(a):
+    """
+    distrdescribe - handler for describe of an array of floats, maps values back to understood dictionary
+    :param a: 
+    :return: kstats - a dict of known distribution quantities
+    """
+    kstats = dict()
+    istats = stats.describe(a)
+    kstats['nsamp'] = istats[0]
+    kstats['min'] = istats[1][0]; kstats['max'] = istats[1][1]
+    kstats['mean'] = istats[2]; kstats['var'] = istats[3]
+    kstats['skew'] = istats[4]; kstats['kurt'] = istats[5]
+
     return kstats

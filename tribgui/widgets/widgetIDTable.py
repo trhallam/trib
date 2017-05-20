@@ -51,13 +51,10 @@ class widgetIDTable(QtWidgets.QWidget):
 
         self.setStyleSheet("background-color: rgb(255, 255, 255);")
         self.tableWidgetInputValues = XParameterTableWidget()
-        # self.tableWidgetInputValues.setMinimumSize(QtCore.QSize(300, 200))
-        # self.tableWidgetInputValues.setMaximumSize(QtCore.QSize(500, 5000))
         self.tableWidgetInputValues.setSizePolicy(QtWidgets.QSizePolicy.Expanding,
                                                     QtWidgets.QSizePolicy.Expanding)
         self.gridLayout.addWidget(self.tableWidgetInputValues)
-        #self.tableWidgetInputValues = XParameterTableWidget(self)
-        
+
         # Populate Input Distr Table
 
         self.inputHeaders = ['Point ID', 'Value']
@@ -67,34 +64,14 @@ class widgetIDTable(QtWidgets.QWidget):
         self.currentInput = self.inputData
         self.tableColRatio = 0.5
         self.tableWidgetInputValues.setdata(self.currentInput)
-#        self._calcFixedDistrTable()
-
-        # monitors for distribution input boxes
-#        self.comboBoxDist.currentIndexChanged.connect(self.onFixedDistrEdited)
 
         # monitors for changes to output table
-
-        self.tableWidgetInputValues.itemChanged.connect(self.onTableEdited) 
-
+        self.tableWidgetInputValues.itemChanged.connect(self.onTableEdited)
 
         # monitors resizing of window
         # self.tableWidgetDistrValues.resizeEvent(self.onTableResize)
 
         #self.tableWidgetDistrInput.setCurrentCell(0, 0)
-
-    # functions for Fixed Distribution Tab
-
-
-
-    def _calcDistrFit(self):
-        fdistpoints = dict()
-        for i, key in enumerate(self.fixedDistr.keys()):
-            fdistpoints['p'+str(i)] = 1 - float(key)
-            fdistpoints['f'+str(i)] = float(self.fixedDistr[key])
-
-        self.kstats = distr.invdistr(self.activeDistr, **fdistpoints)
-        self.kstats = distr.distrstats(self.activeDistr,**self.kstats)
-        self.actionDistrUpdated.emit([self.activeDistr, self.kstats])
 
     def _checkInputRow(self, row):
 

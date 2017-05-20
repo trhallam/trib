@@ -16,28 +16,19 @@ class Ui_MainWindow(object):
         icon.addPixmap(QtGui.QPixmap(":/icons/icons/CDFPlot.svg"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         MainWindow.setWindowIcon(icon)
         MainWindow.setToolTipDuration(2)
-        MainWindow.setStyleSheet("background-color: rgb(250, 250, 250);\n"
-"selection-background-color: rgb(139, 218, 249);\n"
-"border-color: rgb(93, 87, 107);")
+        MainWindow.setStyleSheet("")
         self.centralwidget = QtWidgets.QWidget(MainWindow)
-        self.centralwidget.setStyleSheet("selection-color: rgb(139, 218, 249);\n"
-"background-color: rgb(250, 250, 250);\n"
-"border-color: rgb(93, 87, 107);")
+        self.centralwidget.setStyleSheet("")
         self.centralwidget.setObjectName("centralwidget")
         self.gridLayout = QtWidgets.QGridLayout(self.centralwidget)
         self.gridLayout.setObjectName("gridLayout")
         self.tabWidget = QtWidgets.QTabWidget(self.centralwidget)
         self.tabWidget.setAutoFillBackground(False)
-        self.tabWidget.setStyleSheet("selection-background-color: rgb(139, 218, 249);\n"
-"selection-color: rgb(0,0,0);\n"
-"background-color: rgb(250, 250, 250);\n"
-"border-color: rgb(93, 87, 107);")
+        self.tabWidget.setStyleSheet("")
         self.tabWidget.setObjectName("tabWidget")
         self.tabFixedDist = QtWidgets.QWidget()
         self.tabFixedDist.setAutoFillBackground(False)
-        self.tabFixedDist.setStyleSheet("selection-color: rgb(139, 218, 249);\n"
-"background-color: rgb(250, 250, 250);\n"
-"border-color: rgb(93, 87, 107);")
+        self.tabFixedDist.setStyleSheet("")
         self.tabFixedDist.setObjectName("tabFixedDist")
         self.gridLayout_2 = QtWidgets.QGridLayout(self.tabFixedDist)
         self.gridLayout_2.setContentsMargins(0, 0, 0, 0)
@@ -50,13 +41,6 @@ class Ui_MainWindow(object):
         self.verticalLayoutFD = QtWidgets.QVBoxLayout(self.widget)
         self.verticalLayoutFD.setContentsMargins(0, 0, 0, 0)
         self.verticalLayoutFD.setObjectName("verticalLayoutFD")
-        self.lineSplitterFixedDistr = QtWidgets.QFrame(self.splitter)
-        self.lineSplitterFixedDistr.setMinimumSize(QtCore.QSize(20, 0))
-        self.lineSplitterFixedDistr.setMaximumSize(QtCore.QSize(20, 16777215))
-        self.lineSplitterFixedDistr.setFrameShadow(QtWidgets.QFrame.Sunken)
-        self.lineSplitterFixedDistr.setLineWidth(2)
-        self.lineSplitterFixedDistr.setFrameShape(QtWidgets.QFrame.VLine)
-        self.lineSplitterFixedDistr.setObjectName("lineSplitterFixedDistr")
         self.widget1 = QtWidgets.QWidget(self.splitter)
         self.widget1.setObjectName("widget1")
         self.gridLayoutFDChart = QtWidgets.QGridLayout(self.widget1)
@@ -66,9 +50,7 @@ class Ui_MainWindow(object):
         self.tabWidget.addTab(self.tabFixedDist, "")
         self.tabInputDist = QtWidgets.QWidget()
         self.tabInputDist.setMinimumSize(QtCore.QSize(20, 0))
-        self.tabInputDist.setStyleSheet("selection-color: rgb(139, 218, 249);\n"
-"background-color: rgb(250, 250, 250);\n"
-"border-color: rgb(93, 87, 107);")
+        self.tabInputDist.setStyleSheet("")
         self.tabInputDist.setObjectName("tabInputDist")
         self.gridLayout_3 = QtWidgets.QGridLayout(self.tabInputDist)
         self.gridLayout_3.setContentsMargins(0, 0, 0, 0)
@@ -87,17 +69,6 @@ class Ui_MainWindow(object):
         self.verticalLayoutIDLeft = QtWidgets.QVBoxLayout(self.verticalLayoutWidget_2)
         self.verticalLayoutIDLeft.setContentsMargins(0, 0, 0, 0)
         self.verticalLayoutIDLeft.setObjectName("verticalLayoutIDLeft")
-        self.lineSplitterSetDistr = QtWidgets.QFrame(self.splitter_2)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Expanding)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.lineSplitterSetDistr.sizePolicy().hasHeightForWidth())
-        self.lineSplitterSetDistr.setSizePolicy(sizePolicy)
-        self.lineSplitterSetDistr.setMinimumSize(QtCore.QSize(10, 0))
-        self.lineSplitterSetDistr.setMaximumSize(QtCore.QSize(10, 10000000))
-        self.lineSplitterSetDistr.setFrameShape(QtWidgets.QFrame.VLine)
-        self.lineSplitterSetDistr.setFrameShadow(QtWidgets.QFrame.Sunken)
-        self.lineSplitterSetDistr.setObjectName("lineSplitterSetDistr")
         self.verticalLayoutWidget = QtWidgets.QWidget(self.splitter_2)
         self.verticalLayoutWidget.setObjectName("verticalLayoutWidget")
         self.verticalLayoutIDRight = QtWidgets.QVBoxLayout(self.verticalLayoutWidget)
@@ -257,7 +228,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
         self.tabWidget.setCurrentIndex(1)
-        self.tabWidgetID.setCurrentIndex(0)
+        self.tabWidgetID.setCurrentIndex(2)
         self.actionExit.triggered.connect(MainWindow.close)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
