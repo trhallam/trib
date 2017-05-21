@@ -44,8 +44,8 @@
       <property name="font">
        <font>
         <pointsize>10</pointsize>
-        <weight>75</weight>
-        <bold>true</bold>
+        <weight>50</weight>
+        <bold>false</bold>
        </font>
       </property>
       <property name="styleSheet">
@@ -57,6 +57,12 @@
       <layout class="QGridLayout" name="gridLayout_3">
        <item row="0" column="0">
         <widget class="QComboBox" name="comboBoxDist">
+         <property name="font">
+          <font>
+           <pointsize>9</pointsize>
+           <kerning>false</kerning>
+          </font>
+         </property>
          <property name="styleSheet">
           <string notr="true"/>
          </property>
@@ -89,8 +95,8 @@
       <property name="font">
        <font>
         <pointsize>10</pointsize>
-        <weight>75</weight>
-        <bold>true</bold>
+        <weight>50</weight>
+        <bold>false</bold>
        </font>
       </property>
       <property name="styleSheet">

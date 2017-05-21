@@ -12,6 +12,8 @@ except ImportError:
     from .. import env
     from pyqt5x import XParameterTableWidget
 
+from tribgui.stylesheet import tribtablestyle
+
 '''
 Class to caputre the setup of the data input table.
 '''
@@ -54,6 +56,7 @@ class widgetIDTable(QtWidgets.QWidget):
         self.tableWidgetInputValues.setSizePolicy(QtWidgets.QSizePolicy.Expanding,
                                                     QtWidgets.QSizePolicy.Expanding)
         self.gridLayout.addWidget(self.tableWidgetInputValues)
+        tribtablestyle(self.tableWidgetInputValues)
 
         # Populate Input Distr Table
 

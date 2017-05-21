@@ -16,6 +16,7 @@ from tribgui.widgets import (widgetFDChart, widgetIDChart, widgetIDProbit,
                             widgetIDTable, widgetFDTable, widgetIDStats)
 
 from tribgui._qtdesigner import qdesignMainWindow, qdesignDialogAbout
+from tribgui.stylesheet import tribmainstyle
 
 '''
 Class to capture the setup of the About Dialog.
@@ -49,7 +50,8 @@ class mainApp(QtWidgets.QMainWindow, qdesignMainWindow.Ui_MainWindow):
     def __init__(self, parent=None):
         super(mainApp, self).__init__(parent)
         self.setupUi(self)
-
+        self.setMouseTracking(True)
+        # tribmainstyle(self)
         # global variables
         self.userhome = join(expanduser("~"),'Documents')
 

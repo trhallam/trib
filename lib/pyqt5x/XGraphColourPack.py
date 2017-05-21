@@ -50,6 +50,16 @@ class ColourPack(object):
     def colourOrder(self):
         return self._order
 
+    def rgbDict(self, alpha = False):
+        rgb = dict()
+        if not alpha:
+            for key in self.namedColours():
+                rgb[key] = self.__getattribute__(key).getRgb()[0:3]
+        elif alpha:
+            for key in self.namedColours():
+                rgb[key] = self.__getattribute__(key).getRgb()[0:3]
+        return rgb
+
 gaColours = ColourPack()
 kellyColours = ColourPack()
     
@@ -86,9 +96,14 @@ def main():
                 pallist[i].setColor(QPalette.Window, gaColours.__getattribute__(col)); 
                 colourlist[i].setPalette(pallist[i]); #
                 grid.addWidget(colourlist[i],i,1)
-            self.move(600, 500)
+            self.move(200, 200)
+            self.setMinimumWidth(500)
             self.setWindowTitle('tribPalette')
             self.show()
+
+
+    print(dir(gaColours.white))
+    print(gaColours.pink.getRgb())
 
     app = QApplication(sys.argv)
     ex = GridWidget()

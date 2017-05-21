@@ -14,6 +14,7 @@ except ImportError:
     from pyqt5x import XParameterTableWidget
 
 from tufpy.stats import distr
+from tribgui.stylesheet import tribtablestyle
 
 '''
 Class to caputre the setup of the data input table.
@@ -55,6 +56,7 @@ class widgetIDStats(QtWidgets.QWidget):
         self.tableWidgetStats = XParameterTableWidget()
         self.tableWidgetStats.setSizePolicy(QtWidgets.QSizePolicy.Expanding,
                                                     QtWidgets.QSizePolicy.Expanding)
+        tribtablestyle(self.tableWidgetStats)
         self.gridLayout.addWidget(self.tableWidgetStats)
         self._buildTable()
         self.tableWidgetStats.setdata(self.cstat)
@@ -91,10 +93,7 @@ class widgetIDStats(QtWidgets.QWidget):
 
     @pyqtSlot(dict)
     def receiveFromTable(self, datadict):
-        #self.setRawData(datadict['Value'])
-        print(datadict)
         self._calcstats(datadict['Value'])
-        #self.updateChart()
 
     # special pyqt slots
     @pyqtSlot()

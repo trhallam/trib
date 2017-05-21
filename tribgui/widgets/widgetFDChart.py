@@ -13,14 +13,15 @@ from PyQt5.QtCore import pyqtSlot, Qt
 from tufpy.stats import distr
 
 from tribgui._qtdesigner import qdesignFDChart
+from tribgui.stylesheet import tribchartmenustyle
 from pyqt5x.XChartTools import XLineSeries
 
 class widgetFDChart(QtWidgets.QWidget, qdesignFDChart.Ui_Form):
     def __init__(self, parent=None):
         super(widgetFDChart, self).__init__(parent)
         self.setupUi(self)
-
-        # SetUp for Chart to Display Distribution curves and inputs.
+        tribchartmenustyle(self)
+         # SetUp for Chart to Display Distribution curves and inputs.
         self.chart = QChart()
         self.chart.legend().setVisible(False)
 

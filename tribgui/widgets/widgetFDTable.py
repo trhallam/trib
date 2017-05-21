@@ -10,7 +10,7 @@ from PyQt5 import QtGui, QtWidgets, QtCore
 from PyQt5.QtCore import pyqtSlot, pyqtSignal
 
 from tribgui._qtdesigner import qdesignFDTables
-
+from tribgui.stylesheet import tribtablestyle
 
 
 
@@ -27,6 +27,7 @@ class widgetFDTable(QtWidgets.QWidget, qdesignFDTables.Ui_Form):
     def __init__(self, parent=None):
         super(widgetFDTable, self).__init__(parent)
         self.setupUi(self)
+        tribtablestyle(self)
 
         # known distributions
         self.distrTypes = {'Normal': 'norm',

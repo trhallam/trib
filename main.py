@@ -70,6 +70,7 @@ def main():
     from tribgui import mainWindow
             
     app = QtWidgets.QApplication(sys.argv)
+    # app.setStyle(QtWidgets.QStyleFactory.create('Fusion'))
     mw = mainWindow.mainApp()
 
     if open_on_load:
