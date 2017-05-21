@@ -15,6 +15,7 @@ from tufpy.stats import distr
 from scipy import stats
 
 from tribgui._qtdesigner import qdesignFDChart
+from tribgui.stylesheet import tribchartmenustyle
 
 from pyqt5x import XChartProbit, XComboBoxDict
 
@@ -44,6 +45,7 @@ class widgetIDProbit(QtWidgets.QWidget, qdesignFDChart.Ui_Form):
     def __init__(self, parent=None):
         super(widgetIDProbit, self).__init__(parent)
         self.setupUi(self)
+        tribchartmenustyle(self)
 
         # Default Settings
         self.nbins = 10

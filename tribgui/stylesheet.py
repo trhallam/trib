@@ -10,29 +10,36 @@ def coloursub(sss):
     # Takes sss the style sheet string and replaces references to know colour keys with rgb text values.
     rgb = tribColours.rgbDict()
     for key in rgb:
-        rgbv = rgb[key]; print(rgbv)
+        rgbv = rgb[key]
         sss=sss.replace(key, 'rgb(%d, %d, %d)'%(rgbv[0],rgbv[1],rgbv[2]))
     return sss
 
 
 def tribmainstyle(widget):
-    widget.setStyleSheet("""
+    widget.setStyleSheet(coloursub("""
         QWidget {
-            background-color: rgb(250, 250, 250);
-            selection-color: rgb(93, 87, 107);
-            selection-background-color: rgb(139, 218, 249);
+            background-color: tribSnow;
+            selection-color: tribStone;
+            selection-background-color: tribBlue;
             }
             
-        """)
+        """))
 
 
 def tribtablestyle(widget):
     widget.setStyleSheet(coloursub("""
         QTableWidget {
+            background-color: white;
             selection-color: tribStone;
             selection-background-color: tribBlue;
-            font: bold 9pt;
+            font: 9pt;
             font-family: 'Ariel'
+        }
+        
+        QComboBox {
+                font: 9pt;
+                font-family: 'Ariel';
+                min-height: 30px
         }
         """))
 
@@ -44,10 +51,29 @@ def tribchartmenustyle(widget):
                  }
                 
         QPushButton:hover {
-                border: 2px solid tribBlue;
+                border: 1px solid tribBlue;
+                background : rgba(139, 218, 249, 50%)
                        }
+                       
+        QComboBox {
+                font: 9pt;
+                font-family: 'Ariel';
+                min-height: 24px
+        }
         """))
 
+def tribaboutdialogstyle(widget):
+    widget.setStyleSheet(coloursub("""
+        QPushButton {
+                background : tribSnow;
+                border: None;
+                 }
+
+        QPushButton:hover {
+                border: 1px solid tribBlue;
+                background : rgba(139, 218, 249, 50%);
+                       }
+        """))
 
 
 def main():

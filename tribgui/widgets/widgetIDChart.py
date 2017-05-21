@@ -17,6 +17,7 @@ from scipy import stats
 
 from tribgui._qtdesigner import qdesignFDChart
 from tribgui.colourpack import tribColours
+from tribgui.stylesheet import tribchartmenustyle
 
 from pyqt5x.XChartTools import XLineSeries, XDictSet
 
@@ -46,7 +47,7 @@ class widgetIDChart(QtWidgets.QWidget, qdesignFDChart.Ui_Form):
     def __init__(self, parent=None):
         super(widgetIDChart, self).__init__(parent)
         self.setupUi(self)
-
+        tribchartmenustyle(self)
         # Default Settings
         self.nbins = 10
         
@@ -181,7 +182,7 @@ class widgetIDChart(QtWidgets.QWidget, qdesignFDChart.Ui_Form):
                 
                 # Fit Line Formatting
                 linepen = QPen(); 
-                linepen.setWidth(5.0)
+                linepen.setWidth(2.5)
                 linepen.setColor(tribColours.tribCoral)
                 self.lineDist.setPen(linepen)
 

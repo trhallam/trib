@@ -16,7 +16,7 @@ from tribgui.widgets import (widgetFDChart, widgetIDChart, widgetIDProbit,
                             widgetIDTable, widgetFDTable, widgetIDStats)
 
 from tribgui._qtdesigner import qdesignMainWindow, qdesignDialogAbout
-from tribgui.stylesheet import tribmainstyle
+from tribgui.stylesheet import tribmainstyle, tribaboutdialogstyle
 
 '''
 Class to capture the setup of the About Dialog.
@@ -27,6 +27,7 @@ class aboutDialog(QtWidgets.QDialog, qdesignDialogAbout.Ui_dialogAbout):
     def __init__(self, parent=None):
         super(aboutDialog, self).__init__(parent)
         self.setupUi(self)
+
 
         self.pushButtonGitHub.clicked.connect(self.onIconClick)
         self.pushButtonLIn.clicked.connect(self.onIconClick)
@@ -51,7 +52,7 @@ class mainApp(QtWidgets.QMainWindow, qdesignMainWindow.Ui_MainWindow):
         super(mainApp, self).__init__(parent)
         self.setupUi(self)
         self.setMouseTracking(True)
-        # tribmainstyle(self)
+        tribmainstyle(self)
         # global variables
         self.userhome = join(expanduser("~"),'Documents')
 
@@ -66,6 +67,7 @@ class mainApp(QtWidgets.QMainWindow, qdesignMainWindow.Ui_MainWindow):
         # About
         self.actionAbout.triggered.connect(self._onActionAbout)
         self.aboutDialog = aboutDialog(self)
+        tribaboutdialogstyle(self.aboutDialog)
 
         # Fixed Distribution Tab
         # Fixed Distribution Tables

@@ -238,7 +238,10 @@
           </size>
          </property>
          <property name="cursor">
-          <cursorShape>PointingHandCursor</cursorShape>
+          <cursorShape>ArrowCursor</cursorShape>
+         </property>
+         <property name="mouseTracking">
+          <bool>true</bool>
          </property>
          <property name="toolTip">
           <string>Github: https://github.com/trhallam/trib</string>
@@ -259,8 +262,11 @@
            <height>50</height>
           </size>
          </property>
+         <property name="autoDefault">
+          <bool>false</bool>
+         </property>
          <property name="flat">
-          <bool>true</bool>
+          <bool>false</bool>
          </property>
         </widget>
        </item>
@@ -285,7 +291,10 @@
           </size>
          </property>
          <property name="cursor">
-          <cursorShape>PointingHandCursor</cursorShape>
+          <cursorShape>ArrowCursor</cursorShape>
+         </property>
+         <property name="mouseTracking">
+          <bool>true</bool>
          </property>
          <property name="toolTip">
           <string>Linked-In: https://www.linkedin.com/in/antonyhallam/</string>
@@ -306,8 +315,11 @@
            <height>50</height>
           </size>
          </property>
+         <property name="autoDefault">
+          <bool>false</bool>
+         </property>
          <property name="flat">
-          <bool>true</bool>
+          <bool>false</bool>
          </property>
         </widget>
        </item>
@@ -332,7 +344,10 @@
           </size>
          </property>
          <property name="cursor">
-          <cursorShape>PointingHandCursor</cursorShape>
+          <cursorShape>ArrowCursor</cursorShape>
+         </property>
+         <property name="mouseTracking">
+          <bool>true</bool>
          </property>
          <property name="toolTip">
           <string>Icon8: https://icons8.com/</string>
@@ -353,8 +368,11 @@
            <height>50</height>
           </size>
          </property>
+         <property name="autoDefault">
+          <bool>false</bool>
+         </property>
          <property name="flat">
-          <bool>true</bool>
+          <bool>false</bool>
          </property>
         </widget>
        </item>
