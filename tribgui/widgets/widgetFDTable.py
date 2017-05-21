@@ -22,7 +22,7 @@ Class to caputre the setup of the main window.
 class widgetFDTable(QtWidgets.QWidget, qdesignFDTables.Ui_Form):
 
     # signals to communicate with other widgets through main window
-    #actionDistrUpdated = pyqtSignal(list)
+    actionDistrUpdated = pyqtSignal(list)
 
     def __init__(self, parent=None):
         super(widgetFDTable, self).__init__(parent)
@@ -36,12 +36,8 @@ class widgetFDTable(QtWidgets.QWidget, qdesignFDTables.Ui_Form):
 #        self.comboBoxDist.currentIndexChanged.connect(self.onChangeDistribution)
 
         # Populate Fixed Distr Input Table
-        self.fixedInputHeaders = ['Input', 'Value']
-        self.fixedInputData = {}
-        self.fixedInputData[self.fixedInputHeaders[0]] = ['P90', 'P10']
-        self.fixedInputData[self.fixedInputHeaders[1]] = ['1', '3']
-        self.basicInputs = self.fixedInputData
-        self.tableWidgetDistrInputs.setdata(self.basicInputs)
+        self.fixedInputData = {'Input': [''], 'Value': ['']}
+        self.resetInputTable()
 
         # Populate Fixed Distr Tab Table
 
@@ -61,6 +57,9 @@ class widgetFDTable(QtWidgets.QWidget, qdesignFDTables.Ui_Form):
         # monitors for distribution input boxes
 #        self.comboBoxDist.currentIndexChanged.connect(self.onFixedDistrEdited)
 
+        # monitors for changes to input table
+        self.tableWidgetDistrInputs.itemChanged.connect(self.onInputEdited)
+
         # monitors for changes to output table
 
 #        self.tableWidgetDistrValues.itemChanged.connect(self.onTableEdited) #moved to _calcDistrRow
@@ -76,7 +75,66 @@ class widgetFDTable(QtWidgets.QWidget, qdesignFDTables.Ui_Form):
 
     def _getFixedDistrValues(self):
         self.fixedInputData = self.tableWidgetDistrInputs.returndata()
-        
+
+    def resetInputTable(self):
+        # reset the inputs required for the input table, necessary when type of distribution changes
+        self.fixedInputData['Input'] = distr._distrinputs(self.activeDistr)
+        self.fixedInputData['Value'] = len(self.fixedInputData['Input'])*[''] #TODO get this to work with saved info or info coming form another widget
+        self.tableWidgetDistrInputs.setdata(self.fixedInputData)
+
+    def _calcFixedDistr(self):
+        self.fixedInputData = self.tableWidgetDistrInputs.returndata()
+        # check for active distribution required stats
+        self.inval = {'mu' : None}; icount = 1
+        for i, val in enumerate(self.fixedInputData['Input']):
+            if val != '':  # make sure cell not empty
+                try:  # test value is float and or part of distrinputs
+                    if val in distr._distrinputs(self.activeDistr): #know value
+                        self.inval[val] = float(self.fixedInputData['Value'][i])
+                    else: #unknown value check for decimal input to set f* p* values
+                        pc = float(val)
+                        if 0.0 < pc < 1.0:
+                            self.inval['f%d'%icount] = float(self.fixedInputData['Value'][i])
+                            self.inval['p%d'%icount] = 1-pc
+                            icount+=1
+                        else:
+                            raise ValueError
+
+                except:  #TODO write some code that changes the colour of the cells to reflect bad inputs
+                    pass
+
+        # calculate kstats for input values and send to chart
+        self.kstats = dict()
+        if all([input in self.inval.keys() for input in distr._distrinputs(self.activeDistr)]): # check for simple keys
+            for key in distr._distrinputs(self.activeDistr):
+                self.kstats[key] = self.inval[key] # add simple keys to kstats
+            self.kstats = distr.distrstats(self.activeDistr, **self.kstats) # calculate missing stats
+            self.actionDistrUpdated.emit([self.activeDistr, self.kstats]) # update chart
+        else:
+            self.kstats = distr.invdistr(self.activeDistr, **self.inval) # use 2 point method to fix distribution
+            if self.kstats is not None: # if not failed update chart
+                self.actionDistrUpdated.emit([self.activeDistr, self.kstats])
+
+    @pyqtSlot()
+    def onInputEdited(self):
+        self._calcFixedDistr()
+
+def main():
+    import sys
+    from PyQt5.QtWidgets import QApplication, QMainWindow
+
+    app = QApplication(sys.argv)
+    # chartView.chart.addLinearReg()
+    fdtable = widgetFDTable()
+    window = QMainWindow()
+    window.setCentralWidget(fdtable)
+    window.show()
+    sys.exit(app.exec_())
+
+if __name__ == "__main__":
+    main()
+
+
 '''
     def _calcFixedDistr(self):
         fdistpoints = dict()
@@ -172,18 +230,3 @@ class widgetFDTable(QtWidgets.QWidget, qdesignFDTables.Ui_Form):
 
         self.tableWidgetDistrValues.setCurrentCell(inrow, incol)
 '''
-
-def main():
-    import sys
-    from PyQt5.QtWidgets import QApplication, QMainWindow
-
-    app = QApplication(sys.argv)
-    # chartView.chart.addLinearReg()
-    fdtable = widgetFDTable()
-    window = QMainWindow()
-    window.setCentralWidget(fdtable)
-    window.show()
-    sys.exit(app.exec_())
-
-if __name__ == "__main__":
-    main()

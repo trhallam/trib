@@ -97,6 +97,10 @@ class mainApp(QtWidgets.QMainWindow, qdesignMainWindow.Ui_MainWindow):
         self.gridLayoutProbit.addWidget(self.wIDProbit)
 
         # Connect Widgets
+        # Fixed Distribution
+        self.wFDTable.actionDistrUpdated.connect(self.wFDChart.updateChart)
+
+        # Input Distribution
         self.wIDTable.actionInputUpdated.connect(self.wIDChart.receiveFromTable)
         self.wIDTable.actionInputUpdated.connect(self.wIDProbit.receiveFromTable)
         self.wIDTable.actionInputUpdated.connect(self.wIDStats.receiveFromTable)
@@ -108,7 +112,7 @@ class mainApp(QtWidgets.QMainWindow, qdesignMainWindow.Ui_MainWindow):
         self.wIDProbit.actionRequestFromTable.emit()
 
 
-        #self.wIDTable.onTableEdited()
+
         #self.w1.actionDistrUpdated.connect(self.c1.updateChart)
 
         #chart displays on start

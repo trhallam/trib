@@ -210,7 +210,7 @@ class widgetIDChart(QtWidgets.QWidget, qdesignFDChart.Ui_Form):
         
     @pyqtSlot(str)
     def onComboBoxDistrChanged(self, name):
-        self.activeDist = str(self.distrfromname(name))
+        self.activeDist = self.comboBoxDistr.currentKey()
         self.addHistogram(self.nbins)
         self.updateChart()
 

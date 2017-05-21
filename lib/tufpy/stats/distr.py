@@ -17,8 +17,15 @@ Local Variables
 _sqrt2 = np.sqrt(2)
 
 
+def _distrnames():
+    # returns a dictionary of all the names of the known distributions
+    return {'norm'          : 'Normal',
+            'lognorm'       : 'Log-Normal'
+            }
+
+
 def knowndistr():
-    return ['norm', 'lognorm']
+    return list(_distrnames().keys())
 
 
 def _distrargs(type):
@@ -36,11 +43,11 @@ def _distrkeys(type):
     return reqkeys[type]
 
 
-def _distrnames():
-    # returns a dictionary of all the names of the known distributions
-    return {'norm'          : 'Normal',
-            'lognorm'       : 'Log-Normal'
-            }
+def _distrinputs(type):
+    # define the input values required for each distribution
+    reqinputs = {'norm'     : ['mu', 'std'],
+                 'lognorm'  : ['mu', 'shp']}
+    return reqinputs[type]
 
 
 def _distrkeysync(type,dict,direction='chart'):
@@ -53,7 +60,11 @@ def _distrkeysync(type,dict,direction='chart'):
         elif type == 'lognorm':
             dict['scale'] = np.exp(dict['mu'])
     elif direction == 'trib':
-        pass
+        if type == 'norm':
+            dict['mu'] = dict['loc']
+            dict['std'] = dict['scale']
+        elif type == 'lognorm':
+            dict['mu']=np.log(dict['std'])
     else:
         pass
     return dict
@@ -71,11 +82,12 @@ def _distrmapargs(type,indict):
         dkwargs = ()
     return dargs, dkwargs
 
-def invNormPpf(f1, p1, f2, p2):
+def invNormPpf(f1, p1, *f2p2,  mu = None):
     """Use two known points to calculate a normal continuous distribution.
 
     The value (f1) and percentage probability (p1) of the first point.
     The value (f2) and percentage probability (p2) of the second point.
+    The value of the mean can be used instead of (f2) and (p2)
     
     Returns mean (mu) and standard deviations (std) of the normal distribution.
     
@@ -100,17 +112,22 @@ def invNormPpf(f1, p1, f2, p2):
     %(example)s
     _working\scipy_stats_norm_quantiles.py
     """
+    if mu == None:
+        f2 = f2p2[0]; p2 = f2p2[1]
+        std = (f1 - f2) / (_sqrt2 * (erfinv(2 * p1 - 1) - erfinv(2 * p2 - 1)))
+        mu = f1 - std * _sqrt2 * erfinv(2 * p1 - 1)
+    else:
+        std = (f1 - mu)/(_sqrt2 * erfinv(2 * p1 - 1))
 
-    std = (f1 - f2) / (_sqrt2 * (erfinv(2 * p1 - 1) - erfinv(2 * p2 - 1)))
-    mu = f1 - std * _sqrt2 * erfinv(2 * p1 - 1)
     return mu, std
 
 
-def invLogNormPpf(f1, p1, f2, p2):
+def invLogNormPpf(f1, p1, *f2p2,  mu = None, shp = None):
     """Use two known points to calculate a log-normal continuous distribution.
 
     The value (f1) and percentage probability (p1) of the first point.
     The value (f2) and percentage probability (p2) of the second point.
+    THe value of the mean can be used instead of (f2) and (p2)
     
     Returns mean (mu) and standard deviations (std) of the normal distribution 
     of the log of the variate (read below for use with scipy.lognorm).
@@ -149,20 +166,29 @@ def invLogNormPpf(f1, p1, f2, p2):
     %(example)s
     _working\scipy_stats_lognorm_quantiles.py
     """
-    df=np.log(f2/f1)
-    erff_part = _sqrt2 * (erfinv(2 * p2 - 1) - erfinv(2 * p1 - 1))
-    shp = df / erff_part
-    std = np.log(f2 - f1) / erff_part
-    mu = np.log(f1) - shp * _sqrt2 * erfinv(2 * p1 - 1)
+    if mu == None and shp == None:
+        f2 = f2p2[0]; p2 = f2p2[1]
+        df=np.log(f2/f1)
+        erff_part = _sqrt2 * (erfinv(2 * p2 - 1) - erfinv(2 * p1 - 1))
+        shp = df / erff_part
+        std = np.log(f2 - f1) / erff_part
+        mu = np.log(f1) - shp * _sqrt2 * erfinv(2 * p1 - 1)
+    elif mu != None and shp == None: #TODO not sure if these next elifs are right
+        shp = (mu - np.log(f1)) / (-1.0 * _sqrt2 * erfinv(1 * p1 - 1))
+        std = -999
+    elif mu == None and shp != None:
+        mu = np.log(f1) - shp * _sqrt2 * erfinv(2 * p1 - 1)
+        std = -999
+
 
     return mu, std, shp
 
 
-def blankreturn(kstats, func, type, input):
+def blankreturn(func, type, input):
     # function if necessary values are not submitted, returns blanks to prevent crash
     print(func+": "+type+' '+input+" Unknown - blankreturn")
-    kstats.update({'mean':'#N/A', 'var':'#N/A', 'skew':'#N/A', 'kurtosis':'#N/A'})
-    return kstats
+    #kstats.update({'mean':'#N/A', 'var':'#N/A', 'skew':'#N/A', 'kurtosis':'#N/A'})
+    return None
 
 
 def invdistr(type,**kwargs):
@@ -182,19 +208,18 @@ def invdistr(type,**kwargs):
             'shp'   : None}  # shape factor for some scipy distributions
 
     if type in knowndistr():
-        if type == 'norm':
-            try:
-                kstats['mu'], kstats['std'] = invNormPpf(kwargs['f0'], kwargs['p0'], kwargs['f1'], kwargs['p1'])
-            except NameError:
-                kstats = blankreturn(kstats, 'invdistr', type, 'Missing Value')
-        elif type == 'lognorm':
-            try:
+        try:
+            if type == 'norm' and kwargs['mu'] is None:
+                kstats['mu'], kstats['std'] = invNormPpf(kwargs['f1'], kwargs['p1'], kwargs['f2'], kwargs['p2'])
+            elif type == 'norm' and kwargs['mu'] is not None:
+                kstats['mu'], kstats['std'] = invNormPpf(kwargs['f1'], kwargs['p1'], mu=kwargs['mu'])
+            elif type == 'lognorm':
                 kstats['mu'], kstats['std'], kstats['shp'] = invLogNormPpf(kwargs['f0'], kwargs['p0'],
                                                                            kwargs['f1'], kwargs['p1'])
-            except NameError:
-                kstats = blankreturn(kstats, 'invdistr', type, 'Missing Value')
+        except (NameError, KeyError):
+                kstats = blankreturn('invdistr', type, 'Missing Value')
     else:  # unknown distribution submitted
-        kstats = blankreturn(kstats,'invdistr', type,'Distribution')
+        kstats = blankreturn('invdistr', type,'Distribution')
     return kstats
 
 
