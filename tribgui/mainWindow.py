@@ -8,7 +8,6 @@ make.py must be run in the tribgui module folder to update the gui interface.
 
 import json
 import webbrowser
-from os.path import expanduser, join
 
 from PyQt5 import QtWidgets
 from PyQt5.QtCore import pyqtSlot
@@ -17,6 +16,14 @@ from tribgui.widgets import (widgetFDChart, widgetIDChart, widgetIDProbit,
 
 from tribgui._qtdesigner import qdesignMainWindow, qdesignDialogAbout
 from tribgui.stylesheet import tribmainstyle, tribaboutdialogstyle
+
+"""
+define global variables
+"""
+
+
+
+
 
 '''
 Class to capture the setup of the About Dialog.
@@ -54,7 +61,6 @@ class mainApp(QtWidgets.QMainWindow, qdesignMainWindow.Ui_MainWindow):
         self.setMouseTracking(True)
         tribmainstyle(self)
         # global variables
-        self.userhome = join(expanduser("~"),'Documents')
 
         # Connect Menu Actions to Other Windows
         # File
@@ -147,7 +153,7 @@ class mainApp(QtWidgets.QMainWindow, qdesignMainWindow.Ui_MainWindow):
 
     def _onActionOpen(self):
         self.sessionfile = QtWidgets.QFileDialog.getOpenFileName(self,
-                caption='Open File', directory = self.userhome, filter='*.json')
+                caption='Open File', directory = userhome, filter='*.json')
         try:
             self.openSession(self.sessionfile[0])
         except PermissionError:
@@ -168,5 +174,5 @@ class mainApp(QtWidgets.QMainWindow, qdesignMainWindow.Ui_MainWindow):
 
     def _onActionSaveSessionAs(self):
         self.sessionfile = QtWidgets.QFileDialog.getSaveFileName(self,
-                caption = 'Save Session As', directory = self.userhome, filter='*.json')
+                caption = 'Save Session As', directory = userhome, filter='*.json')
         self.saveSession(*self.sessionfile[0])

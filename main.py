@@ -16,8 +16,12 @@ Examples:
 
 from PyQt5 import QtGui,QtWidgets
 import getopt, sys, os, inspect
+from os.path import expanduser, join
 
 _debug = 0
+
+global userhome
+userhome = join(expanduser("~"),'Documents')
 
 def usage():
     print (__doc__)

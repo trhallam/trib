@@ -8,7 +8,7 @@ make.py must be run in the tribgui module folder to update the gui interface.
 
 from PyQt5 import QtWidgets
 from PyQt5.QtChart import QChart, QChartView, QValueAxis
-from PyQt5.QtGui import QPainter
+from PyQt5.QtGui import QPainter, QPixmap
 from PyQt5.QtCore import pyqtSlot, Qt
 from tufpy.stats import distr
 
@@ -37,6 +37,9 @@ class widgetFDChart(QtWidgets.QWidget, qdesignFDChart.Ui_Form):
         # self.legend().setVisible(True)
         # self.setAnimationOptions(QChart.SeriesAnimations)
         # self.legend().setAlignment(Qt.AlignBottom)
+
+        # Connect Buttons
+        self.pushButtonExportPNG.pressed.connect(self._onActionSavePNG)
 
     def axesMinMax(self):
         # returns a length 4 list of the axes min and max values [x1,x2,y1,y2]
@@ -71,7 +74,19 @@ class widgetFDChart(QtWidgets.QWidget, qdesignFDChart.Ui_Form):
         self.chart.removeAllSeries()
         self.addDistrLine(self.activeDist, 100, self.kstats)
 
+    @pyqtSlot(str)
+    def paintChart(self,filename):
+        #pixmap = QPixmap()
+        pixmap = self.chartview.grab()
+        pixmap.save(filename)
 
+    def _onActionSavePNG(self):
+        pngfile = QtWidgets.QFileDialog.getSaveFileName(self,
+                caption = 'Export PNG As', directory = '~', filter='*.png')
+        #try:
+        self.paintChart(pngfile[0])
+        #except:
+        #   pass
 
 def main():
     import sys

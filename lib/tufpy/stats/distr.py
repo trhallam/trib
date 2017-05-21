@@ -244,15 +244,15 @@ def distrstats(type,**kwargs):
                 kstats['mean'], kstats['var'], kstats['skew'], kstats['kurtosis'] = \
                     stats.norm.stats(loc=kstats['mu'], scale=kstats['std'],moments='mvsk')
             except (TypeError,AttributeError):
-                kstats = blankreturn(kstats, 'distrstats', type, 'Value')
+                kstats = blankreturn('distrstats', type, 'Value')
         elif type == 'lognorm':  # lognormal distribution
             try:
                 kstats['mean'], kstats['var'], kstats['skew'], kstats['kurtosis'] = \
                     stats.lognorm.stats(kstats['shp'], scale=np.exp(kstats['mu']), moments='mvsk')
             except (TypeError, AttributeError):
-                kstats = blankreturn(kstats, 'distrstats', type, 'Value')
+                kstats = blankreturn('distrstats', type, 'Value')
     else:  # unknown distribution submitted
-        kstats = blankreturn(kstats, 'distrstats', type,'Distribution')
+        kstats = blankreturn('distrstats', type,'Distribution')
     return kstats
 
 
