@@ -10,6 +10,8 @@ from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtChart import QChart, QChartView, QValueAxis, QBarSet
 from PyQt5.QtGui import QPainter, QPen
 from PyQt5.QtCore import pyqtSlot, Qt, pyqtSignal
+from pyqt5x.XChartTools import XLineSeries, XDictSet
+from pyqt5x import XComboBoxDict
 from tufpy.stats import distr
 
 import numpy as np
@@ -19,7 +21,7 @@ from tribgui._qtdesigner import qdesignFDChart
 from tribgui.colourpack import tribColours
 from tribgui.stylesheet import tribchartmenustyle
 
-from pyqt5x.XChartTools import XLineSeries, XDictSet
+
 
 s = 0.5
 dummy_data_4testing = stats.lognorm.rvs(s, scale=0.2, size=100)
@@ -53,11 +55,12 @@ class widgetIDChart(QtWidgets.QWidget, qdesignFDChart.Ui_Form):
         
         # Extra Menu Items
         # Distribution Type Selection
-        self.comboBoxDistr = QtWidgets.QComboBox(self)
+        self.comboBoxDistr = XComboBoxDict(self)
         self.comboBoxDistr.setMinimumSize(QtCore.QSize(100, 30))
         
         self.knowndistr = distr._distrnames()
-        self.comboBoxDistr.addItems(['None'] + [self.knowndistr[key] for key in self.knowndistr])
+        self.comboBoxDistr.addItem({'None':'None'})
+        self.comboBoxDistr.addItems(self.knowndistr)
         self.comboBoxDistr.setObjectName("comboBoxDistr")
         self.horizontalLayout.insertWidget(3,self.comboBoxDistr)
         self.comboBoxDistr.currentTextChanged.connect(self.onComboBoxDistrChanged)
@@ -65,7 +68,7 @@ class widgetIDChart(QtWidgets.QWidget, qdesignFDChart.Ui_Form):
 
         # Spinbox Label
         self.spinBoxLab = QtWidgets.QLabel(self)
-        self.spinBoxLab.setText('N Hist Bins: ')
+        self.spinBoxLab.setText('  Bins: ')
         self.horizontalLayout.insertWidget(4, self.spinBoxLab)
         
         # Histogram N columns quick select spin box

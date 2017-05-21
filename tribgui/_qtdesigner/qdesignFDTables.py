@@ -31,7 +31,7 @@ class Ui_Form(object):
         self.distributionDefBox.setObjectName("distributionDefBox")
         self.gridLayout_3 = QtWidgets.QGridLayout(self.distributionDefBox)
         self.gridLayout_3.setObjectName("gridLayout_3")
-        self.comboBoxDist = QtWidgets.QComboBox(self.distributionDefBox)
+        self.comboBoxDist = XComboBoxDict(self.distributionDefBox)
         font = QtGui.QFont()
         font.setPointSize(9)
         font.setKerning(False)
@@ -80,5 +80,6 @@ class Ui_Form(object):
         self.distributionDefBox.setTitle(_translate("Form", "Distribution Definition"))
         self.distributionValuesGroup.setTitle(_translate("Form", "Distribution Values"))
 
+from pyqt5x import XComboBoxDict
 from pyqt5x.XTableWidget import XParameterTableWidget
 import qdesignResource_rc

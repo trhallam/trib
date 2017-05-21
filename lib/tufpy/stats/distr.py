@@ -252,16 +252,6 @@ def distrpdf(type, n, **kwargs):
     data_dict = dict()
     if type in knowndistr():
         kstats = _distrkeysync(type, kstats)
-        '''
-        try:
-            dargs = {kstats[key] for key in _distrargs(type)}
-        except TypeError:
-            dargs = ()
-        try:
-            dkwargs = {key: kstats[key] for key in _distrkeys(type)}
-        except TypeError:
-            dkwargs = ()
-        '''
         dargs, dkwargs = _distrmapargs(type, kstats)
         if type == 'norm':  # normal distribution
             # calculate X space
@@ -336,8 +326,8 @@ def distrdescribe(a):
     kstats['mean'] = istats[2]; kstats['var'] = istats[3]
     kstats['skew'] = istats[4]; kstats['kurt'] = istats[5]
 
-    kstats['F90'] = stats.scoreatpercentile(a, 0.1)
-    kstats['F50'] = stats.scoreatpercentile(a, 0.5)
-    kstats['F10'] = stats.scoreatpercentile(a, 0.9)
+    kstats['F90'] = stats.scoreatpercentile(a, 10)
+    kstats['F50'] = stats.scoreatpercentile(a, 50)
+    kstats['F10'] = stats.scoreatpercentile(a, 90)
 
     return kstats

@@ -56,7 +56,7 @@
       </property>
       <layout class="QGridLayout" name="gridLayout_3">
        <item row="0" column="0">
-        <widget class="QComboBox" name="comboBoxDist">
+        <widget class="XComboBoxDict" name="comboBoxDist">
          <property name="font">
           <font>
            <pointsize>9</pointsize>
@@ -129,6 +129,11 @@
    <class>XParameterTableWidget</class>
    <extends>QTableWidget</extends>
    <header>pyqt5x.XTableWidget.h</header>
+  </customwidget>
+  <customwidget>
+   <class>XComboBoxDict</class>
+   <extends>QComboBox</extends>
+   <header>pyqt5x</header>
   </customwidget>
  </customwidgets>
  <resources>

@@ -12,7 +12,7 @@ from PyQt5.QtCore import pyqtSlot, pyqtSignal
 from tribgui._qtdesigner import qdesignFDTables
 from tribgui.stylesheet import tribtablestyle
 
-
+from tufpy.stats import distr
 
 '''
 Class to caputre the setup of the main window.
@@ -29,14 +29,10 @@ class widgetFDTable(QtWidgets.QWidget, qdesignFDTables.Ui_Form):
         self.setupUi(self)
         tribtablestyle(self)
 
-        # known distributions
-        self.distrTypes = {'Normal': 'norm',
-                           'Log-Normal': 'lognorm'}
-
         # Populate Distribution Combobox
         self.comboBoxDist.clear()
-        self.comboBoxDist.addItems(list(self.distrTypes.keys()))
-        self.activeDistr = self.distrTypes[self.comboBoxDist.currentText()]
+        self.comboBoxDist.addItems(distr._distrnames())
+        self.activeDistr = self.comboBoxDist.currentKey()
 #        self.comboBoxDist.currentIndexChanged.connect(self.onChangeDistribution)
 
         # Populate Fixed Distr Input Table

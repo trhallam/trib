@@ -60,7 +60,7 @@ class widgetIDProbit(QtWidgets.QWidget, qdesignFDChart.Ui_Form):
         self.comboBoxDistr.setObjectName("comboBoxDistr")
         self.horizontalLayout.insertWidget(3,self.comboBoxDistr)
         self.comboBoxDistr.currentKeyChanged.connect(self.onComboBoxDistrChanged)
-        self.activeDist = str(self.distrfromname(self.comboBoxDistr.currentText()))
+        self.activeDist = self.comboBoxDistr.currentKey()
 
         self.chart = XChartProbit()
 
