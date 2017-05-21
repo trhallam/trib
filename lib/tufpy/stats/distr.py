@@ -336,4 +336,8 @@ def distrdescribe(a):
     kstats['mean'] = istats[2]; kstats['var'] = istats[3]
     kstats['skew'] = istats[4]; kstats['kurt'] = istats[5]
 
+    kstats['F90'] = stats.scoreatpercentile(a, 0.1)
+    kstats['F50'] = stats.scoreatpercentile(a, 0.5)
+    kstats['F10'] = stats.scoreatpercentile(a, 0.9)
+
     return kstats
