@@ -111,11 +111,11 @@ class widgetFDTable(QtWidgets.QWidget, qdesignFDTables.Ui_Form):
             self.kstats = dict()
             for key in distr._distrinputs(self.activeDistr):
                 self.kstats[key] = self.inval[key] # add simple keys to kstats
-            self.kstats = distr.distrstats(self.activeDistr, **self.kstats) # calculate missing stats
         else:
             self.kstats = distr.invdistr(self.activeDistr, **self.inval) # use 2 point method to fix distribution
 
         if self.kstats is not None: # if not failed update chart
+            self.kstats = distr.distrstats(self.activeDistr, **self.kstats)  # calculate missing stats
             self.actionDistrUpdated.emit([self.activeDistr, self.kstats])
             self._calcFixedDistrTable()
 
@@ -124,6 +124,7 @@ class widgetFDTable(QtWidgets.QWidget, qdesignFDTables.Ui_Form):
         self.tableWidgetDistrValues.setCurrentCell(row, 0)
         var = self.tableWidgetDistrValues.currentItem().text()
 
+        print(self.kstats)
         if var in self.kstats:
             val = self.kstats[var]
 
@@ -141,7 +142,7 @@ class widgetFDTable(QtWidgets.QWidget, qdesignFDTables.Ui_Form):
                     raise ValueError
             except ValueError:
                 self.tableWidgetDistrValues.currentItem().setBackground(QtGui.QColor(255, 154, 145))
-                self._setRowColour(self.tableWidgetDistrValues, row, QtGui.QColor(255, 154, 145))
+                self.tableWidgetDistrValues.setRowColour(row, QtGui.QColor(255, 154, 145))
                 val = '#N/A'
 
         # check if last row and add another if needed
@@ -152,7 +153,7 @@ class widgetFDTable(QtWidgets.QWidget, qdesignFDTables.Ui_Form):
         self.tableWidgetDistrValues.setCurrentCell(row, 1)
         self.tableWidgetDistrValues.currentItem().setText(str(val))
         if val != '#N/A':
-            self._setRowColour(self.tableWidgetDistrValues, row, QtGui.QColor(255, 255, 255))
+            self.tableWidgetDistrValues.setRowColour(row, QtGui.QColor(255, 255, 255))
 
     def _calcFixedDistrTable(self):
         self.tableWidgetDistrValues.itemChanged.disconnect()
@@ -162,13 +163,6 @@ class widgetFDTable(QtWidgets.QWidget, qdesignFDTables.Ui_Form):
             self._calcFixedDistrRow(row)
 
         self.tableWidgetDistrValues.itemChanged.connect(self.onTableEdited)
-
-    def _setRowColour(self, table, row, colour):
-        # QTableWidget, int, QColor
-        nclm = table.columnCount()
-        for ind in range(0, nclm):
-            table.setCurrentCell(row, ind)
-            table.currentItem().setBackground(colour)
 
     # special pyqt slots
 

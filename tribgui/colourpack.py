@@ -15,7 +15,8 @@ colours = {'tribBlue' : '#8BDAF9',
            'tribCoral': '#FF7F7F',
            'tribSnow' : '#FAFAFA',
            'tribOlive': '#9ABCAB',
-           'tribStone': '#5D576B'
+           'tribStone': '#5D576B',
+           'tribGreenFloss': '#C6FFB9'
           }
 
 tribColours = ColourPack()

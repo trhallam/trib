@@ -55,6 +55,7 @@ class XParameterTableWidget(QtWidgets.QTableWidget):
 
     def returndata(self):
         nrows = self.rowCount(); ncols = self.columnCount()
+        inrow = self.currentRow(); incol = self.currentColumn()
         data = dict()
         for j in range(0, ncols):
             temp = list()
@@ -66,6 +67,8 @@ class XParameterTableWidget(QtWidgets.QTableWidget):
                 except AttributeError:
                     temp.append('')
             data[key] = temp
+
+        self.setCurrentCell(inrow, incol)
         return data
 
     def setdata(self, data, keyorder = None):
@@ -79,9 +82,14 @@ class XParameterTableWidget(QtWidgets.QTableWidget):
         for j, key in enumerate(keyorder):
             for i, item in enumerate(data[key]+['']):
                 self.setItem(i, j, QtWidgets.QTableWidgetItem(str(item)))
-
-
         self.setHorizontalHeaderLabels(keyorder)
+
+    def setRowColour(self, row, colour):
+        # QTableWidget, int, QColor
+        nclm = self.columnCount()
+        for ind in range(0, nclm):
+            self.setCurrentCell(row, ind)
+            self.currentItem().setBackground(colour)
 
     def setSize(self, int_n, int_m):
         self.setColumnCount(int_m)
