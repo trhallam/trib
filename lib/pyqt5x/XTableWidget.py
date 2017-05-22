@@ -84,12 +84,28 @@ class XParameterTableWidget(QtWidgets.QTableWidget):
                 self.setItem(i, j, QtWidgets.QTableWidgetItem(str(item)))
         self.setHorizontalHeaderLabels(keyorder)
 
+    def setBlankColumn(self, column):
+        nrows = self.rowCount();
+        inrow = self.currentRow(); incol = self.currentColumn()
+        for i in range(0,nrows):
+            self.setCurrentCell(i, column)
+            self.currentItem()
+            self.currentItem().setText('')
+        self.setCurrentCell(inrow, incol)
+
     def setRowColour(self, row, colour):
         # QTableWidget, int, QColor
         nclm = self.columnCount()
         for ind in range(0, nclm):
             self.setCurrentCell(row, ind)
             self.currentItem().setBackground(colour)
+
+    def colourTableByRow(self, rowflags, colourdict):
+        #TODO could automatically extend rowflags to be white or a copy of rowflags for all rows
+        inrow = self.currentRow(); incol = self.currentColumn()
+        for i, row in enumerate(rowflags):
+            self.setRowColour(i, colourdict[row])
+        self.setCurrentCell(inrow, incol)
 
     def setSize(self, int_n, int_m):
         self.setColumnCount(int_m)

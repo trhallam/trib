@@ -4,6 +4,7 @@ This file contains the styles of the trib program
 
 """
 from tribgui.colourpack import tribColours
+from PyQt5. QtGui import QColor
 
 
 def coloursub(sss):
@@ -75,6 +76,14 @@ def tribaboutdialogstyle(widget):
                        }
         """))
 
+def tablecolourflagstyle():
+    flagdict = dict()
+    flagdict[0] = tribColours.tribGreenFloss        # highlight cell
+    flagdict[1] = QColor('white')                   # cell ok
+    flagdict[2] = QColor('white')                   # float cell ok
+    flagdict[9] = tribColours.tribCoral             # cell error
+    return flagdict
+
 
 def main():
     rgb = tribColours.rgbDict()
@@ -93,6 +102,8 @@ def main():
 
     print (teststring)
     print (coloursub(teststring))
+    print(tablecolourflagstyle())
+    print(QColor.colorNames())
 
 if __name__ == "__main__":
     main()
