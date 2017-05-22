@@ -90,65 +90,13 @@ class widgetFDTable(QtWidgets.QWidget, qdesignFDTables.Ui_Form):
     def _calcFixedDistr(self):
         self.fixedInputData = self.tableWidgetDistrInputs.returndata()
         # check for active distribution required stats
-
-        # input table checking
-        self.inval = dict(); icount = 1; fpsanity = []; rowflags = []; fprows = []
-        for i, val in enumerate(self.fixedInputData['Input']):  # loop through values in input
-            if val != '':  # make sure cell not empty
-                try:
-                    if val in distr._distrinputs(self.activeDistr):  # known values like mu, std
-                        self.inval[val] = float(self.fixedInputData['Value'][i])
-                        rowflags.append(1)  # append known value flag
-                    else: #unknown value check for decimal input to set f* p* values
-                        pc = float(val); fv = float(self.fixedInputData['Value'][i])
-                        if 0.0 < pc < 1.0:
-                            self.inval['f%d'%icount] = fv
-                            self.inval['p%d'%icount] = 1-pc
-                            icount+=1
-                            fpsanity.append([1 - pc, fv]); fprows.append(i)
-                            rowflags.append(2)  # append fp type row flag (requires group sanity check)
-
-                        else:  # append bad row flag
-                            rowflags.append(9)
-                except:  #TODO write some code that changes the colour of the cells to reflect bad inputs
-                    rowflags.append(9)  # append bad row flag
-
-        # sanity check for fp values
-        fpsanity = np.array(fpsanity)
-        try:
-            fpsanity = fpsanity[fpsanity[:, 1].argsort()]
-            if not strictly_increasing(fpsanity[:, 0]):
-                for row in fprows:
-                    rowflags[row] = 9
-        except:
-            pass
+        self.kstats, rowflags = distr.invdistr2(self.activeDistr, self.fixedInputData, flags=True)
         self.tableWidgetDistrInputs.colourTableByRow(rowflags,tablecolourflagstyle())
-
-        # calculate kstats for input values and send to chart
-        # mu and std as input
-        cond1 = all([input in self.inval.keys() for input in distr._distrinputs(self.activeDistr)])
-        # mu and p1 f1 as input
-        cond2 = all([input in self.inval.keys() for input in ['mu', 'f1', 'p1']])
-        # p1 f1 p2 f2 as input
-        cond3 = all([input in self.inval.keys() for input in ['f1', 'p1', 'f2', 'p2']])
-        if cond1: # check for simple keys
-            self.kstats = dict()
-            for key in distr._distrinputs(self.activeDistr):
-                self.kstats[key] = self.inval[key] # add simple keys to kstats
-        elif cond2:
-            self.kstats = distr.invdistr(self.activeDistr, **self.inval) # use 2 point method to fix distribution
-        elif cond3:
-            self.inval['mu'] = None
-            self.kstats = distr.invdistr(self.activeDistr, **self.inval)  # use 2 point method to fix distribution
-        else:
-            self.kstats = None
-
         if self.kstats is not None: # if not failed update chart
             self.kstats = distr.distrstats(self.activeDistr, **self.kstats)  # calculate missing stats
             self.actionDistrUpdated.emit([self.activeDistr, self.kstats])
 
         self._calcFixedDistrTable()
-
 
     def _calcFixedDistrRow(self, row):
 

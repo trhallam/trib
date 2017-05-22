@@ -10,6 +10,8 @@ import numpy as np
 from scipy import stats
 from scipy.special import erfinv
 
+from tufpy.utils import strictly_increasing
+
 '''
 Local Variables
 '''
@@ -222,6 +224,91 @@ def invdistr(type,**kwargs):
         kstats = blankreturn('invdistr', type,'Distribution')
     return kstats
 
+def invdistr2(type, inputdict, flags=False):
+    """
+    invdistr2 - handler for all distribution types to simplify widgetFDTable mostly
+        Key Features:
+            - checks the sanity of input parameters and returns flags when they are not ok
+            - calculates the inverse distribution of the type specified
+    :param type: string - type of distribution to calculate for from [norm, lognorm, 
+    :param inputdict: diction of inputs to calculate distribution, most distribution need two or more data points   
+                    dictionary has structure {'Inputs':[], 'Values':[]}
+                    inputs can be know values (mean, mu, std, shp, probits (0<p<1), ...etc)
+                    values must be floats valid for the relevant input
+    :return: kstats a dictionary containing all the inverse distribution outputs
+    :return: kstats, rowflags if flags=True
+    """
+
+    # loop variables
+    inval = dict()  # build the dictionary of valid values
+    icount = 1      # counter for number of probit values input
+    fpsanity = []   # array for probit sanity check
+    rowflags = []   # array for output rowflags
+    fprows = []     # index of probit rows from greater number of rows
+
+    for i, val in enumerate(inputdict['Input']):  # loop through values in input
+        if val != '':  # make sure cell not empty
+            try:
+                if val in _distrinputs(type):  # known values like mu, std
+                    inval[val] = float(inputdict['Value'][i])
+                    rowflags.append(1)  # append known value flag
+                else:  # unknown value check for decimal input to set f* p* values
+                    pc = float(val);
+                    fv = float(inputdict['Value'][i])
+                    if 0.0 < pc < 1.0:
+                        inval['f%d' % icount] = fv
+                        inval['p%d' % icount] = 1 - pc
+                        icount += 1
+                        fpsanity.append([1 - pc, fv]);
+                        fprows.append(i)
+                        rowflags.append(2)  # append fp type row flag (requires group sanity check)
+
+                    else:  # append bad row flag
+                        rowflags.append(9)
+            except:  # TODO write some code that changes the colour of the cells to reflect bad inputs
+                rowflags.append(9)  # append bad row flag
+
+    # sanity check for fp values
+    fpsanity = np.array(fpsanity)
+    try:
+        fpsanity = fpsanity[fpsanity[:, 1].argsort()]
+        if not strictly_increasing(fpsanity[:, 0]):
+            for row in fprows:
+                rowflags[row] = 9
+    except:
+        pass
+
+    # calculate kstats for input values fir distribution types
+    # standard distribution definition as input - different for each distribution
+    cond1 = all([var in inval.keys() for var in _distrinputs(type)])
+    # p1 f1 p2 f2 as input
+    cond3 = all([var in inval.keys() for var in ['f1', 'p1', 'f2', 'p2']])
+
+    if type == 'norm':
+        # mu and p1 f1 as input
+        cond2 = all([var in inval.keys() for var in ['mu', 'f1', 'p1']])
+
+    elif type == 'lognorm':
+        # mu and p1 f1 as input or shp and p1 f1 as input
+        cond2 = all([var in inval.keys() for var in ['mu', 'f1', 'p1']]) or \
+                all([var in inval.keys() for var in ['shp', 'f1', 'p1']])
+
+    if cond1:  # check for simple keys
+        kstats = dict()
+        for key in _distrinputs(type):
+            kstats[key] = inval[key]  # add simple keys to kstats
+    elif cond2:
+        kstats = invdistr(type, **inval)  # use 2 point method to fix distribution
+    elif cond3:
+        inval['mu'] = None
+        kstats = invdistr(type, **inval)  # use 2 point method to fix distribution
+    else:
+        kstats = None
+
+    if flags:
+        return kstats, rowflags
+    else:
+        return kstats
 
 def distrstats(type,**kwargs):
     """
