@@ -1,6 +1,11 @@
 # Folders to Ignore
 highcharts/
+_working/
 .idea/
+
+# File types to ignore
+*.json
+*.png
 
 # Windows image file caches
 Thumbs.db
