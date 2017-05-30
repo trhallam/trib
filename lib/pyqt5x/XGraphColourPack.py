@@ -102,7 +102,7 @@ def main():
                 collab = QLabel(); colourlist.append(collab)
                 lpal = QPalette(); pallist.append(lpal)
                 colourlist[i].setAutoFillBackground(True)
-                pallist[i].setColor(QPalette.Window, gaColours.__getattribute__(col)); 
+                pallist[i].setColor(QPalette.Window, gaColours.colour(col)); 
                 colourlist[i].setPalette(pallist[i]); #
                 grid.addWidget(colourlist[i],i,1)
             self.move(200, 200)
