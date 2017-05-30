@@ -36,10 +36,10 @@ libpath = os.path.abspath(os.path.join(os.path.dirname(inspect.getfile(inspect.c
 if libpath not in sys.path:
 	sys.path.insert(0, libpath)
 	
-#from tribgui.widgetIDTable import *#
+from tribgui.widgets import *
 #from tribgui.widgetIDChart import *
 #from tribgui.colourpack import *
-from tribgui.widgets import widgetIDProbit
+#from tribgui.widgets import widgetIDProbit
 from tribgui.widgets import main
 
 print(dir())

@@ -13,28 +13,31 @@ Contains all the colour definitions necessary for items in Trib.
 """
 
 from PyQt5 import QtGui
+from collections import OrderedDict
 
-kellycolours = {'white' : '#FFC9D7', 'black': '#131313', 'yellow' : '#FFB300', 'purple': '#803E75',
-                'orange': '#FF6800', 'lightblue' : '#A6BDD7', 'red' : '#C10020', 'buff' : '#C2B280',
-                'grey' : '#848482', 'green' : '#008856', 'purplishpink' : '#E68FAC', 'blue' : '#0067A5',
-                'yellowishpink' : '#F99379', 'violet' : '#604E97', 'orangeyellow' : '#F6A600',
-                'purplishred' : '#B32851', 'greenishyellow' : '#DCD300', 'reddishbrown' : '#7F180D',
-                'yellowgreen' : '#8DB600', 'yellowishbrown' : '#654522', 'reddishorange' : '#F13A13',
-                'olivegreen' : '#2B3D26'
-                }
+kellycolours = OrderedDict([
+                ('white','#FFC9D7'), ('black','#131313'), ('yellow','#FFB300'), ('purple','#803E75'),
+                ('orange','#FF6800'), ('lightblue','#A6BDD7'), ('red','#C10020'), ('buff','#C2B280'),
+                ('grey','#848482'), ('green','#008856'), ('purplishpink','#E68FAC'), ('blue','#0067A5'),
+                ('yellowishpink','#F99379'), ('violet','#604E97'), ('orangeyellow','#F6A600'),
+                ('purplishred','#B32851'), ('greenishyellow','#DCD300'), ('reddishbrown','#7F180D'),
+                ('yellowgreen','#8DB600'), ('yellowishbrown','#654522'), ('reddishorange','#F13A13'),
+                ('olivegreen','#2B3D26')
+                ])
 
-gacolours = {'white' : '#FFFFFF', 'black' : '#191919', 'yellow' : '#FFFF00',  'damson' : '#4C005C', 
-             'zinnia' : '#FF5005', 'sky' : '#5EF1F2', 'red' : '#FF0010', 'xanthin' : '#FFFF80',
-             'iron' : '#808080', 'green' : '#2BCE48', 'pink' : '#FFA8BB', 'blue' : '#0075DC',
-             'honeydew' : '#FFCC99',  'violet' : '#740AFF', 'orpiment' : '#FFA405', 'mallow' : '#C20088',
-             'uranium' : '#E0FF66', 'wine' : '#990000', 'lime' : '#9DCC00', 'caramel' : '#993F00',
-             'amethyst' : '#F0A3FF', 'quagmire' : '#426600', 'jade' : '#94FFB5', 'navy' : '#003380',
-             'khaki' : '#8F7C00', 'forest' : '#005C31', 'turquoise' : '#00998F'
-            }
+gacolours = OrderedDict([
+             ('white','#FFFFFF'), ('black','#191919'), ('yellow','#FFFF00'),  ('damson','#4C005C'), 
+             ('zinnia','#FF5005'), ('sky','#5EF1F2'), ('red','#FF0010'), ('xanthin','#FFFF80'),
+             ('iron','#808080'), ('green','#2BCE48'), ('pink','#FFA8BB'), ('blue','#0075DC'),
+             ('honeydew','#FFCC99'), ('violet','#740AFF'), ('orpiment','#FFA405'), ('mallow','#C20088'),
+             ('uranium','#E0FF66'), ('wine','#990000'), ('lime','#9DCC00'), ('caramel','#993F00'),
+             ('amethyst','#F0A3FF'), ('quagmire','#426600'), ('jade','#94FFB5'), ('navy','#003380'),
+             ('khaki','#8F7C00'), ('forest','#005C31'), ('turquoise','#00998F')
+            ])
 
 class ColourPack(object):
     def __init__(self):
-        self._cdd = dict()
+        self._cdd = OrderedDict()
         self._order = list()
         
     def addColour(self, name, rgbhex):
@@ -59,6 +62,12 @@ class ColourPack(object):
             for key in self.namedColours():
                 rgb[key] = self.__getattribute__(key).getRgb()[0:3]
         return rgb
+        
+    def colour(self, key):
+        return self.__getattribute__(key)
+        
+    def __len__(self):
+        return (len(self._cdd))
 
 gaColours = ColourPack()
 kellyColours = ColourPack()
