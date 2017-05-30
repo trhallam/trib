@@ -30,7 +30,7 @@ class XMarkerBase(QBrush):
         self._penWidth=1
         self._rotationAngle=0
         
-        colourpicker = round(random.uniform(2,len(gaColours)))
+        colourpicker = round(random.uniform(2,len(gaColours)-1))
         colourkey = list(gaColours.namedColours())[colourpicker]
         self._colour = gaColours.colour(colourkey)
         self._bcolour = self._colour.darker()
@@ -55,9 +55,23 @@ class XMarkerBase(QBrush):
     def setRotationAngle(self, degrees):
         self._rotationAngle = degrees
         self.update()        
+        
+    def setPath(self):
+        return QPainterPath()
 
     def update(self):
-        pass
+        image = QImage(self._wrs, self._hrs, QImage.Format_ARGB32_Premultiplied)
+        path = self.setPath()
+        painter = QPainter(image)
+        painter.setOpacity(self._opacity)
+        painter.setRenderHint(QPainter.Antialiasing)
+        painter.setPen(
+                QPen(self._bcolour, self._penWidth, Qt.SolidLine, Qt.RoundCap,
+                        Qt.RoundJoin))
+        painter.setBrush(self._colour)
+        painter.drawPath(path)
+        painter.end()
+        self.setTextureImage(image.smoothScaled(self._width, self._height))     
         
     def setBrush(self, width, height, border=2, opacity=None, fill_opacity=None, border_opacity=None):
         if opacity is None:
@@ -78,22 +92,12 @@ class XMarkerCircle(XMarkerBase):
         super(XMarkerCircle, self).__init__(parent)
         self.update()
         
-    def update(self):
-        image = QImage(self._wrs, self._hrs, QImage.Format_ARGB32_Premultiplied)
+    def setPath(self):
         path = QPainterPath()
         path.moveTo(self._wrs*0.8,self._hrs/2)
         # artTo (startx, starty, width, height, arcdeg start, arcdeg end)
         path.arcTo(self._wrs*0.2,self._hrs*0.2, self._wrs*0.6, self._hrs*0.6, 0.0, 360.0)
-        painter = QPainter(image)
-        painter.setOpacity(self._opacity)
-        painter.setRenderHint(QPainter.Antialiasing)
-        painter.setPen(
-                QPen(self._bcolour, self._penWidth, Qt.SolidLine, Qt.RoundCap,
-                        Qt.RoundJoin))
-        painter.setBrush(self._colour)
-        painter.drawPath(path)
-        painter.end()
-        self.setTextureImage(image.smoothScaled(self._width, self._height))
+        return path
 
         
 class XMarkerPlus(XMarkerBase):
@@ -105,32 +109,18 @@ class XMarkerPlus(XMarkerBase):
         self._thick = .15
         self.update()
         
-    def update(self):
-        image = QImage(self._wrs, self._hrs, QImage.Format_ARGB32_Premultiplied)
+    def setPath(self):
         path = QPainterPath()
         thickw = self._thick*self._wrs; thickh = self._thick*self._hrs
-        pw1 = self._wrs*0.1; pw2 = self._wrs/2-thickw/2; pw3 = pw2+thickw; pw4 = self._wrs-pw1
-        ph1 = self._hrs*0.1; ph2 = self._hrs/2-thickh/2; ph3 = ph2+thickh; ph4 = self._hrs-ph1
+        pw1 = self._wrs*0.2; pw2 = self._wrs/2-thickw/2; pw3 = pw2+thickw; pw4 = self._wrs-pw1
+        ph1 = self._hrs*0.2; ph2 = self._hrs/2-thickh/2; ph3 = ph2+thickh; ph4 = self._hrs-ph1
         sequence = [(pw2, ph1), (pw3,ph1), (pw3,ph2), (pw4,ph2), (pw4,ph3), (pw3,ph3),
                     (pw3,ph4), (pw2, ph4), (pw2,ph3), (pw1,ph3), (pw1,ph2), (pw2,ph2)]
-        
         path.moveTo(pw2,ph1)
         for point in sequence:
             path.lineTo(*point)
         path.closeSubpath()
-        
-        painter = QPainter(image)
-        painter.setOpacity(self._opacity)
-        painter.setRenderHint(QPainter.Antialiasing)
-        painter.setPen(
-                QPen(self._bcolour, 0, Qt.SolidLine, Qt.RoundCap,
-                        Qt.RoundJoin))
-        
-        painter.setBrush(self._colour)
-        painter.drawPath(path)
-        painter.end()
-        self.setTextureImage(image.smoothScaled(self._width, self._height))    
-        
+        return path
 
 class XMarkerDash(XMarkerBase):
     """
@@ -141,23 +131,11 @@ class XMarkerDash(XMarkerBase):
         self._thick = .15
         self.update()
         
-    def update(self):
-        image = QImage(self._wrs, self._hrs, QImage.Format_ARGB32_Premultiplied)
+    def setPath(self):
         path = QPainterPath()
         thickh = self._thick*self._hrs
-        path.addRect(self._wrs*0.1,self._hrs/2-thickh/2,self._wrs*0.8,thickh)
-        
-        painter = QPainter(image)
-        painter.setOpacity(self._opacity)
-        painter.setRenderHint(QPainter.Antialiasing)
-        painter.setPen(
-                QPen(self._bcolour, 0, Qt.SolidLine, Qt.RoundCap,
-                        Qt.RoundJoin))
-        painter.setBrush(self._colour)
-        painter.drawPath(path)
-        painter.end()
-        self.setTextureImage(image.smoothScaled(self._width, self._height))    
-
+        path.addRect(self._wrs*0.2,self._hrs/2-thickh/2,self._wrs*0.6,thickh)
+        return path
 
 class XMarkerSquare(XMarkerBase):
     """
@@ -165,54 +143,73 @@ class XMarkerSquare(XMarkerBase):
     """
     def __init__(self, parent=None):
         super(XMarkerSquare, self).__init__(parent)
+        self.setPath()
         self.update()
         
-    def update(self):
-        image = QImage(self._wrs, self._hrs, QImage.Format_ARGB32_Premultiplied)
+    def setPath(self):
         path = QPainterPath()
         path.addRect(self._wrs*0.2,self._hrs*0.2,self._wrs*0.6,self._hrs*0.6)
-        
-        painter = QPainter(image)
-        painter.setOpacity(self._opacity)
-        painter.setRenderHint(QPainter.Antialiasing)
-        painter.setPen(
-                QPen(self._bcolour, self._penWidth, Qt.SolidLine, Qt.RoundCap,
-                        Qt.RoundJoin))
-        painter.setBrush(self._colour)
-        painter.drawPath(path)
-        painter.end()
-        self.setTextureImage(image.smoothScaled(self._width, self._height))      
-        
+        return path
         
 class XMarkerDiamond(XMarkerBase):
     """
-    Square Box
+    Diamon Shaped box
     """
     def __init__(self, parent=None):
         super(XMarkerDiamond, self).__init__(parent)
         self._rotationAngle=45
         self.update()
         
-    def update(self):
-        image = QImage(self._wrs, self._hrs, QImage.Format_ARGB32_Premultiplied)
+    def setPath(self):
         path = QPainterPath()
         path.moveTo(self._wrs*0.5,self._hrs*0.2)
         path.lineTo(self._wrs*0.8,self._hrs*0.5)
         path.lineTo(self._wrs*0.5, self._hrs*0.8)
         path.lineTo(self._wrs*0.2, self._hrs*0.5)
         path.closeSubpath()
-        painter = QPainter(image)
-        #painter.setOpacity(self._opacity)
-        painter.setRenderHint(QPainter.Antialiasing)
-        painter.setPen(
-                QPen(self._bcolour, self._penWidth, Qt.SolidLine, Qt.RoundCap,
-                        Qt.RoundJoin))
-        painter.setBrush(self._colour)
-        painter.drawPath(path)
-        
-        painter.end()
-        self.setTextureImage(image.smoothScaled(self._width, self._height))        
+        return path
 
+        
+class XMarkerCross(XMarkerBase):
+    """
+    A cross
+    """
+    def __init__(self, parent=None):
+        super(XMarkerCross, self).__init__(parent)
+        self._thick = .15
+        self.update()
+        
+    def setPath(self):
+        path = QPainterPath()
+        thickw = self._thick*self._wrs; thickh = self._thick*self._hrs
+        pw1 = self._wrs*0.2; pw2 = pw1+thickw*0.851;  pw4 = self._wrs/2; pw7=self._wrs*0.8
+        pw3 = pw4-0.851*thickw; pw5 = pw4+0.851*thickw; pw6 = pw7 - thickw*0.851
+        ph1 = self._hrs*0.2; ph2 = ph1+thickh*0.851;  ph4 = self._hrs/2; ph7=self._hrs*0.8
+        ph3 = ph4-0.851*thickh; ph5 = ph4+0.851*thickh; ph6 = ph7 - thickh*0.851
+        sequence = [(pw2, ph1), (pw4,ph3), (pw6,ph1), (pw7,ph2), (pw5,ph4), (pw7,ph6),
+                    (pw6,ph7), (pw4, ph5), (pw2,ph7), (pw1,ph6), (pw3,ph4), (pw1,ph2)]
+        
+        path.moveTo(pw1,ph2)
+        for point in sequence:
+            path.lineTo(*point)
+        path.closeSubpath()
+        return path
+
+class XMarkerTriangle(XMarkerBase):
+    """
+    A Triangle
+    """
+    def __init__(self, parent=None):
+        super(XMarkerTriangle, self).__init__(parent)
+        self.update()
+        
+    def setPath(self):
+        path = QPainterPath()
+        path.moveTo(self._wrs*0.5,self._hrs*0.2)
+        path.lineTo(self._wrs*0.8,self._hrs*0.8)
+        path.lineTo(self._wrs*0.2,self._hrs*0.8)
+        path.closeSubpath()
+        return path
         
 def main():
     import sys
@@ -231,7 +228,9 @@ def main():
                XMarkerPlus(),
                XMarkerDash(),
                XMarkerSquare(),
-               XMarkerDiamond()]
+               XMarkerDiamond(),
+               XMarkerCross(),
+               XMarkerTriangle()]
    
     # Chart Setup
     chart = QChart()
@@ -248,22 +247,23 @@ def main():
     pos = [0.1, 0.3, 0.5, 0.7, 0.9]
     for i in pos:
         for j in pos:
-            if mcount < nm:
-                print(mcount)
-                m = markers[mcount]
-                m.setBrush(size, size, border=bdr, opacity=opc)
-                ser = QScatterSeries()
-                
-                ser.append(i,j)
-                ser.setBorderColor(QColor(0,0,0,0))
-                ser.setMarkerSize(size)
-                ser.setMarkerShape(1)
-                ser.setBrush(m)   
+            if mcount == nm:
+                mcount = 0
+            #print(mcount)
+            m = markers[mcount]
+            m.setBrush(size, size, border=bdr, opacity=opc)
+            ser = QScatterSeries()
+            
+            ser.append(i,j)
+            ser.setBorderColor(QColor(0,0,0,0))
+            ser.setMarkerSize(size)
+            ser.setMarkerShape(1)
+            ser.setBrush(m)   
 
-                chart.addSeries(ser)
-                chart.setAxisX(chart.axisX, ser)
-                chart.setAxisY(chart.axisY, ser)
-                mcount += 1
+            chart.addSeries(ser)
+            chart.setAxisX(chart.axisX, ser)
+            chart.setAxisY(chart.axisY, ser)
+            mcount += 1
                 
     chart.axisX.setMin(0); chart.axisY.setMin(0)
     chart.axisX.setMax(1); chart.axisY.setMax(1)
