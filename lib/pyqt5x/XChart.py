@@ -12,25 +12,29 @@ from itertools import zip_longest
 import random
 import numpy as np
 
+from XChartMarkers import xtypemarker
+from XGraphColourPack import gaColours
+
 class XScatterSeries(QScatterSeries):
 
     onActionUpdated = pyqtSignal()
     hovered = pyqtSignal(QPointF, bool, str)
 
-    def __init__(self, parent=None, tooltips=False, temp=False):#, parent = None):
+    def __init__(self, parent=None, marker=None, tooltips=False, temp=False):#, parent = None):
         super(QScatterSeries, self).__init__(parent)
         self.setUseOpenGL(True)
         
         #self.hovered.connect(self.onHoverHighlight)
-        self.setMarkerSize(15)
         self.setName('Help')
         self._temp = temp
-        
-        
-        #conncet to overloaded slots
-        if tooltips:
-            super(QScatterSeries,self).hovered.connect(self.onHovered)
 
+        #setup better marker defaults
+        self._markersize = 15
+        self.setMarkerSize(self._markersize)
+        self.setMarkerShape(1)
+        self.setBorderColor(QColor(0,0,0,0))
+        xtypemarker(self, fillalpha=100)
+            
     def addXY(self,X, Y):
         '''
         the first dict in the key_order will be used as the x-axis
@@ -39,36 +43,10 @@ class XScatterSeries(QScatterSeries):
         for i, (itemx, itemy) in enumerate(zip_longest(X,Y)):
             self.append(itemx, itemy)
             
-            
     def _find_nearest(self, vx, vy):
         idx = np.sqrt(np.power(self.X-vx,2) + np.power(self.Y-vy,2)).argmin()
         #idx = (np.abs(array-value)).argmin()
         return QPointF(self.X[idx], self.Y[idx])
-            
-    @pyqtSlot(QPointF, bool)        
-    def onHovered(self, point, state):
-        print('l')
-        point = self._find_nearest(point.x(),point.y())
-        if not self._temp:
-            
-            self.hovered.emit(point, state, self.name())
-        else:
-            print('h')
-            #if not state:
-            self.hovered.emit(point, state, self.name())
-        '''
-        if state:
-            self.setColor(QColor(50,30,210))
-            self.append(0,0)
-            self.remove(0,0)
-        else:
-            self.setColor(QColor(120,244,210))
-            self.append(0,0)
-            self.remove(0,0)
-        '''   
-        
-        #self.markerColorChanged.emit()
-        #self.onActionUpdated.emit()
 
 
 class XScatterSet(QObject):
@@ -79,22 +57,13 @@ class XScatterSet(QObject):
     def __init__(self, tooltips=False, useOpenGL=False, parent=None):
         super(XScatterSet, self).__init__(parent)
         self._openGL = useOpenGL
-        #self.hovered.connect(self.onHoverHighlight)
         self._scatterset = []
-        self._basecolour = QColor(153,217,234)
-        self._basebordercolour = QColor(73,152,173)
-        self._basecolour.setAlpha(10)
-        self._basepen = QPen()
-        self._basepen.setColor(self._basebordercolour)
-        self._basepen.setWidth(100)
-        print(self._basepen.isSolid())
         
-        #self.setName('Help')
- 
-#        #conncet to overloaded slots - implement for each scatter series
-#        if tooltips:
-#            super(QScatterSeries,self).hovered.connect(self.onHovered)
-
+        self._basecolour = gaColours.blue
+        self._hlcolour = gaColours.zinnia
+        self._size = 15
+        
+        
     def setChart(self, chart):
         self._chart = chart
     
@@ -103,18 +72,17 @@ class XScatterSet(QObject):
 
     def addXY(self,X, Y):
         for i, (itemx, itemy) in enumerate(zip_longest(X,Y)):
-            series = QScatterSeries()
+            series = QScatterSeries()#XScatterSeries(marker=self._marker)
             if self._openGL:
                 series.setUseOpenGL(True)
             series.append(itemx, itemy)
+            
+            xtypemarker(series, fill=self._basecolour, width=3, size=self._size)
             self._scatterset.append(series)
             self._chart.addSeries(series)
             self.chart().legend().markers(series)[0].setVisible(False)
             series.hovered.connect(self.onHovered)
-            series.setColor(self._basecolour)
-            series.setPen(self._basepen)
-            #series.setBorderColor(self._basebordercolour)
-            
+           
 
     def setAxisX(self, axis):
         for ser in self._scatterset:
@@ -133,16 +101,10 @@ class XScatterSet(QObject):
     def onHovered(self, point, state):
         sender = self.sender()
         if state:
-            size = 25
-            color = QColor(221,145,145,150)
+            xtypemarker(sender, size=self._size*1.3, width=3, fill=self._hlcolour)
         else:
-            size = 15
-            color = self._basecolour
-            
-        sender.setMarkerSize(size)
-        sender.setColor(color)
-        sender.setPen(self._basepen)
-        sender.pointsReplaced.emit()#colorChanged.emit(color)
+            xtypemarker(sender, size=self._size, width=3, fill=self._basecolour)
+        sender.pointsReplaced.emit()
 
         
 
@@ -165,60 +127,20 @@ class XChart(QChart):
         self.axisY.setMin(0); self.axisY.setMax(1)
         
         #Temporay Test Data
-        x = np.random.rand(1000)
-        y = np.random.rand(1000)
+        x = np.random.rand(100)
+        y = np.random.rand(100)
         #self.series = XScatterSeries(tooltips = True)
         #self.series.addXY(x,y)
         #self.addSeries(self.series)
         #self.setAxisX(self.axisX, self.series); self.setAxisY(self.axisY, self.series)
         
-        self.serset = XScatterSet(useOpenGL=True)
+        self.serset = XScatterSet(useOpenGL=False) # many options not supported with openGl
         self.serset.setChart(self)
         self.serset.addXY(x,y)
         self.serset.setAxisX(self.axisX); self.serset.setAxisY(self.axisY)
         
-        
+        self.setToolTip('Hello')
         #Tooltip series
-        self.hlser = XScatterSeries(temp=True)
-        #self.hlser.append(0,0); 
-        self.addSeries(self.hlser)
-        #self.hlser.remove(0,0)
-        self.legend().markers(self.hlser)[0].setVisible(False)
-        self.hlser.setColor(QColor(50,30,210))
-        self.hlser.setMarkerSize(20)
-        self.setAxisX(self.axisX, self.hlser); self.setAxisY(self.axisY, self.hlser)
-        
-        #self.series.hovered.connect(self.onHoverHighlight)
-        
-        #self.serset.onActionUpdated.connect(self.update)
-       
-    @pyqtSlot(QPointF, bool, str)
-    def onHoverHighlight(self, point, state, name):
-        print(state,name)
-        if state:
-            self.series.hovered.disconnect(self.onHoverHighlight)
-            self.hlser.hovered.connect(self.onHoverHighlight)
-            self.hlser.append(point)
-            #self.series.remove(point)
-        else:
-            self.hlser.hovered.disconnect(self.onHoverHighlight)
-            self.hlser.remove(point)
-            self.series.hovered.connect(self.onHoverHighlight)
-            #self.series.append(point)
-
-    @pyqtSlot()
-    def onUpdate(self):
-        '''
-        rect = self.boundingRect()
-        self.visibleChanged.emit()
-        
-        self.scene().update(0,0,1000,1000)
-        self.plotAreaChanged.emit(rect)
-        self.enabledChanged.emit()
-        self.update(rect)
-        print(self.isEnabled())
-        print(self.isActive())
-        '''
 
 class XChartView(QChartView):
     def __init__(self, parent=None):
