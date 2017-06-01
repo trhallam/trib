@@ -266,7 +266,7 @@ def xtooltippath(point):
 
     
 class XToolTipLabel(QtWidgets.QLabel):
-    def __init__(self, text, left=True):
+    def __init__(self, text, colour=None, left=True):
         super(XToolTipLabel,self).__init__(text)
         self._text = text.split('\n')
         self._pointersize = 5
@@ -274,10 +274,15 @@ class XToolTipLabel(QtWidgets.QLabel):
         self.setFont(QFont("Helvetica [Cronyx]", 12))
         self.setStyleSheet("background-color: rgb(0,0,0,0);")
         self._fillColour = Qt.white
+        self.pen = QPen(Qt.black)
+        if colour is not None:
+            colour.setAlpha(255)
+            self.pen = QPen(colour)
 
     def paintEvent(self, e):
         super(XToolTipLabel,self).paintEvent(e)  
         p = QtGui.QPainter(self)
+        p.setPen(self.pen)
         p.setBrush(self._fillColour)
         p.setRenderHint(QtGui.QPainter.Antialiasing,True)
         p.drawPath(self.boundarypath())
@@ -292,7 +297,6 @@ class XToolTipLabel(QtWidgets.QLabel):
         path.lineTo(width/2+pointer,height-pointer); path.lineTo(width/2,height)
         path.lineTo(width/2-pointer,height-pointer); path.lineTo(0,height-pointer); path.lineTo(0,0)
         path.closeSubpath()    
-        
         return path
         
 def main():
@@ -342,7 +346,7 @@ def main():
         def onHovered(self, point, state):
             if state:
                 spoint = self.chart().mapToPosition(point)-QPointF(0,size/2)
-                self.ttip = XToolTipLabel('Hello from:\n x: %.1f, y: %.1f'%(point.x(), point.y()))
+                self.ttip = XToolTipLabel('Hello from:\n x: %.1f, y: %.1f'%(point.x(), point.y()), colour = self.color())
                 
                 self.ttip_proxy = chart.scene().addWidget(self.ttip)
                 w = self.ttip.width(); h = self.ttip.height();
