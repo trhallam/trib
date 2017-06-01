@@ -7,7 +7,8 @@ Definitions for a whole heap of chart markers.
 from PyQt5.QtChart import QScatterSeries, QXYSeries, QValueAxis
 from PyQt5.QtChart import QChart, QChartView
 from PyQt5.QtCore import QObject, QPointF, pyqtSlot, pyqtSignal, Qt
-from PyQt5.QtGui import QColor, QPen, QBrush, QPainterPath, QImage, QPainter, QPixmap
+from PyQt5.QtGui import QColor, QPen, QBrush, QPainterPath, QImage, QPainter, QPixmap, QFont
+from PyQt5 import QtWidgets, QtGui
 from itertools import zip_longest
 import random, copy
 import numpy as np
@@ -260,8 +261,39 @@ def xtooltippath(point):
     path.lineTo(width/2-pointer,height); path.lineTo(0,height); path.lineTo(0,0)
     path.closeSubpath()
     path.translate(point.x()-width/2,point.y()-height-pointer)
+
     return path
 
+    
+class XToolTipLabel(QtWidgets.QLabel):
+    def __init__(self, text, left=True):
+        super(XToolTipLabel,self).__init__(text)
+        self._text = text.split('\n')
+        self._pointersize = 5
+        self.setContentsMargins(10,10,15+self._pointersize,10)
+        self.setFont(QFont("Helvetica [Cronyx]", 12))
+        self.setStyleSheet("background-color: rgb(0,0,0,0);")
+        self._fillColour = Qt.white
+
+    def paintEvent(self, e):
+        super(XToolTipLabel,self).paintEvent(e)  
+        p = QtGui.QPainter(self)
+        p.setBrush(self._fillColour)
+        p.setRenderHint(QtGui.QPainter.Antialiasing,True)
+        p.drawPath(self.boundarypath())
+        for i,text in enumerate(self._text):
+            z=len(self._text)-i
+            p.drawText(QPointF(10, self.height()-z*14-z*3),text)
+        
+    def boundarypath(self):
+        path = QtGui.QPainterPath()
+        width = self.width(); height = self.height(); pointer=self._pointersize
+        path.lineTo(width,0), path.lineTo(width,height-pointer)
+        path.lineTo(width/2+pointer,height-pointer); path.lineTo(width/2,height)
+        path.lineTo(width/2-pointer,height-pointer); path.lineTo(0,height-pointer); path.lineTo(0,0)
+        path.closeSubpath()    
+        
+        return path
         
 def main():
     import sys
@@ -278,7 +310,7 @@ def main():
     
     app = QApplication(sys.argv)
     
-    size = 20; bdr = 2; opc = 0.3
+    size = 50; bdr = 2; opc = 0.3
     special = False
     
     markers = [XMarkerCircle(),
@@ -309,11 +341,15 @@ def main():
         @pyqtSlot(QPointF, bool)
         def onHovered(self, point, state):
             if state:
-                point = self.chart().mapToPosition(point)-QPointF(0,size/2)
-                color = self.color(); color.setAlpha(255)
-                self.ttpath = chart.scene().addPath(xtooltippath(point),QPen(color))
+                spoint = self.chart().mapToPosition(point)-QPointF(0,size/2)
+                self.ttip = XToolTipLabel('Hello from:\n x: %.1f, y: %.1f'%(point.x(), point.y()))
+                
+                self.ttip_proxy = chart.scene().addWidget(self.ttip)
+                w = self.ttip.width(); h = self.ttip.height();
+                self.ttip_proxy.setPos(spoint.x()-w/2.0,spoint.y()-h)
+                self.ttip.updateGeometry()
             else:
-                chart.scene().removeItem(self.ttpath)
+                self.ttip_proxy.deleteLater()
 
     
     mcount = 0; nm = len(markers)
