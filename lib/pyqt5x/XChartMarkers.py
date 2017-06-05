@@ -20,6 +20,18 @@ class XMarkerBase(QBrush):
     """
     Base class from which other markers are derived.
     """
+    
+    _colourpicker = 1
+    _ncolours = len(gaColours)
+    
+    @classmethod
+    def _nextcolour(cls):
+        if _colourpicker < _ncolours:
+            _colourpicker += 1
+        else:
+            _colourpicker = 2
+        
+    
     def __init__(self, parent=None):
         super(XMarkerBase, self).__init__()
         self._wrs = 500.0
@@ -33,8 +45,8 @@ class XMarkerBase(QBrush):
         self._penWidth=1
         self._rotationAngle=0
         
-        colourpicker = round(random.uniform(2,len(gaColours)-1))
-        colourkey = list(gaColours.namedColours())[colourpicker]
+        self._nextcolour()
+        colourkey = list(gaColours.namedColours())[self._colourpicker]
         self.setColour(gaColours.colour(colourkey))
 
     def setColour(self, Qcolor, pen='darker'):
@@ -135,6 +147,7 @@ class XMarkerPlus(XMarkerBase):
         path.closeSubpath()
         return path
 
+        
 class XMarkerDash(XMarkerBase):
     """
     Dash Sign
@@ -150,6 +163,7 @@ class XMarkerDash(XMarkerBase):
         path.addRect(self._wrs*0.05,self._hrs/2-thickh/2,self._wrs*0.9,thickh)
         return path
 
+        
 class XMarkerSquare(XMarkerBase):
     """
     Square Box
@@ -163,6 +177,7 @@ class XMarkerSquare(XMarkerBase):
         path = QPainterPath()
         path.addRect(self._wrs*0.17,self._hrs*0.17,self._wrs*0.66,self._hrs*0.66)
         return path
+        
         
 class XMarkerDiamond(XMarkerBase):
     """
@@ -208,6 +223,7 @@ class XMarkerCross(XMarkerBase):
         path.closeSubpath()
         return path
 
+        
 class XMarkerTriangle(XMarkerBase):
     """
     A Triangle
@@ -252,6 +268,7 @@ def xtypemarker(series, fill=True, fillalpha=60, border=True, borderalpha=255, s
         series.colorChanged.emit(colour)
         series.markerSizeChanged.emit(size)
         
+        
 def xtooltippath(point):
     print(point)
     path = QPainterPath()
@@ -274,6 +291,7 @@ class XToolTipLabel(QtWidgets.QLabel):
         self.setFont(QFont("Helvetica [Cronyx]", 12))
         self.setStyleSheet("background-color: rgb(0,0,0,0);")
         self._fillColour = Qt.white
+        self._fillColour.setAlpha=100
         self.pen = QPen(Qt.black)
         if colour is not None:
             colour.setAlpha(255)
@@ -298,6 +316,7 @@ class XToolTipLabel(QtWidgets.QLabel):
         path.lineTo(width/2-pointer,height-pointer); path.lineTo(0,height-pointer); path.lineTo(0,0)
         path.closeSubpath()    
         return path
+
         
 def main():
     import sys

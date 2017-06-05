@@ -6,34 +6,33 @@ This file contains functions which help build charts using QtCharts
 
 from PyQt5.QtChart import QScatterSeries, QXYSeries, QValueAxis
 from PyQt5.QtChart import QChart, QChartView
-from PyQt5.QtCore import QObject, QPointF, pyqtSlot, pyqtSignal
-from PyQt5.QtGui import QColor, QPen
+from PyQt5.QtCore import QObject, QPointF, pyqtSlot, pyqtSignal, Qt, QRect
+from PyQt5.QtGui import QColor, QPen, QBrush
+from PyQt5.QtWidgets import QGraphicsRectItem
 from itertools import zip_longest
 import random
 import numpy as np
 
-from XChartMarkers import xtypemarker
+from XChartMarkers import xtypemarker, XToolTipLabel
 from XGraphColourPack import gaColours
 
 class XScatterSeries(QScatterSeries):
 
     onActionUpdated = pyqtSignal()
-    hovered = pyqtSignal(QPointF, bool, str)
 
-    def __init__(self, parent=None, marker=None, tooltips=False, temp=False):#, parent = None):
-        super(QScatterSeries, self).__init__(parent)
-        self.setUseOpenGL(True)
+    def __init__(self, parent=None, marker=None, tooltips=False, temp=False):
+        super(XScatterSeries, self).__init__(parent)
         
-        #self.hovered.connect(self.onHoverHighlight)
         self.setName('Help')
-        self._temp = temp
+        self._tooltips=tooltips
 
         #setup better marker defaults
         self._markersize = 15
         self.setMarkerSize(self._markersize)
-        self.setMarkerShape(1)
         self.setBorderColor(QColor(0,0,0,0))
         xtypemarker(self, fillalpha=100)
+        
+        self.hovered.connect(self.onHovered)
             
     def addXY(self,X, Y):
         '''
@@ -45,8 +44,22 @@ class XScatterSeries(QScatterSeries):
             
     def _find_nearest(self, vx, vy):
         idx = np.sqrt(np.power(self.X-vx,2) + np.power(self.Y-vy,2)).argmin()
-        #idx = (np.abs(array-value)).argmin()
         return QPointF(self.X[idx], self.Y[idx])
+        
+    @pyqtSlot(QPointF, bool)
+    def onHovered(self, point, state):
+        if state:
+            spoint = self.chart().mapToPosition(point)-QPointF(0,self._markersize/2)
+            if self._tooltips:
+                self.ttip = XToolTipLabel('Hello from:\n x: %.1f, y: %.1f'%(point.x(), point.y()), colour = self.color())
+            
+                self.ttip_proxy = self.chart().scene().addWidget(self.ttip)
+                w = self.ttip.width(); h = self.ttip.height();
+                self.ttip_proxy.setPos(spoint.x()-w/2.0,spoint.y()-h)
+                self.ttip.updateGeometry()
+        else:
+            if self._tooltips:
+                self.ttip_proxy.deleteLater()
 
 
 class XScatterSet(QObject):
@@ -54,15 +67,12 @@ class XScatterSet(QObject):
     onActionUpdated = pyqtSignal(int, int, int, int)
     hovered = pyqtSignal(QPointF, bool, str)
 
-    def __init__(self, tooltips=False, useOpenGL=False, parent=None):
+    def __init__(self, tooltips=False, parent=None):
         super(XScatterSet, self).__init__(parent)
-        self._openGL = useOpenGL
         self._scatterset = []
-        
         self._basecolour = gaColours.blue
         self._hlcolour = gaColours.zinnia
         self._size = 15
-        
         
     def setChart(self, chart):
         self._chart = chart
@@ -72,17 +82,13 @@ class XScatterSet(QObject):
 
     def addXY(self,X, Y):
         for i, (itemx, itemy) in enumerate(zip_longest(X,Y)):
-            series = QScatterSeries()#XScatterSeries(marker=self._marker)
-            if self._openGL:
-                series.setUseOpenGL(True)
+            series = XScatterSeries(tooltips=True)
             series.append(itemx, itemy)
-            
-            xtypemarker(series, fill=self._basecolour, width=3, size=self._size)
+            #xtypemarker(series, fill=self._basecolour, width=3, size=self._size)
+            xtypemarker(series, width=3, size=self._size)
             self._scatterset.append(series)
             self._chart.addSeries(series)
-            self.chart().legend().markers(series)[0].setVisible(False)
-            series.hovered.connect(self.onHovered)
-           
+            self._chart.legend().markers(series)[0].setVisible(False)
 
     def setAxisX(self, axis):
         for ser in self._scatterset:
@@ -92,26 +98,10 @@ class XScatterSet(QObject):
         for ser in self._scatterset:
             self.chart().setAxisY(axis, ser)
             
-    def _find_nearest(self, vx, vy):
-        idx = np.sqrt(np.power(self.X-vx,2) + np.power(self.Y-vy,2)).argmin()
-        #idx = (np.abs(array-value)).argmin()
-        return QPointF(self.X[idx], self.Y[idx])
-            
-    @pyqtSlot(QPointF, bool)        
-    def onHovered(self, point, state):
-        sender = self.sender()
-        if state:
-            xtypemarker(sender, size=self._size*1.3, width=3, fill=self._hlcolour)
-        else:
-            xtypemarker(sender, size=self._size, width=3, fill=self._basecolour)
-        sender.pointsReplaced.emit()
-
-        
 
 class XChart(QChart):
     
-    onActionUpdated = pyqtSignal()
-    
+
     def __init__(self, parent=None):
         super(QChart, self).__init__(parent)
         
@@ -126,21 +116,68 @@ class XChart(QChart):
         self.axisX.setMin(0); self.axisX.setMax(1)
         self.axisY.setMin(0); self.axisY.setMax(1)
         
+        series=[]
         #Temporay Test Data
-        x = np.random.rand(100)
-        y = np.random.rand(100)
+        for i in range(0, 10):
+            x = np.random.rand(10)
+            y = np.random.rand(10)
         #self.series = XScatterSeries(tooltips = True)
         #self.series.addXY(x,y)
         #self.addSeries(self.series)
         #self.setAxisX(self.axisX, self.series); self.setAxisY(self.axisY, self.series)
         
-        self.serset = XScatterSet(useOpenGL=False) # many options not supported with openGl
-        self.serset.setChart(self)
-        self.serset.addXY(x,y)
-        self.serset.setAxisX(self.axisX); self.serset.setAxisY(self.axisY)
+            serset = XScatterSet() # many options not supported with openGl
+            serset.setChart(self)
+            serset.addXY(x,y)
+            serset.setAxisX(self.axisX); serset.setAxisY(self.axisY)
+            series.append(serset)
+            
+        #self.mousePressEvent.connect(self.zoomSelectionAction)
         
-        self.setToolTip('Hello')
-        #Tooltip series
+        
+        
+
+    def mousePressEvent(self, event):
+        self._clickpos = event.buttonDownScenePos(Qt.LeftButton)
+        self._clickval = self.mapToValue(self._clickpos)
+        
+    def mouseMoveEvent(self, event):
+        self._clickpos = event.buttonDownScenePos(Qt.LeftButton)
+        self._clickval = self.mapToValue(self._clickpos)
+        dragpos = event.scenePos() 
+        c1 = self._clickpos.x(); c2 = self._clickpos.y()
+        d1 = dragpos.x(); d2 = dragpos.y()
+        x1 = min(c1,d1); y1 = min(c2, d2)
+        x2 = abs(c1-d1); y2 = abs(c2 - d2)
+        try:
+            self.selectbox.prepareGeometryChange()
+            self.scene().removeItem(self.selectbox)
+        except AttributeError:
+            pass
+        self.selectbox = self.scene().addRect(x1, y1, x2, y2, QPen(QColor(0,0,0,0)), QBrush(QColor(125,125,255,100)))
+        
+    def mouseReleaseEvent(self, event):
+        try:
+            self.selectbox.prepareGeometryChange()
+            self.scene().removeItem(self.selectbox)
+        except AttributeError:
+            pass
+        self._releasepos = event.lastScenePos()
+        self._releaseval = self.mapToValue(self._releasepos)
+        self.scene().update()
+        print(self._clickval, self._releaseval)
+
+        
+    def keyReleaseEvent(self, event):
+        
+        print(dir(event))
+        if event == Qt.Key_Z:
+            print ('zoom')
+        
+    @pyqtSlot()
+    def zoomSelectionAction(self):
+        print('click')
+            #Tooltip series
 
 class XChartView(QChartView):
     def __init__(self, parent=None):
@@ -161,16 +198,20 @@ def main():
 
     app = QApplication(sys.argv)
     chart = XChart()
-    #chart.addSeries(series)
+    
+    series = XScatterSeries()
+    series.append(0.5,0.5)
+    chart.addSeries(series)
 
  
     chart.legend().setVisible(True)
     chart.legend().setAlignment(Qt.AlignBottom)
 
-    chartView = XChartView(chart)
+    chartView = QChartView(chart)
+    chartView.setFocusPolicy(Qt.StrongFocus)
     #chart.serset.onActionUpdated.connect(chartView.repaint)
     
-    chartView.setMouseTracking(True)
+    #chartView.setMouseTracking(True)
 
     chartView.setRenderHint(QPainter.Antialiasing)
     
